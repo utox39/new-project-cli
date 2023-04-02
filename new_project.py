@@ -58,7 +58,7 @@ class NewProject:
                 console.print("▶ [underline]main.py[/underline] created.")
             console.print("✓ Done." + "\n")
 
-            console.print(":sparkles: [gold1]Happy Coding![/gold1]")
+            console.print("⫸ [gold1]Happy Coding![/gold1]")
         except FileExistsError:
             console.print(
                 f"[orange3]{new_py_project_dir}[/orange3] [bold red3]already exists![/bold red3]"
@@ -88,7 +88,7 @@ class NewProject:
                 console.print("▶ [underline]Main.java[/underline] created.")
             console.print("✓ Done." + "\n")
 
-            console.print(":sparkles: [gold1]Happy Coding![/gold1]")
+            console.print("⫸ [gold1]Happy Coding![/gold1]")
         except FileExistsError:
             console.print(
                 f"[orange3]{new_java_project_dir}[/orange3] [bold red3]already exists![/bold red3]"
@@ -117,7 +117,7 @@ class NewProject:
                 console.print("▶ [underline]main.go[/underline] created.")
             console.print("✓ Done." + "\n")
 
-            console.print(":sparkles: [gold1]Happy Coding![/gold1]")
+            console.print("⫸ [gold1]Happy Coding![/gold1]")
         except FileExistsError:
             console.print(
                 f"[orange3]{new_go_project_dir}[/orange3] [bold red3]already exists![/bold red3]"
@@ -148,7 +148,7 @@ class NewProject:
             subprocess.run(["chmod", "+x", f"{new_bash_project_dir}/{self.cli_args.bash}.sh"])
             console.print("✓ Done." + "\n")
 
-            console.print(":sparkles: [gold1]Happy Coding![/gold1]")
+            console.print("⫸ [gold1]Happy Coding![/gold1]")
         except FileExistsError:
             console.print(
                 f"[orange3]{new_bash_project_dir}[/orange3] [bold red3]already exists![/bold red3]"
@@ -172,7 +172,7 @@ class NewProject:
         subprocess.run(["cargo", "new", new_rust_project_dir])
         console.print("✓ Done." + "\n")
 
-        console.print(":sparkles: [gold1]Happy Coding![/gold1]")
+        console.print("⫸ [gold1]Happy Coding![/gold1]")
 
     # * CPP
     def create_cpp_project(self):
@@ -207,7 +207,7 @@ int main()
                 console.print("▶ [underline]main.cpp[/underline] created.")
             console.print("✓ Done." + "\n")
 
-            console.print(":sparkles: [gold1]Happy Coding![/gold1]")
+            console.print("⫸ [gold1]Happy Coding![/gold1]")
         except FileExistsError:
             console.print(
                 f"[orange3]{new_cpp_project_dir}[/orange3] [bold red3]already exists![/bold red3]"
@@ -234,7 +234,7 @@ int main()
             os.mkdir(new_non_specific_project_dir)
             console.print("✓ Done." + "\n")
 
-            console.print(":sparkles: [gold1]Happy Coding![/gold1]")
+            console.print("⫸ [gold1]Happy Coding![/gold1]")
         except FileExistsError:
             console.print(
                 f"[orange3]{new_non_specific_project_dir}[/orange3] [bold red3]already exists![/bold red3]"
