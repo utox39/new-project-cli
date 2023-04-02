@@ -17,7 +17,6 @@ console = Console()
 DEV_DIR = f"{Path.home()}/Developer/projects/"
 
 
-# TODO: beautify the output with rich
 class NewProject:
     def __init__(self, cli_args):
         self.cli_args = cli_args
@@ -35,9 +34,7 @@ class NewProject:
             py_projects_path = os.path.join(DEV_DIR, py_projects_dir_name)
         if not os.path.isdir(py_projects_path):
             os.mkdir(py_projects_path)
-            console.print(
-                "[gold1]Pyt[/gold1][blue1]hon[/blue1] projects dir [bold green4]created.[/bold green4]"
-            )
+            console.print("Python projects dir [underline]created.[/underline]")
 
         # Creating the project folder
         new_py_project_dir = f"{py_projects_path}/{self.cli_args.python}"
@@ -45,24 +42,23 @@ class NewProject:
             os.mkdir(new_py_project_dir)
 
             # python -m venv NEW_PROJECT_DIR/venv
-            console.print("[dodger_blue1]Generating the venv for your project...[/dodger_blue1]")
-            subprocess.run(["python3", "-m", "venv", f"{new_py_project_dir}/venv"])
-            console.print("[bold green4]Done.[/bold green4]\n")
-
-            # Creating the project folder
             console.print(
-                f"[dodger_blue1]Creating the file structure for:[/dodger_blue1] [gold1]{self.cli_args.python}[/gold1]"
-                + "\n"
+                "[dodger_blue1]Generating the [underline]venv[/underline]...[/dodger_blue1]"
             )
+            with console.status("[dodger_blue1]Generating...[/dodger_blue1]", spinner="aesthetic"):
+                subprocess.run(["python3", "-m", "venv", f"{new_py_project_dir}/venv"])
+            console.print(":white_check_mark: Done." + "\n")
+
+            # Creating the file structure
+            console.print(f"[dodger_blue1]Creating the file structure...[/dodger_blue1]")
             os.mkdir(f"{new_py_project_dir}/src")
             with open(f"{new_py_project_dir}/src/__init__.py", "x"):
-                console.print("[bold green4]__init__.py created.[/bold green4]")
+                console.print("▶ [underline]__init__.py[/underline] created.")
             with open(f"{new_py_project_dir}/src/main.py", "x"):
-                console.print("[bold green4]main.py created.[/bold green4]" + "\n")
-            subprocess.run(["exa", "--all", "--header", "--icons", "--long", new_py_project_dir])
-            console.print("\n[bold green4]Done.[bold green4]\n")
+                console.print("▶ [underline]main.py[/underline] created.")
+            console.print(":white_check_mark: Done." + "\n")
 
-            console.print("[gold1]Happy Coding![/gold1]")
+            console.print(":sparkles: [gold1]Happy Coding![/gold1]")
         except FileExistsError:
             console.print(
                 f"[orange3]{new_py_project_dir}[/orange3] [bold red3]already exists![/bold red3]"
@@ -78,9 +74,7 @@ class NewProject:
             java_projects_path = os.path.join(DEV_DIR, java_projects_dir_name)
         if not os.path.isdir(java_projects_path):
             os.mkdir(java_projects_path)
-            console.print(
-                "[dark_orange3]Ja[/dark_orange3][bright_white]va[/bright_white] projects dir [bold green4]created.[/bold green4]"
-            )
+            console.print("Java projects dir [underline]created.[/underline]")
 
         # Creating the project folder
         new_java_project_dir = f"{java_projects_path}/{self.cli_args.java}"
@@ -88,17 +82,13 @@ class NewProject:
             os.mkdir(new_java_project_dir)
 
             # Creating the file structure for the project
-            console.print(
-                f"[dodger_blue1]Creating the file structure for:[/dodger_blue1] [gold1]{self.cli_args.java}[/gold1]"
-                + "\n"
-            )
+            console.print(f"[dodger_blue1]Creating the file structure...[/dodger_blue1]")
             os.mkdir(f"{new_java_project_dir}/src")
             with open(f"{new_java_project_dir}/src/Main.java", "x"):
-                console.print("[bold green4]Main.java created.[/bold green4]")
-            subprocess.run(["exa", "--all", "--header", "--icons", "--long", new_java_project_dir])
-            console.print("\n[bold green4]Done.[bold green4]")
+                console.print("▶ [underline]Main.java[/underline] created.")
+            console.print(":white_check_mark: Done." + "\n")
 
-            console.print("[gold1]Happy Coding![/gold1]")
+            console.print(":sparkles: [gold1]Happy Coding![/gold1]")
         except FileExistsError:
             console.print(
                 f"[orange3]{new_java_project_dir}[/orange3] [bold red3]already exists![/bold red3]"
@@ -114,9 +104,7 @@ class NewProject:
             go_projects_path = os.path.join(DEV_DIR, go_projects_dir_name)
         if not os.path.isdir(go_projects_path):
             os.mkdir(go_projects_path)
-            console.print(
-                "[dark_turquoise]Go[/dark_turquoise] projects dir [bold green4]created.[/bold green4]"
-            )
+            console.print("Go projects dir [underline]created.[/underline]")
 
         # Creating the project folder
         new_go_project_dir = f"{go_projects_path}/{self.cli_args.go}"
@@ -124,16 +112,12 @@ class NewProject:
             os.mkdir(new_go_project_dir)
 
             # Creating the file structure for the project
-            console.print(
-                f"[dodger_blue1]Creating the file structure for:[/dodger_blue1] [gold1]{self.cli_args.go}[/gold1]"
-                + "\n"
-            )
+            console.print(f"[dodger_blue1]Creating the file structure...[/dodger_blue1]")
             with open(f"{new_go_project_dir}/main.go", "x"):
-                console.print("main.go created.")
-            subprocess.run(["exa", "--all", "--header", "--icons", "--long", new_go_project_dir])
-            console.print("\nDone.")
+                console.print("▶ [underline]main.go[/underline] created.")
+            console.print(":white_check_mark: Done." + "\n")
 
-            console.print("Happy Coding!")
+            console.print(":sparkles: [gold1]Happy Coding![/gold1]")
         except FileExistsError:
             console.print(
                 f"[orange3]{new_go_project_dir}[/orange3] [bold red3]already exists![/bold red3]"
@@ -149,7 +133,7 @@ class NewProject:
             bash_projects_path = os.path.join(DEV_DIR, bash_projects_dir_name)
         if not os.path.isdir(bash_projects_path):
             os.mkdir(bash_projects_path)
-            console.print("Bash projects dir created.")
+            console.print("Bash projects dir [underline]created.[/underline]")
 
         # Creating the project folder
         new_bash_project_dir = f"{bash_projects_path}/{self.cli_args.bash}"
@@ -157,15 +141,14 @@ class NewProject:
             os.mkdir(new_bash_project_dir)
 
             # Creating the file structure for the project
-            console.print(f"Creating the file structure for: {self.cli_args.bash}" + "\n")
+            console.print(f"[dodger_blue1]Creating the file structure...[/dodger_blue1]")
             with open(f"{new_bash_project_dir}/{self.cli_args.bash}.sh", "w") as main_f:
                 main_f.write("#!/bin/bash")
-                console.print("Bash script created.")
+                console.print(f"▶ [underline]{self.cli_args.bash}.sh[/underline] created.")
             subprocess.run(["chmod", "+x", f"{new_bash_project_dir}/{self.cli_args.bash}.sh"])
-            subprocess.run(["exa", "--all", "--header", "--icons", "--long", new_bash_project_dir])
-            console.print("\nDone.")
+            console.print(":white_check_mark: Done." + "\n")
 
-            console.print("Happy Coding!")
+            console.print(":sparkles: [gold1]Happy Coding![/gold1]")
         except FileExistsError:
             console.print(
                 f"[orange3]{new_bash_project_dir}[/orange3] [bold red3]already exists![/bold red3]"
@@ -181,15 +164,15 @@ class NewProject:
             rust_projects_path = os.path.join(DEV_DIR, rust_projects_dir_name)
         if not os.path.isdir(rust_projects_path):
             os.mkdir(rust_projects_path)
-            console.print("Rust projects dir created.")
+            console.print("Rust projects dir [underline]created.[/underline]")
 
         # Creating the project folder and file structure for the project
+        console.print(f"[dodger_blue1]Creating the file structure...[/dodger_blue1]")
         new_rust_project_dir = f"{rust_projects_path}/{self.cli_args.rust}"
         subprocess.run(["cargo", "new", new_rust_project_dir])
-        subprocess.run(["exa", "--all", "--header", "--icons", "--long", new_rust_project_dir])
-        console.print("\nDone.")
+        console.print(":white_check_mark: Done." + "\n")
 
-        console.print("Happy Coding!")
+        console.print(":sparkles: [gold1]Happy Coding![/gold1]")
 
     # * CPP
     def create_cpp_project(self):
@@ -201,7 +184,7 @@ class NewProject:
             cpp_projects_path = os.path.join(DEV_DIR, cpp_projects_dir_name)
         if not os.path.isdir(cpp_projects_path):
             os.mkdir(cpp_projects_path)
-            console.print("Cpp projects dir created.")
+            console.print("Cpp projects dir [underline]created.[/underline]")
 
         # Creating the project folder
         new_cpp_project_dir = f"{cpp_projects_path}/{self.cli_args.cpp}"
@@ -209,7 +192,7 @@ class NewProject:
             os.mkdir(new_cpp_project_dir)
 
             # Creating the file structure for the project
-            console.print(f"Creating the file structure for: {self.cli_args.cpp}" + "\n")
+            console.print(f"[dodger_blue1]Creating the file structure...[/dodger_blue1]")
             os.mkdir(f"{new_cpp_project_dir}/src")
             with open(f"{new_cpp_project_dir}/src/main.cpp", "w") as main_f:
                 main_f.write(
@@ -221,11 +204,10 @@ int main()
 }
             """
                 )
-                console.print("Main.cpp created.")
-            subprocess.run(["exa", "--all", "--header", "--icons", "--long", new_cpp_project_dir])
-            console.print("\nDone.")
+                console.print("▶ [underline]main.cpp[/underline] created.")
+            console.print(":white_check_mark: Done." + "\n")
 
-            print("Happy Coding!")
+            console.print(":sparkles: [gold1]Happy Coding![/gold1]")
         except FileExistsError:
             console.print(
                 f"[orange3]{new_cpp_project_dir}[/orange3] [bold red3]already exists![/bold red3]"
@@ -250,9 +232,9 @@ int main()
         new_non_specific_project_dir = f"{non_specific_projects_path}/{self.cli_args.none}"
         try:
             os.mkdir(new_non_specific_project_dir)
-            console.print("\nDone.")
+            console.print(":white_check_mark: Done." + "\n")
 
-            console.print("Happy Coding!")
+            console.print(":sparkles: [gold1]Happy Coding![/gold1]")
         except FileExistsError:
             console.print(
                 f"[orange3]{new_non_specific_project_dir}[/orange3] [bold red3]already exists![/bold red3]"
