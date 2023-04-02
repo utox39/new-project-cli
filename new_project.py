@@ -47,7 +47,7 @@ class NewProject:
             )
             with console.status("[dodger_blue1]Generating...[/dodger_blue1]", spinner="aesthetic"):
                 subprocess.run(["python3", "-m", "venv", f"{new_py_project_dir}/venv"])
-            console.print(":white_check_mark: Done." + "\n")
+            console.print("✓ Done." + "\n")
 
             # Creating the file structure
             console.print(f"[dodger_blue1]Creating the file structure...[/dodger_blue1]")
@@ -56,7 +56,7 @@ class NewProject:
                 console.print("▶ [underline]__init__.py[/underline] created.")
             with open(f"{new_py_project_dir}/src/main.py", "x"):
                 console.print("▶ [underline]main.py[/underline] created.")
-            console.print(":white_check_mark: Done." + "\n")
+            console.print("✓ Done." + "\n")
 
             console.print(":sparkles: [gold1]Happy Coding![/gold1]")
         except FileExistsError:
@@ -86,7 +86,7 @@ class NewProject:
             os.mkdir(f"{new_java_project_dir}/src")
             with open(f"{new_java_project_dir}/src/Main.java", "x"):
                 console.print("▶ [underline]Main.java[/underline] created.")
-            console.print(":white_check_mark: Done." + "\n")
+            console.print("✓ Done." + "\n")
 
             console.print(":sparkles: [gold1]Happy Coding![/gold1]")
         except FileExistsError:
@@ -115,7 +115,7 @@ class NewProject:
             console.print(f"[dodger_blue1]Creating the file structure...[/dodger_blue1]")
             with open(f"{new_go_project_dir}/main.go", "x"):
                 console.print("▶ [underline]main.go[/underline] created.")
-            console.print(":white_check_mark: Done." + "\n")
+            console.print("✓ Done." + "\n")
 
             console.print(":sparkles: [gold1]Happy Coding![/gold1]")
         except FileExistsError:
@@ -146,7 +146,7 @@ class NewProject:
                 main_f.write("#!/bin/bash")
                 console.print(f"▶ [underline]{self.cli_args.bash}.sh[/underline] created.")
             subprocess.run(["chmod", "+x", f"{new_bash_project_dir}/{self.cli_args.bash}.sh"])
-            console.print(":white_check_mark: Done." + "\n")
+            console.print("✓ Done." + "\n")
 
             console.print(":sparkles: [gold1]Happy Coding![/gold1]")
         except FileExistsError:
@@ -170,7 +170,7 @@ class NewProject:
         console.print(f"[dodger_blue1]Creating the file structure...[/dodger_blue1]")
         new_rust_project_dir = f"{rust_projects_path}/{self.cli_args.rust}"
         subprocess.run(["cargo", "new", new_rust_project_dir])
-        console.print(":white_check_mark: Done." + "\n")
+        console.print("✓ Done." + "\n")
 
         console.print(":sparkles: [gold1]Happy Coding![/gold1]")
 
@@ -205,7 +205,7 @@ int main()
             """
                 )
                 console.print("▶ [underline]main.cpp[/underline] created.")
-            console.print(":white_check_mark: Done." + "\n")
+            console.print("✓ Done." + "\n")
 
             console.print(":sparkles: [gold1]Happy Coding![/gold1]")
         except FileExistsError:
@@ -232,7 +232,7 @@ int main()
         new_non_specific_project_dir = f"{non_specific_projects_path}/{self.cli_args.none}"
         try:
             os.mkdir(new_non_specific_project_dir)
-            console.print(":white_check_mark: Done." + "\n")
+            console.print("✓ Done." + "\n")
 
             console.print(":sparkles: [gold1]Happy Coding![/gold1]")
         except FileExistsError:
