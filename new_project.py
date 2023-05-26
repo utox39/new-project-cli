@@ -24,6 +24,33 @@ class NewProject:
     def run(self):
         self.handler()
 
+    def git_init_command(self, project_dir):
+        console.print(
+            "[dodger_blue1]Initializing [underline]git[/underline] repository[/dodger_blue1]"
+        )
+        subprocess.run(["git", "init", f"{project_dir}"])
+
+        with open(f"{project_dir}/.gitignore", "w") as git_ignore_f:
+            if self.cli_args.python:
+                git_ignore_f.write(
+                    """.env
+venv/
+test/
+.vscode/
+.idea/"""
+                )
+            else:
+                git_ignore_f.write(
+                    """.env
+test/
+.vscode/
+.idea/"""
+                )
+
+            console.print("▶ [underline].gitignore[/underline] created.")
+
+        console.print("✓ Done." + "\n")
+
     # * PYTHON
     def create_python_project(self):
         py_projects_dir_name = "python_projects"
@@ -58,6 +85,9 @@ class NewProject:
                 console.print("▶ [underline]main.py[/underline] created.")
             console.print("✓ Done." + "\n")
 
+            # git init {project dir}
+            self.git_init_command(new_py_project_dir)
+
             console.print("[gold1]⫸ Happy Coding![/gold1]")
         except FileExistsError:
             console.print(
@@ -88,6 +118,9 @@ class NewProject:
                 console.print("▶ [underline]Main.java[/underline] created.")
             console.print("✓ Done." + "\n")
 
+            # git init {project dir}
+            self.git_init_command(new_java_project_dir)
+
             console.print("[gold1]⫸ Happy Coding![/gold1]")
         except FileExistsError:
             console.print(
@@ -116,6 +149,9 @@ class NewProject:
             with open(f"{new_go_project_dir}/main.go", "x"):
                 console.print("▶ [underline]main.go[/underline] created.")
             console.print("✓ Done." + "\n")
+
+            # git init {project dir}
+            self.git_init_command(new_go_project_dir)
 
             console.print("[gold1]⫸ Happy Coding![/gold1]")
         except FileExistsError:
@@ -147,6 +183,9 @@ class NewProject:
                 console.print(f"▶ [underline]{self.cli_args.bash}.sh[/underline] created.")
             subprocess.run(["chmod", "+x", f"{new_bash_project_dir}/{self.cli_args.bash}.sh"])
             console.print("✓ Done." + "\n")
+
+            # git init {project dir}
+            self.git_init_command(new_bash_project_dir)
 
             console.print("[gold1]⫸ Happy Coding![/gold1]")
         except FileExistsError:
@@ -207,6 +246,9 @@ int main()
                 console.print("▶ [underline]main.cpp[/underline] created.")
             console.print("✓ Done." + "\n")
 
+            # git init {project dir}
+            self.git_init_command(new_cpp_project_dir)
+
             console.print("[gold1]⫸ Happy Coding![/gold1]")
         except FileExistsError:
             console.print(
@@ -233,6 +275,9 @@ int main()
         try:
             os.mkdir(new_non_specific_project_dir)
             console.print("✓ Done." + "\n")
+
+            # git init {project dir}
+            self.git_init_command(new_non_specific_project_dir)
 
             console.print("[gold1]⫸ Happy Coding![/gold1]")
         except FileExistsError:
