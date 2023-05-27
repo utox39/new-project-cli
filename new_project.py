@@ -51,6 +51,14 @@ test/
 
         console.print("✓ Done." + "\n")
 
+    @staticmethod
+    def open_in_vscode(project_dir):
+        subprocess.run(["code", f"{project_dir}"])
+
+    @staticmethod
+    def open_in_pycharm(project_dir):
+        subprocess.run(["pycharm", f"{project_dir}"])
+
     # * PYTHON
     def create_python_project(self):
         py_projects_dir_name = "python_projects"
@@ -88,7 +96,15 @@ test/
             # git init {project dir}
             self.git_init_command(new_py_project_dir)
 
+            if self.cli_args.code:
+                self.open_in_vscode(project_dir=new_py_project_dir)
+
+            if self.cli_args.pycharm:
+                self.open_in_pycharm(project_dir=new_py_project_dir)
+
             console.print("[gold1]⫸ Happy Coding![/gold1]")
+
+            # cd into the new project dir
         except FileExistsError:
             console.print(
                 f"[orange3]{new_py_project_dir}[/orange3] [bold red3]already exists![/bold red3]"
@@ -358,6 +374,16 @@ if __name__ == "__main__":
         "--shared",
         action="store_true",
         help="create the project in the shared_projects folder",
+    )
+    parser.add_argument(
+        "--code",
+        action="store_true",
+        help="open the project in Visual Studio Code",
+    )
+    parser.add_argument(
+        "--pycharm",
+        action="store_true",
+        help="open the project in PyCharm",
     )
     args = parser.parse_args()
 
