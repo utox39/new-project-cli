@@ -96,9 +96,11 @@ test/
             # git init {project dir}
             self.git_init_command(new_py_project_dir)
 
+            # open the project in vscode
             if self.cli_args.code:
                 self.open_in_vscode(project_dir=new_py_project_dir)
 
+            # open the project in pycharm
             if self.cli_args.pycharm:
                 self.open_in_pycharm(project_dir=new_py_project_dir)
 
@@ -137,6 +139,10 @@ test/
             # git init {project dir}
             self.git_init_command(new_java_project_dir)
 
+            # open the project in vscode
+            if self.cli_args.code:
+                self.open_in_vscode(project_dir=new_java_project_dir)
+
             console.print("[gold1]⫸ Happy Coding![/gold1]")
         except FileExistsError:
             console.print(
@@ -168,6 +174,10 @@ test/
 
             # git init {project dir}
             self.git_init_command(new_go_project_dir)
+
+            # open the project in vscode
+            if self.cli_args.code:
+                self.open_in_vscode(project_dir=new_go_project_dir)
 
             console.print("[gold1]⫸ Happy Coding![/gold1]")
         except FileExistsError:
@@ -203,6 +213,10 @@ test/
             # git init {project dir}
             self.git_init_command(new_bash_project_dir)
 
+            # open the project in vscode
+            if self.cli_args.code:
+                self.open_in_vscode(project_dir=new_bash_project_dir)
+
             console.print("[gold1]⫸ Happy Coding![/gold1]")
         except FileExistsError:
             console.print(
@@ -226,6 +240,10 @@ test/
         new_rust_project_dir = f"{rust_projects_path}/{self.cli_args.rust}"
         subprocess.run(["cargo", "new", new_rust_project_dir])
         console.print("✓ Done." + "\n")
+
+        # open the project in vscode
+        if self.cli_args.code:
+            self.open_in_vscode(project_dir=new_rust_project_dir)
 
         console.print("[gold1]⫸ Happy Coding![/gold1]")
 
@@ -265,6 +283,10 @@ int main()
             # git init {project dir}
             self.git_init_command(new_cpp_project_dir)
 
+            # open the project in vscode
+            if self.cli_args.code:
+                self.open_in_vscode(project_dir=new_cpp_project_dir)
+
             console.print("[gold1]⫸ Happy Coding![/gold1]")
         except FileExistsError:
             console.print(
@@ -294,6 +316,10 @@ int main()
 
             # git init {project dir}
             self.git_init_command(new_non_specific_project_dir)
+
+            # open the project in vscode
+            if self.cli_args.code:
+                self.open_in_vscode(project_dir=new_non_specific_project_dir)
 
             console.print("[gold1]⫸ Happy Coding![/gold1]")
         except FileExistsError:
