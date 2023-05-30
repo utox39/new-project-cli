@@ -6,6 +6,7 @@ import subprocess
 import textwrap
 
 from pathlib import Path
+from typing import Final
 
 # rich
 from rich.console import Console
@@ -16,6 +17,15 @@ console = Console()
 # Default Development folder
 DEV_DIR = f"{Path.home()}/Developer/projects/"
 
+# Projects folder names
+PY_PROJECTS_DIR_NAME: Final = "python_projects"
+JAVA_PROJECTS_DIR_NAME: Final = "java_projects"
+GO_PROJECTS_DIR_NAME: Final = "go_projects"
+BASH_PROJECTS_DIR_NAME: Final = "bash_projects"
+RUST_PROJECTS_DIR_NAME: Final = "rust_projects"
+CPP_PROJECTS_DIR_NAME: Final = "cpp_projects"
+NON_SPECIFIC_PROJECTS_DIR_NAME: Final = "non_specific_projects"
+
 
 class NewProject:
     def __init__(self, cli_args):
@@ -24,7 +34,38 @@ class NewProject:
     def run(self):
         self.handler()
 
-    def git_init_command(self, project_dir):
+    @staticmethod
+    def projects_path_check(projects_dir_name: str) -> None:
+        """
+        Check if the parsed programming language projects folder exists
+        :param projects_dir_name: str - name of the programming language projects folder
+        """
+        projects_path = os.path.join(DEV_DIR, projects_dir_name)
+        if not os.path.isdir(projects_path):
+            os.mkdir(projects_path)
+            console.print(f"{projects_dir_name} dir [underline]created.[/underline]")
+
+    @staticmethod
+    def open_in_vscode(project_dir: str) -> None:
+        """
+        Open the project in Visual Studio Code
+        :param project_dir: str
+        """
+        subprocess.run(["code", f"{project_dir}"])
+
+    @staticmethod
+    def open_in_pycharm(project_dir: str) -> None:
+        """
+        Open the python project in PyCharm
+        :param project_dir: str
+        """
+        subprocess.run(["pycharm", f"{project_dir}"])
+
+    def git_init_command(self, project_dir: str) -> None:
+        """
+        Initialize a local git repository
+        :param project_dir: str
+        """
         console.print(
             "[dodger_blue1]Initializing [underline]git[/underline] repository[/dodger_blue1]"
         )
@@ -33,44 +74,34 @@ class NewProject:
         with open(f"{project_dir}/.gitignore", "w") as git_ignore_f:
             if self.cli_args.python:
                 git_ignore_f.write(
-                    """.env
-venv/
-test/
-.vscode/
-.idea/"""
+                    textwrap.dedent("""\
+                    .env
+                    .vscode/
+                    .idea/
+                    test/
+                    venv/""")
                 )
             else:
                 git_ignore_f.write(
-                    """.env
-test/
-.vscode/
-.idea/"""
+                    textwrap.dedent("""\
+                    .env
+                    .vscode/
+                    .idea/
+                    test/""")
                 )
 
             console.print("▶ [underline].gitignore[/underline] created.")
 
         console.print("✓ Done." + "\n")
 
-    @staticmethod
-    def open_in_vscode(project_dir):
-        subprocess.run(["code", f"{project_dir}"])
-
-    @staticmethod
-    def open_in_pycharm(project_dir):
-        subprocess.run(["pycharm", f"{project_dir}"])
-
     # * PYTHON
-    def create_python_project(self):
-        py_projects_dir_name = "python_projects"
-        if self.cli_args.shared:
-            shared_dev_dir = f"{Path.home()}/Developer/shared_projects/"
-            py_projects_path = os.path.join(shared_dev_dir, py_projects_dir_name)
-        else:
-            py_projects_path = os.path.join(DEV_DIR, py_projects_dir_name)
-        if not os.path.isdir(py_projects_path):
-            os.mkdir(py_projects_path)
-            console.print("Python projects dir [underline]created.[/underline]")
+    def create_python_project(self) -> None:
+        """
+        Create a python project. Generates a venv.
+        """
+        self.projects_path_check(projects_dir_name=PY_PROJECTS_DIR_NAME)
 
+        py_projects_path = os.path.join(DEV_DIR, PY_PROJECTS_DIR_NAME)
         # Creating the project folder
         new_py_project_dir = f"{py_projects_path}/{self.cli_args.python}"
         try:
@@ -86,21 +117,16 @@ test/
 
             # Creating the file structure
             console.print(f"[dodger_blue1]Creating the file structure...[/dodger_blue1]")
-            os.mkdir(f"{new_py_project_dir}/src")
-            with open(f"{new_py_project_dir}/src/__init__.py", "x"):
-                console.print("▶ [underline]__init__.py[/underline] created.")
-            with open(f"{new_py_project_dir}/src/main.py", "x"):
+            with open(f"{new_py_project_dir}/main.py", "x"):
                 console.print("▶ [underline]main.py[/underline] created.")
             console.print("✓ Done." + "\n")
 
             # git init {project dir}
-            self.git_init_command(new_py_project_dir)
+            self.git_init_command(project_dir=new_py_project_dir)
 
-            # open the project in vscode
             if self.cli_args.code:
                 self.open_in_vscode(project_dir=new_py_project_dir)
 
-            # open the project in pycharm
             if self.cli_args.pycharm:
                 self.open_in_pycharm(project_dir=new_py_project_dir)
 
@@ -113,17 +139,13 @@ test/
             )
 
     # * JAVA
-    def create_java_project(self):
-        java_projects_dir_name = "java_projects"
-        if self.cli_args.shared:
-            shared_dev_dir = f"{Path.home()}/Developer/shared_projects/"
-            java_projects_path = os.path.join(shared_dev_dir, java_projects_dir_name)
-        else:
-            java_projects_path = os.path.join(DEV_DIR, java_projects_dir_name)
-        if not os.path.isdir(java_projects_path):
-            os.mkdir(java_projects_path)
-            console.print("Java projects dir [underline]created.[/underline]")
+    def create_java_project(self) -> None:
+        """
+        Create a java projects
+        """
+        self.projects_path_check(projects_dir_name=JAVA_PROJECTS_DIR_NAME)
 
+        java_projects_path = os.path.join(DEV_DIR, JAVA_PROJECTS_DIR_NAME)
         # Creating the project folder
         new_java_project_dir = f"{java_projects_path}/{self.cli_args.java}"
         try:
@@ -137,9 +159,8 @@ test/
             console.print("✓ Done." + "\n")
 
             # git init {project dir}
-            self.git_init_command(new_java_project_dir)
+            self.git_init_command(project_dir=new_java_project_dir)
 
-            # open the project in vscode
             if self.cli_args.code:
                 self.open_in_vscode(project_dir=new_java_project_dir)
 
@@ -150,17 +171,13 @@ test/
             )
 
     # * GO
-    def create_go_project(self):
-        go_projects_dir_name = "go_projects"
-        if self.cli_args.shared:
-            shared_dev_dir = f"{Path.home()}/Developer/shared_projects/"
-            go_projects_path = os.path.join(shared_dev_dir, go_projects_dir_name)
-        else:
-            go_projects_path = os.path.join(DEV_DIR, go_projects_dir_name)
-        if not os.path.isdir(go_projects_path):
-            os.mkdir(go_projects_path)
-            console.print("Go projects dir [underline]created.[/underline]")
+    def create_go_project(self) -> None:
+        """
+        Create a go projects
+        """
+        self.projects_path_check(projects_dir_name=GO_PROJECTS_DIR_NAME)
 
+        go_projects_path = os.path.join(DEV_DIR, GO_PROJECTS_DIR_NAME)
         # Creating the project folder
         new_go_project_dir = f"{go_projects_path}/{self.cli_args.go}"
         try:
@@ -173,9 +190,8 @@ test/
             console.print("✓ Done." + "\n")
 
             # git init {project dir}
-            self.git_init_command(new_go_project_dir)
+            self.git_init_command(project_dir=new_go_project_dir)
 
-            # open the project in vscode
             if self.cli_args.code:
                 self.open_in_vscode(project_dir=new_go_project_dir)
 
@@ -186,17 +202,13 @@ test/
             )
 
     # * BASH
-    def create_bash_project(self):
-        bash_projects_dir_name = "bash_projects"
-        if self.cli_args.shared:
-            shared_dev_dir = f"{Path.home()}/Developer/shared_projects/"
-            bash_projects_path = os.path.join(shared_dev_dir, bash_projects_dir_name)
-        else:
-            bash_projects_path = os.path.join(DEV_DIR, bash_projects_dir_name)
-        if not os.path.isdir(bash_projects_path):
-            os.mkdir(bash_projects_path)
-            console.print("Bash projects dir [underline]created.[/underline]")
+    def create_bash_project(self) -> None:
+        """
+        Create a bash project
+        """
+        self.projects_path_check(projects_dir_name=BASH_PROJECTS_DIR_NAME)
 
+        bash_projects_path = os.path.join(DEV_DIR, BASH_PROJECTS_DIR_NAME)
         # Creating the project folder
         new_bash_project_dir = f"{bash_projects_path}/{self.cli_args.bash}"
         try:
@@ -211,9 +223,8 @@ test/
             console.print("✓ Done." + "\n")
 
             # git init {project dir}
-            self.git_init_command(new_bash_project_dir)
+            self.git_init_command(project_dir=new_bash_project_dir)
 
-            # open the project in vscode
             if self.cli_args.code:
                 self.open_in_vscode(project_dir=new_bash_project_dir)
 
@@ -224,41 +235,32 @@ test/
             )
 
     # * RUST
-    def create_rust_project(self):
-        rust_projects_dir_name = "rust_projects"
-        if self.cli_args.shared:
-            shared_dev_dir = f"{Path.home()}/Developer/shared_projects/"
-            rust_projects_path = os.path.join(shared_dev_dir, rust_projects_dir_name)
-        else:
-            rust_projects_path = os.path.join(DEV_DIR, rust_projects_dir_name)
-        if not os.path.isdir(rust_projects_path):
-            os.mkdir(rust_projects_path)
-            console.print("Rust projects dir [underline]created.[/underline]")
+    def create_rust_project(self) -> None:
+        """
+        Create a rust project
+        """
+        self.projects_path_check(projects_dir_name=RUST_PROJECTS_DIR_NAME)
 
+        rust_projects_path = os.path.join(DEV_DIR, RUST_PROJECTS_DIR_NAME)
         # Creating the project folder and file structure for the project
         console.print(f"[dodger_blue1]Creating the file structure...[/dodger_blue1]")
         new_rust_project_dir = f"{rust_projects_path}/{self.cli_args.rust}"
         subprocess.run(["cargo", "new", new_rust_project_dir])
         console.print("✓ Done." + "\n")
 
-        # open the project in vscode
         if self.cli_args.code:
             self.open_in_vscode(project_dir=new_rust_project_dir)
 
         console.print("[gold1]⫸ Happy Coding![/gold1]")
 
     # * CPP
-    def create_cpp_project(self):
-        cpp_projects_dir_name = "cpp_projects"
-        if self.cli_args.shared:
-            shared_dev_dir = f"{Path.home()}/Developer/shared_projects/"
-            cpp_projects_path = os.path.join(shared_dev_dir, cpp_projects_dir_name)
-        else:
-            cpp_projects_path = os.path.join(DEV_DIR, cpp_projects_dir_name)
-        if not os.path.isdir(cpp_projects_path):
-            os.mkdir(cpp_projects_path)
-            console.print("Cpp projects dir [underline]created.[/underline]")
+    def create_cpp_project(self) -> None:
+        """
+        Create a cpp project
+        """
+        self.projects_path_check(projects_dir_name=CPP_PROJECTS_DIR_NAME)
 
+        cpp_projects_path = os.path.join(DEV_DIR, CPP_PROJECTS_DIR_NAME)
         # Creating the project folder
         new_cpp_project_dir = f"{cpp_projects_path}/{self.cli_args.cpp}"
         try:
@@ -269,21 +271,20 @@ test/
             os.mkdir(f"{new_cpp_project_dir}/src")
             with open(f"{new_cpp_project_dir}/src/main.cpp", "w") as main_f:
                 main_f.write(
-                    """#include <iostream>
+                    textwrap.dedent("""\
+                    #include <iostream>
 
-int main()
-{
-    return 0;
-}
-            """
+                    int main()
+                    {
+                        return 0;
+                    }""")
                 )
                 console.print("▶ [underline]main.cpp[/underline] created.")
             console.print("✓ Done." + "\n")
 
             # git init {project dir}
-            self.git_init_command(new_cpp_project_dir)
+            self.git_init_command(project_dir=new_cpp_project_dir)
 
-            # open the project in vscode
             if self.cli_args.code:
                 self.open_in_vscode(project_dir=new_cpp_project_dir)
 
@@ -294,20 +295,13 @@ int main()
             )
 
     # * NON-SPECIFIC PROJECTS
-    def create_non_specific_project(self):
-        non_specific_projects_dir_name = "non_specific_projects"
-        if self.cli_args.shared:
-            shared_dev_dir = f"{Path.home()}/Developer/shared_projects/"
-            non_specific_projects_path = os.path.join(
-                shared_dev_dir,
-                non_specific_projects_dir_name,
-            )
-        else:
-            non_specific_projects_path = os.path.join(DEV_DIR, non_specific_projects_dir_name)
-        if not os.path.isdir(non_specific_projects_path):
-            os.mkdir(non_specific_projects_path)
-            console.print("Non-specific projects dir created.")
+    def create_non_specific_project(self) -> None:
+        """
+        Create a non specific project
+        """
+        self.projects_path_check(projects_dir_name=NON_SPECIFIC_PROJECTS_DIR_NAME)
 
+        non_specific_projects_path = os.path.join(DEV_DIR, NON_SPECIFIC_PROJECTS_DIR_NAME)
         # Creating the project folder
         new_non_specific_project_dir = f"{non_specific_projects_path}/{self.cli_args.none}"
         try:
@@ -315,9 +309,8 @@ int main()
             console.print("✓ Done." + "\n")
 
             # git init {project dir}
-            self.git_init_command(new_non_specific_project_dir)
+            self.git_init_command(project_dir=new_non_specific_project_dir)
 
-            # open the project in vscode
             if self.cli_args.code:
                 self.open_in_vscode(project_dir=new_non_specific_project_dir)
 
@@ -346,7 +339,6 @@ int main()
 
 if __name__ == "__main__":
     # argparse config
-    # TODO: improve information
     parser = argparse.ArgumentParser(
         description="A CLI tool to create a new project",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -357,7 +349,8 @@ if __name__ == "__main__":
         new_project --java PROJECT_NAME              #create a new java project
         new_project --go PROJECT_NAME                #create a new go project
         new_project --none PROJECT_NAME              #create a new non-specific project
-        new_project --shared --python PROJECT_NAME   #create a new shared python project
+        new_project --code --python PROJECT_NAME     #open the new project in VSCode
+        new_project --pycharm --python PROJECT_NAME  #open the new project in PyCharm
         """
         ),
     )
@@ -397,11 +390,6 @@ if __name__ == "__main__":
         help="create a non-specific project",
     )
     parser.add_argument(
-        "--shared",
-        action="store_true",
-        help="create the project in the shared_projects folder",
-    )
-    parser.add_argument(
         "--code",
         action="store_true",
         help="open the project in Visual Studio Code",
@@ -413,5 +401,5 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    new_project = NewProject(args)
+    new_project = NewProject(cli_args=args)
     new_project.run()
