@@ -38,7 +38,7 @@ class NewProject:
     def projects_path_check(projects_dir_name: str) -> None:
         """
         Check if the parsed programming language projects folder exists
-        :param projects_dir_name: str - name of the programming language projects folder
+        :param projects_dir_name: (str) name of the programming language projects folder
         """
         projects_path = os.path.join(DEV_DIR, projects_dir_name)
         if not os.path.isdir(projects_path):
@@ -49,7 +49,7 @@ class NewProject:
     def open_in_vscode(project_dir: str) -> None:
         """
         Open the project in Visual Studio Code
-        :param project_dir: str
+        :param project_dir: (str) project directory
         """
         subprocess.run(["code", f"{project_dir}"])
 
@@ -57,14 +57,14 @@ class NewProject:
     def open_in_pycharm(project_dir: str) -> None:
         """
         Open the python project in PyCharm
-        :param project_dir: str
+        :param project_dir: (str) project directory
         """
         subprocess.run(["pycharm", f"{project_dir}"])
 
     def git_init_command(self, project_dir: str) -> None:
         """
         Initialize a local git repository
-        :param project_dir: str
+        :param project_dir: (str) project directory
         """
         console.print(
             "[dodger_blue1]Initializing [underline]git[/underline] repository[/dodger_blue1]"
@@ -74,20 +74,24 @@ class NewProject:
         with open(f"{project_dir}/.gitignore", "w") as git_ignore_f:
             if self.cli_args.python:
                 git_ignore_f.write(
-                    textwrap.dedent("""\
+                    textwrap.dedent(
+                        """\
                     .env
                     .vscode/
                     .idea/
                     test/
-                    venv/""")
+                    venv/"""
+                    )
                 )
             else:
                 git_ignore_f.write(
-                    textwrap.dedent("""\
+                    textwrap.dedent(
+                        """\
                     .env
                     .vscode/
                     .idea/
-                    test/""")
+                    test/"""
+                    )
                 )
 
             console.print("▶ [underline].gitignore[/underline] created.")
@@ -97,7 +101,7 @@ class NewProject:
     # * PYTHON
     def create_python_project(self) -> None:
         """
-        Create a python project. Generates a venv.
+        Creates a python project and generates a venv
         """
         self.projects_path_check(projects_dir_name=PY_PROJECTS_DIR_NAME)
 
@@ -271,13 +275,15 @@ class NewProject:
             os.mkdir(f"{new_cpp_project_dir}/src")
             with open(f"{new_cpp_project_dir}/src/main.cpp", "w") as main_f:
                 main_f.write(
-                    textwrap.dedent("""\
+                    textwrap.dedent(
+                        """\
                     #include <iostream>
 
                     int main()
                     {
                         return 0;
-                    }""")
+                    }"""
+                    )
                 )
                 console.print("▶ [underline]main.cpp[/underline] created.")
             console.print("✓ Done." + "\n")
