@@ -3,6 +3,7 @@
 import argparse
 import os
 import subprocess
+import sys
 import textwrap
 
 from pathlib import Path
@@ -115,8 +116,14 @@ class NewProject:
             console.print(
                 "[dodger_blue1]Generating the [underline]venv[/underline]...[/dodger_blue1]"
             )
-            with console.status("[dodger_blue1]Generating...[/dodger_blue1]", spinner="aesthetic"):
-                subprocess.run(["python3", "-m", "venv", f"{new_py_project_dir}/venv"])
+            # MacOS/Linux
+            if sys.platform.startswith("darwin") or sys.platform.startswith("linux"):
+                with console.status("[dodger_blue1]Generating...[/dodger_blue1]", spinner="aesthetic"):
+                    subprocess.run(["python3", "-m", "venv", f"{new_py_project_dir}/venv"])
+            # Windows
+            if sys.platform.startswith("win32"):
+                with console.status("[dodger_blue1]Generating...[/dodger_blue1]", spinner="aesthetic"):
+                    subprocess.run(["virtualenv", f"{new_py_project_dir}/venv"])
             console.print("✓ Done." + "\n")
 
             # Creating the file structure
