@@ -1,0 +1,10 @@
+{
+  "dev_dir": "Developer/projects/",
+  "py_projects_dir_name": "python_projects",
+  "java_projects_dir_name": "java_projects",
+  "go_projects_dir_name": "go_projects",
+  "bash_projects_dir_name": "bash_projects",
+  "rust_projects_dir_name": "rust_projects",
+  "cpp_projects_dir_name": "cpp_projects",
+  "non_specific_projects_dir_name": "non_specific_projects"
+}

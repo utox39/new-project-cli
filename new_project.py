@@ -2,6 +2,7 @@
 
 import argparse
 import os
+import json
 import subprocess
 import sys
 import textwrap
@@ -15,17 +16,24 @@ from rich.console import Console
 # rich config
 console = Console()
 
+# Config file
+CONFIG_FILE: Final[str] = "~/.config/new_project_cli_tool/new_project_config.json"
+
+# Load json config file
+with open(CONFIG_FILE) as config_file:
+    dir_name = json.load(config_file)
+
 # Default Development folder
-DEV_DIR = f"{Path.home()}/Developer/projects/"
+DEV_DIR: Final[str] = f"{Path.home()}/{dir_name['dev_dir']}"
 
 # Projects folder names
-PY_PROJECTS_DIR_NAME: Final = "python_projects"
-JAVA_PROJECTS_DIR_NAME: Final = "java_projects"
-GO_PROJECTS_DIR_NAME: Final = "go_projects"
-BASH_PROJECTS_DIR_NAME: Final = "bash_projects"
-RUST_PROJECTS_DIR_NAME: Final = "rust_projects"
-CPP_PROJECTS_DIR_NAME: Final = "cpp_projects"
-NON_SPECIFIC_PROJECTS_DIR_NAME: Final = "non_specific_projects"
+PY_PROJECTS_DIR_NAME: Final[str] = dir_name["py_projects_dir_name"]
+JAVA_PROJECTS_DIR_NAME: Final[str] = dir_name["java_projects_dir_name"]
+GO_PROJECTS_DIR_NAME: Final[str] = dir_name["go_projects_dir_name"]
+BASH_PROJECTS_DIR_NAME: Final[str] = dir_name["bash_projects_dir_name"]
+RUST_PROJECTS_DIR_NAME: Final[str] = dir_name["rust_projects_dir_name"]
+CPP_PROJECTS_DIR_NAME: Final[str] = dir_name["cpp_projects_dir_name"]
+NON_SPECIFIC_PROJECTS_DIR_NAME: Final[str] = dir_name["non_specific_projects_dir_name"]
 
 
 class NewProject:
@@ -38,11 +46,12 @@ class NewProject:
     @staticmethod
     def dev_dir_check() -> None:
         if not os.path.isdir(DEV_DIR):
-            choice = input("This directory doesn't exists!\nDo you want to create it? [Y/n]: ").lower()
+            choice: str = input("This directory doesn't exists!\nDo you want to create it? [Y/n]: ").lower()
             if choice == "y":
                 os.mkdir(DEV_DIR)
                 console.print(f"{DEV_DIR} dir [underline]created.[/underline]")
             else:
+                console.print("[red]Then please edit the dev_dir in the new_project_config.json file![/red]")
                 sys.exit()
 
     def projects_path_check(self, projects_dir_name: str) -> None:

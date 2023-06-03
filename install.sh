@@ -26,7 +26,7 @@ if [ -f ./requirements.txt ]; then
     mkdir ~/.config/new_project_cli_tool
 
     # copying config file in config folder
-    if [ -f ././new_project_config.json ]; then
+    if [ -f ./new_project_config.json ]; then
         cp ./new_project_config.json ~/.config/new_project_cli_tool/new_project_config.json
     else
         echo "Could not find new_project_config.json file"
@@ -35,8 +35,8 @@ if [ -f ./requirements.txt ]; then
 
     # making new project.py executable and copying it into the bin folder
     if [ -f ./new_project.py ]; then
+        cp ./new_project.py new_project
         chmod +x ./new_project.py
-        mv ./new_project.py new_project
         if [ "$UNAME" == "Linux" ]; then
             sudo cp ./new_project /usr/local/bin/new-project
         elif [ "$UNAME" == "Darwin" ]; then
