@@ -35,12 +35,12 @@ if [ -f ./requirements.txt ]; then
 
     # making new project.py executable and copying it into the bin folder
     if [ -f ./new_project.py ]; then
-        cp ./new_project.py new_project
-        chmod +x ./new_project.py
+        cp ./new_project.py new-project
+        chmod +x ./new-project
         if [ "$UNAME" == "Linux" ]; then
-            sudo cp ./new_project /usr/local/bin/new-project
+            sudo cp ./new-project /usr/local/bin/new-project
         elif [ "$UNAME" == "Darwin" ]; then
-            cp ./new_project ~/bin/
+            cp ./new-project ~/bin/
         fi
     else
         echo "Could not find new_project.py file"
