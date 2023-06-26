@@ -343,7 +343,7 @@ class NewProject:
             # Creating the file structure for the project
             console.print(f"[dodger_blue1]Creating the file structure...[/dodger_blue1]")
             os.mkdir(f"{new_c_project_dir}/src")
-            with open(f"{new_c_project_dir}/src/main.cpp", "w") as main_f:
+            with open(f"{new_c_project_dir}/src/main.c", "w") as main_f:
                 main_f.write(
                     textwrap.dedent(
                         """\
@@ -355,7 +355,7 @@ class NewProject:
                     }"""
                     )
                 )
-                console.print("▶ [underline]main.cpp[/underline] created.")
+                console.print("▶ [underline]main.c[/underline] created.")
             console.print("✓ Done." + "\n")
 
             # git init {project dir}
