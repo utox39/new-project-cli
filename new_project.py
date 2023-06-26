@@ -33,6 +33,7 @@ GO_PROJECTS_DIR_NAME: Final[str] = dir_name["go_projects_dir_name"]
 BASH_PROJECTS_DIR_NAME: Final[str] = dir_name["bash_projects_dir_name"]
 RUST_PROJECTS_DIR_NAME: Final[str] = dir_name["rust_projects_dir_name"]
 CPP_PROJECTS_DIR_NAME: Final[str] = dir_name["cpp_projects_dir_name"]
+CLANG_PROJECTS_DIR_NAME: Final[str] = dir_name["clang_projects_dir_name"]
 NON_SPECIFIC_PROJECTS_DIR_NAME: Final[str] = dir_name["non_specific_projects_dir_name"]
 
 
@@ -326,6 +327,49 @@ class NewProject:
                 f"[orange3]{new_cpp_project_dir}[/orange3] [bold red3]already exists![/bold red3]"
             )
 
+    # * C
+    def create_clang_project(self) -> None:
+        """
+        Create a c project
+        """
+        self.projects_path_check(projects_dir_name=CLANG_PROJECTS_DIR_NAME)
+
+        c_projects_path = os.path.join(DEV_DIR, CLANG_PROJECTS_DIR_NAME)
+        # Creating the project folder
+        new_c_project_dir = f"{c_projects_path}/{self.cli_args.cpp}"
+        try:
+            os.mkdir(new_c_project_dir)
+
+            # Creating the file structure for the project
+            console.print(f"[dodger_blue1]Creating the file structure...[/dodger_blue1]")
+            os.mkdir(f"{new_c_project_dir}/src")
+            with open(f"{new_c_project_dir}/src/main.cpp", "w") as main_f:
+                main_f.write(
+                    textwrap.dedent(
+                        """\
+                    #include <iostream>
+
+                    int main()
+                    {
+                        return 0;
+                    }"""
+                    )
+                )
+                console.print("▶ [underline]main.cpp[/underline] created.")
+            console.print("✓ Done." + "\n")
+
+            # git init {project dir}
+            self.git_init_command(project_dir=new_c_project_dir)
+
+            if self.cli_args.code:
+                self.open_in_vscode(project_dir=new_c_project_dir)
+
+            console.print("[gold1]⫸ Happy Coding![/gold1]")
+        except FileExistsError:
+            console.print(
+                f"[orange3]{new_c_project_dir}[/orange3] [bold red3]already exists![/bold red3]"
+            )
+
     # * NON-SPECIFIC PROJECTS
     def create_non_specific_project(self) -> None:
         """
@@ -365,6 +409,8 @@ class NewProject:
             self.create_rust_project()
         elif self.cli_args.cpp:
             self.create_cpp_project()
+        elif self.cli_args.clang:
+            self.create_clang_project()
         elif self.cli_args.none:
             self.create_non_specific_project()
 
@@ -415,6 +461,11 @@ if __name__ == "__main__":
         "--cpp",
         type=str,
         help="create a new cpp project",
+    )
+    parser.add_argument(
+        "--clang",
+        type=str,
+        help="create a new c project",
     )
     parser.add_argument(
         "--none",
