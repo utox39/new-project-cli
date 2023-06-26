@@ -38,9 +38,9 @@ if [ -f ./requirements.txt ]; then
         cp ./new_project.py new-project
         chmod +x ./new-project
         if [ "$UNAME" == "Linux" ]; then
-            sudo cp ./new-project /usr/local/bin/new-project
+            sudo mv ./new-project /usr/local/bin/new-project
         elif [ "$UNAME" == "Darwin" ]; then
-            cp ./new-project ~/bin/
+            mv ./new-project ~/bin/
         fi
     else
         echo "Could not find new_project.py file"
