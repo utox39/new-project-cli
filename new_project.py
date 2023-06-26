@@ -336,7 +336,7 @@ class NewProject:
 
         c_projects_path = os.path.join(DEV_DIR, CLANG_PROJECTS_DIR_NAME)
         # Creating the project folder
-        new_c_project_dir = f"{c_projects_path}/{self.cli_args.cpp}"
+        new_c_project_dir = f"{c_projects_path}/{self.cli_args.clang}"
         try:
             os.mkdir(new_c_project_dir)
 
