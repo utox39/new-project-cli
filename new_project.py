@@ -97,6 +97,7 @@ class NewProject:
                 git_ignore_f.write(
                     textwrap.dedent(
                         """\
+                    .DS_Store
                     .env
                     .vscode/
                     .idea/
@@ -108,6 +109,7 @@ class NewProject:
                 git_ignore_f.write(
                     textwrap.dedent(
                         """\
+                    .DS_Store
                     .env
                     .vscode/
                     .idea/
