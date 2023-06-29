@@ -16,12 +16,21 @@ from rich.console import Console
 # rich config
 console = Console()
 
+# Error codes
+FILE_NOT_FOUND_ERROR = 204
+DEVELOPMENT_DIR_NOT_FOUND_ERROR = 205
+PROJECT_ALREADY_EXIST_ERROR = 206
+
 # Config file
 CONFIG_FILE: Final[str] = f"{Path.home()}/.config/new_project_cli_tool/new_project_config.json"
 
 # Load json config file
-with open(CONFIG_FILE) as config_file:
-    dir_name = json.load(config_file)
+try:
+    with open(CONFIG_FILE) as config_file:
+        dir_name = json.load(config_file)
+except FileNotFoundError:
+    print(f"Error: Json config file not found")
+    sys.exit(FILE_NOT_FOUND_ERROR)
 
 # Default Development folder
 DEV_DIR: Final[str] = f"{Path.home()}/{dir_name['dev_dir']}"
@@ -47,13 +56,13 @@ class NewProject:
     @staticmethod
     def dev_dir_check() -> None:
         if not os.path.isdir(DEV_DIR):
-            choice: str = input("This directory doesn't exists!\nDo you want to create it? [Y/n]: ").lower()
+            choice: str = input(f"'{DEV_DIR}' doesn't exists!\nDo you want to create it? [Y/n]: ").lower()
             if choice == "y":
                 os.mkdir(DEV_DIR)
                 console.print(f"{DEV_DIR} dir [underline]created.[/underline]")
             else:
                 console.print("[red]Then please edit the dev_dir in the new_project_config.json file![/red]")
-                sys.exit()
+                sys.exit(DEVELOPMENT_DIR_NOT_FOUND_ERROR)
 
     def projects_path_check(self, projects_dir_name: str) -> None:
         """
@@ -170,6 +179,7 @@ class NewProject:
             console.print(
                 f"[orange3]{new_py_project_dir}[/orange3] [bold red3]already exists![/bold red3]"
             )
+            sys.exit(PROJECT_ALREADY_EXIST_ERROR)
 
     # * JAVA
     def create_java_project(self) -> None:
@@ -202,6 +212,7 @@ class NewProject:
             console.print(
                 f"[orange3]{new_java_project_dir}[/orange3] [bold red3]already exists![/bold red3]"
             )
+            sys.exit(PROJECT_ALREADY_EXIST_ERROR)
 
     # * GO
     def create_go_project(self) -> None:
@@ -233,6 +244,7 @@ class NewProject:
             console.print(
                 f"[orange3]{new_go_project_dir}[/orange3] [bold red3]already exists![/bold red3]"
             )
+            sys.exit(PROJECT_ALREADY_EXIST_ERROR)
 
     # * BASH
     def create_bash_project(self) -> None:
@@ -266,6 +278,7 @@ class NewProject:
             console.print(
                 f"[orange3]{new_bash_project_dir}[/orange3] [bold red3]already exists![/bold red3]"
             )
+            sys.exit(PROJECT_ALREADY_EXIST_ERROR)
 
     # * RUST
     def create_rust_project(self) -> None:
@@ -328,6 +341,7 @@ class NewProject:
             console.print(
                 f"[orange3]{new_cpp_project_dir}[/orange3] [bold red3]already exists![/bold red3]"
             )
+            sys.exit(PROJECT_ALREADY_EXIST_ERROR)
 
     # * C
     def create_clang_project(self) -> None:
@@ -371,6 +385,7 @@ class NewProject:
             console.print(
                 f"[orange3]{new_c_project_dir}[/orange3] [bold red3]already exists![/bold red3]"
             )
+            sys.exit(PROJECT_ALREADY_EXIST_ERROR)
 
     # * NON-SPECIFIC PROJECTS
     def create_non_specific_project(self) -> None:
@@ -397,6 +412,7 @@ class NewProject:
             console.print(
                 f"[orange3]{new_non_specific_project_dir}[/orange3] [bold red3]already exists![/bold red3]"
             )
+            sys.exit(PROJECT_ALREADY_EXIST_ERROR)
 
     def handler(self):
         if self.cli_args.python:
