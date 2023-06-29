@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import errno
 import os
 import json
 import subprocess
@@ -16,11 +17,6 @@ from rich.console import Console
 # rich config
 console = Console()
 
-# Error codes
-FILE_NOT_FOUND_ERROR = 204
-DEVELOPMENT_DIR_NOT_FOUND_ERROR = 205
-PROJECT_ALREADY_EXIST_ERROR = 206
-
 # Config file
 CONFIG_FILE: Final[str] = f"{Path.home()}/.config/new_project_cli_tool/new_project_config.json"
 
@@ -30,7 +26,7 @@ try:
         dir_name = json.load(config_file)
 except FileNotFoundError:
     print(f"Error: Json config file not found")
-    sys.exit(FILE_NOT_FOUND_ERROR)
+    sys.exit(errno.ENOENT)
 
 # Default Development folder
 DEV_DIR: Final[str] = f"{Path.home()}/{dir_name['dev_dir']}"
@@ -51,29 +47,34 @@ class NewProject:
         self.cli_args = cli_args
 
     def run(self):
+        self.dev_dir_check()
         self.handler()
 
     @staticmethod
     def dev_dir_check() -> None:
-        if not os.path.isdir(DEV_DIR):
-            choice: str = input(f"'{DEV_DIR}' doesn't exists!\nDo you want to create it? [Y/n]: ").lower()
-            if choice == "y":
-                os.mkdir(DEV_DIR)
-                console.print(f"{DEV_DIR} dir [underline]created.[/underline]")
-            else:
-                console.print("[red]Then please edit the dev_dir in the new_project_config.json file![/red]")
-                sys.exit(DEVELOPMENT_DIR_NOT_FOUND_ERROR)
+        """
+        Check if the development folder exists
+        """
+        try:
+            if not os.path.isdir(DEV_DIR):
+                raise FileNotFoundError
+        except FileNotFoundError:
+            print(f"Error: {DEV_DIR} does not exists")
+            sys.exit(errno.ENOENT)
 
-    def projects_path_check(self, projects_dir_name: str) -> None:
+    @staticmethod
+    def projects_path_check(projects_dir_to_check: str) -> None:
         """
-        Check if the parsed programming language projects folder exists
-        :param projects_dir_name: (str) name of the programming language projects folder
+        Check if the specified programming language project folder exists
+        :param projects_dir_to_check: (str) name of the programming language projects folder
         """
-        self.dev_dir_check()
-        projects_path = os.path.join(DEV_DIR, projects_dir_name)
-        if not os.path.isdir(projects_path):
-            os.mkdir(projects_path)
-            console.print(f"{projects_dir_name} dir [underline]created.[/underline]")
+        projects_path = os.path.join(DEV_DIR, projects_dir_to_check)
+        try:
+            if not os.path.isdir(projects_path):
+                raise FileNotFoundError
+        except FileNotFoundError:
+            print(f"{projects_path} does not exists")
+            sys.exit(errno.ENOENT)
 
     @staticmethod
     def open_in_vscode(project_dir: str) -> None:
@@ -130,128 +131,115 @@ class NewProject:
 
         console.print("✓ Done." + "\n")
 
-    # * PYTHON
-    def create_python_project(self) -> None:
-        """
-        Creates a python project and generates a venv
-        """
-        self.projects_path_check(projects_dir_name=PY_PROJECTS_DIR_NAME)
+    def create_project(self, projects_dir_name: str, project_name: str, file_name: str):
+        # check if the specified projects folder exists
+        self.projects_path_check(projects_dir_to_check=projects_dir_name)
 
-        py_projects_path = os.path.join(DEV_DIR, PY_PROJECTS_DIR_NAME)
+        projects_path = os.path.join(DEV_DIR, projects_dir_name)
         # Creating the project folder
-        new_py_project_dir = f"{py_projects_path}/{self.cli_args.python}"
-        try:
-            os.mkdir(new_py_project_dir)
+        new_project_dir = f"{projects_path}/{project_name}"
 
-            # python -m venv NEW_PROJECT_DIR/venv
-            console.print(
-                "[dodger_blue1]Generating the [underline]venv[/underline]...[/dodger_blue1]"
-            )
-            # MacOS/Linux
-            if sys.platform.startswith("darwin") or sys.platform.startswith("linux"):
-                with console.status("[dodger_blue1]Generating...[/dodger_blue1]", spinner="aesthetic"):
-                    subprocess.run(["python3", "-m", "venv", f"{new_py_project_dir}/venv"])
-            # Windows
-            if sys.platform.startswith("win32"):
-                with console.status("[dodger_blue1]Generating...[/dodger_blue1]", spinner="aesthetic"):
-                    subprocess.run(["virtualenv", f"{new_py_project_dir}/venv"])
-            console.print("✓ Done." + "\n")
+        try:
+            os.mkdir(new_project_dir)
+
+            if self.cli_args.python:
+                # python -m venv NEW_PROJECT_DIR/venv
+                console.print(
+                    "[dodger_blue1]Generating the [underline]venv[/underline]...[/dodger_blue1]"
+                )
+                # MacOS/Linux
+                if sys.platform.startswith("darwin") or sys.platform.startswith("linux"):
+                    with console.status("[dodger_blue1]Generating...[/dodger_blue1]", spinner="aesthetic"):
+                        subprocess.run(["python3", "-m", "venv", f"{new_project_dir}/venv"])
+                # Windows
+                if sys.platform.startswith("win32"):
+                    with console.status("[dodger_blue1]Generating...[/dodger_blue1]", spinner="aesthetic"):
+                        subprocess.run(["virtualenv", f"{new_project_dir}/venv"])
+                console.print("✓ Done." + "\n")
 
             # Creating the file structure
             console.print(f"[dodger_blue1]Creating the file structure...[/dodger_blue1]")
-            with open(f"{new_py_project_dir}/main.py", "x"):
-                console.print("▶ [underline]main.py[/underline] created.")
+            with open(f"{new_project_dir}/{file_name}", "x"):
+                console.print(f"▶ [underline]{file_name}[/underline] created.")
             console.print("✓ Done." + "\n")
 
-            # git init {project dir}
-            self.git_init_command(project_dir=new_py_project_dir)
+            # git init
+            self.git_init_command(project_dir=new_project_dir)
 
             if self.cli_args.code:
-                self.open_in_vscode(project_dir=new_py_project_dir)
+                self.open_in_vscode(project_dir=new_project_dir)
 
             if self.cli_args.pycharm:
-                self.open_in_pycharm(project_dir=new_py_project_dir)
+                self.open_in_pycharm(project_dir=new_project_dir)
 
             console.print("[gold1]⫸ Happy Coding![/gold1]")
 
             # cd into the new project dir
         except FileExistsError:
             console.print(
-                f"[orange3]{new_py_project_dir}[/orange3] [bold red3]already exists![/bold red3]"
+                f"{new_project_dir} [bold red3]already exists![/bold red3]"
             )
-            sys.exit(PROJECT_ALREADY_EXIST_ERROR)
+            sys.exit(errno.EEXIST)
+
+    # * PYTHON
+    def create_python_project(self) -> None:
+        """
+        Creates a python project and generates a venv
+        """
+
+        self.create_project(
+            projects_dir_name=PY_PROJECTS_DIR_NAME,
+            project_name=self.cli_args.python,
+            file_name="main.py"
+        )
 
     # * JAVA
     def create_java_project(self) -> None:
         """
         Create a java projects
         """
-        self.projects_path_check(projects_dir_name=JAVA_PROJECTS_DIR_NAME)
 
-        java_projects_path = os.path.join(DEV_DIR, JAVA_PROJECTS_DIR_NAME)
-        # Creating the project folder
-        new_java_project_dir = f"{java_projects_path}/{self.cli_args.java}"
-        try:
-            os.mkdir(new_java_project_dir)
-
-            # Creating the file structure for the project
-            console.print(f"[dodger_blue1]Creating the file structure...[/dodger_blue1]")
-            os.mkdir(f"{new_java_project_dir}/src")
-            with open(f"{new_java_project_dir}/src/Main.java", "x"):
-                console.print("▶ [underline]Main.java[/underline] created.")
-            console.print("✓ Done." + "\n")
-
-            # git init {project dir}
-            self.git_init_command(project_dir=new_java_project_dir)
-
-            if self.cli_args.code:
-                self.open_in_vscode(project_dir=new_java_project_dir)
-
-            console.print("[gold1]⫸ Happy Coding![/gold1]")
-        except FileExistsError:
-            console.print(
-                f"[orange3]{new_java_project_dir}[/orange3] [bold red3]already exists![/bold red3]"
-            )
-            sys.exit(PROJECT_ALREADY_EXIST_ERROR)
+        self.create_project(
+            projects_dir_name=JAVA_PROJECTS_DIR_NAME,
+            project_name=self.cli_args.java,
+            file_name="Main.java")
 
     # * GO
     def create_go_project(self) -> None:
         """
         Create a go projects
         """
-        self.projects_path_check(projects_dir_name=GO_PROJECTS_DIR_NAME)
 
-        go_projects_path = os.path.join(DEV_DIR, GO_PROJECTS_DIR_NAME)
-        # Creating the project folder
-        new_go_project_dir = f"{go_projects_path}/{self.cli_args.go}"
-        try:
-            os.mkdir(new_go_project_dir)
+        self.create_project(
+            projects_dir_name=GO_PROJECTS_DIR_NAME,
+            project_name=self.cli_args.go,
+            file_name="main.go")
 
-            # Creating the file structure for the project
-            console.print(f"[dodger_blue1]Creating the file structure...[/dodger_blue1]")
-            with open(f"{new_go_project_dir}/main.go", "x"):
-                console.print("▶ [underline]main.go[/underline] created.")
-            console.print("✓ Done." + "\n")
+    # * RUST
+    def create_rust_project(self) -> None:
+        """
+        Create a rust project
+        """
+        self.projects_path_check(projects_dir_to_check=RUST_PROJECTS_DIR_NAME)
 
-            # git init {project dir}
-            self.git_init_command(project_dir=new_go_project_dir)
+        rust_projects_path = os.path.join(DEV_DIR, RUST_PROJECTS_DIR_NAME)
+        # Creating the project folder and file structure for the project
+        console.print(f"[dodger_blue1]Creating the file structure...[/dodger_blue1]")
+        new_rust_project_dir = f"{rust_projects_path}/{self.cli_args.rust}"
+        subprocess.run(["cargo", "new", new_rust_project_dir])
+        console.print("✓ Done." + "\n")
 
-            if self.cli_args.code:
-                self.open_in_vscode(project_dir=new_go_project_dir)
+        if self.cli_args.code:
+            self.open_in_vscode(project_dir=new_rust_project_dir)
 
-            console.print("[gold1]⫸ Happy Coding![/gold1]")
-        except FileExistsError:
-            console.print(
-                f"[orange3]{new_go_project_dir}[/orange3] [bold red3]already exists![/bold red3]"
-            )
-            sys.exit(PROJECT_ALREADY_EXIST_ERROR)
+        console.print("[gold1]⫸ Happy Coding![/gold1]")
 
     # * BASH
     def create_bash_project(self) -> None:
         """
         Create a bash project
         """
-        self.projects_path_check(projects_dir_name=BASH_PROJECTS_DIR_NAME)
+        self.projects_path_check(projects_dir_to_check=BASH_PROJECTS_DIR_NAME)
 
         bash_projects_path = os.path.join(DEV_DIR, BASH_PROJECTS_DIR_NAME)
         # Creating the project folder
@@ -276,35 +264,16 @@ class NewProject:
             console.print("[gold1]⫸ Happy Coding![/gold1]")
         except FileExistsError:
             console.print(
-                f"[orange3]{new_bash_project_dir}[/orange3] [bold red3]already exists![/bold red3]"
+                f"{new_bash_project_dir} [bold red3]already exists![/bold red3]"
             )
-            sys.exit(PROJECT_ALREADY_EXIST_ERROR)
-
-    # * RUST
-    def create_rust_project(self) -> None:
-        """
-        Create a rust project
-        """
-        self.projects_path_check(projects_dir_name=RUST_PROJECTS_DIR_NAME)
-
-        rust_projects_path = os.path.join(DEV_DIR, RUST_PROJECTS_DIR_NAME)
-        # Creating the project folder and file structure for the project
-        console.print(f"[dodger_blue1]Creating the file structure...[/dodger_blue1]")
-        new_rust_project_dir = f"{rust_projects_path}/{self.cli_args.rust}"
-        subprocess.run(["cargo", "new", new_rust_project_dir])
-        console.print("✓ Done." + "\n")
-
-        if self.cli_args.code:
-            self.open_in_vscode(project_dir=new_rust_project_dir)
-
-        console.print("[gold1]⫸ Happy Coding![/gold1]")
+            sys.exit(errno.EEXIST)
 
     # * CPP
     def create_cpp_project(self) -> None:
         """
         Create a cpp project
         """
-        self.projects_path_check(projects_dir_name=CPP_PROJECTS_DIR_NAME)
+        self.projects_path_check(projects_dir_to_check=CPP_PROJECTS_DIR_NAME)
 
         cpp_projects_path = os.path.join(DEV_DIR, CPP_PROJECTS_DIR_NAME)
         # Creating the project folder
@@ -339,16 +308,16 @@ class NewProject:
             console.print("[gold1]⫸ Happy Coding![/gold1]")
         except FileExistsError:
             console.print(
-                f"[orange3]{new_cpp_project_dir}[/orange3] [bold red3]already exists![/bold red3]"
+                f"{new_cpp_project_dir} [bold red3]already exists![/bold red3]"
             )
-            sys.exit(PROJECT_ALREADY_EXIST_ERROR)
+            sys.exit(errno.EEXIST)
 
     # * C
     def create_clang_project(self) -> None:
         """
         Create a c project
         """
-        self.projects_path_check(projects_dir_name=CLANG_PROJECTS_DIR_NAME)
+        self.projects_path_check(projects_dir_to_check=CLANG_PROJECTS_DIR_NAME)
 
         c_projects_path = os.path.join(DEV_DIR, CLANG_PROJECTS_DIR_NAME)
         # Creating the project folder
@@ -383,16 +352,16 @@ class NewProject:
             console.print("[gold1]⫸ Happy Coding![/gold1]")
         except FileExistsError:
             console.print(
-                f"[orange3]{new_c_project_dir}[/orange3] [bold red3]already exists![/bold red3]"
+                f"{new_c_project_dir} [bold red3]already exists![/bold red3]"
             )
-            sys.exit(PROJECT_ALREADY_EXIST_ERROR)
+            sys.exit(errno.EEXIST)
 
     # * NON-SPECIFIC PROJECTS
     def create_non_specific_project(self) -> None:
         """
         Create a non specific project
         """
-        self.projects_path_check(projects_dir_name=NON_SPECIFIC_PROJECTS_DIR_NAME)
+        self.projects_path_check(projects_dir_to_check=NON_SPECIFIC_PROJECTS_DIR_NAME)
 
         non_specific_projects_path = os.path.join(DEV_DIR, NON_SPECIFIC_PROJECTS_DIR_NAME)
         # Creating the project folder
@@ -410,9 +379,9 @@ class NewProject:
             console.print("[gold1]⫸ Happy Coding![/gold1]")
         except FileExistsError:
             console.print(
-                f"[orange3]{new_non_specific_project_dir}[/orange3] [bold red3]already exists![/bold red3]"
+                f"{new_non_specific_project_dir} [bold red3]already exists![/bold red3]"
             )
-            sys.exit(PROJECT_ALREADY_EXIST_ERROR)
+            sys.exit(errno.EEXIST)
 
     def handler(self):
         if self.cli_args.python:
