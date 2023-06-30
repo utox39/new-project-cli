@@ -43,39 +43,112 @@ CLANG_PROJECTS_DIR_NAME: Final[str] = dir_name["clang_projects_dir_name"]
 NON_SPECIFIC_PROJECTS_DIR_NAME: Final[str] = dir_name["non_specific_projects_dir_name"]
 
 
+def argparse_config():
+    # argparse config
+    parser = argparse.ArgumentParser(
+        description="A CLI tool to create a new project",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=textwrap.dedent(
+            """
+        Examples:
+        new_project --python PROJECT_NAME            #create a new python project
+        new_project --java PROJECT_NAME              #create a new java project
+        new_project --go PROJECT_NAME                #create a new go project
+        new_project --none PROJECT_NAME              #create a new non-specific project
+        new_project --code --python PROJECT_NAME     #open the new project in VSCode
+        new_project --pycharm --python PROJECT_NAME  #open the new project in PyCharm
+        """
+        ),
+    )
+    parser.add_argument(
+        "--python",
+        type=str,
+        help="create a new python project",
+    )
+    parser.add_argument(
+        "--java",
+        type=str,
+        help="create a new java project",
+    )
+    parser.add_argument(
+        "--go",
+        type=str,
+        help="create a new go project",
+    )
+    parser.add_argument(
+        "--bash",
+        type=str,
+        help="create a new bash project",
+    )
+    parser.add_argument(
+        "--rust",
+        type=str,
+        help="create a new rust project",
+    )
+    parser.add_argument(
+        "--cpp",
+        type=str,
+        help="create a new cpp project",
+    )
+    parser.add_argument(
+        "--clang",
+        type=str,
+        help="create a new c project",
+    )
+    parser.add_argument(
+        "--none",
+        type=str,
+        help="create a non-specific project",
+    )
+    parser.add_argument(
+        "--code",
+        action="store_true",
+        help="open the project in Visual Studio Code",
+    )
+    parser.add_argument(
+        "--pycharm",
+        action="store_true",
+        help="open the project in PyCharm",
+    )
+
+    print(type(parser.parse_args))
+
+    return parser.parse_args()
+
+
+def dev_dir_check() -> None:
+    """
+    Check if the development folder exists
+    """
+    try:
+        if not os.path.isdir(DEV_DIR):
+            raise FileNotFoundError
+    except FileNotFoundError:
+        print(f"Error: {DEV_DIR} does not exists")
+        sys.exit(errno.ENOENT)
+
+
+def projects_path_check(projects_dir_to_check: str) -> None:
+    """
+    Check if the specified programming language project folder exists
+    :param projects_dir_to_check: (str) name of the programming language projects folder
+    """
+    projects_path = os.path.join(DEV_DIR, projects_dir_to_check)
+    try:
+        if not os.path.isdir(projects_path):
+            raise FileNotFoundError
+    except FileNotFoundError:
+        print(f"{projects_path} does not exists")
+        sys.exit(errno.ENOENT)
+
+
 class NewProject:
     def __init__(self, cli_args):
         self.cli_args = cli_args
 
     def run(self):
-        self.dev_dir_check()
+        dev_dir_check()
         self.handler()
-
-    @staticmethod
-    def dev_dir_check() -> None:
-        """
-        Check if the development folder exists
-        """
-        try:
-            if not os.path.isdir(DEV_DIR):
-                raise FileNotFoundError
-        except FileNotFoundError:
-            print(f"Error: {DEV_DIR} does not exists")
-            sys.exit(errno.ENOENT)
-
-    @staticmethod
-    def projects_path_check(projects_dir_to_check: str) -> None:
-        """
-        Check if the specified programming language project folder exists
-        :param projects_dir_to_check: (str) name of the programming language projects folder
-        """
-        projects_path = os.path.join(DEV_DIR, projects_dir_to_check)
-        try:
-            if not os.path.isdir(projects_path):
-                raise FileNotFoundError
-        except FileNotFoundError:
-            print(f"{projects_path} does not exists")
-            sys.exit(errno.ENOENT)
 
     @staticmethod
     def open_in_vscode(project_dir: str) -> None:
@@ -155,7 +228,7 @@ class NewProject:
 
     def create_project(self, projects_dir_name: str, project_name: str, file_name: str = "", file_content: str = ""):
         # check if the specified projects folder exists
-        self.projects_path_check(projects_dir_to_check=projects_dir_name)
+        projects_path_check(projects_dir_to_check=projects_dir_name)
 
         projects_path = os.path.join(DEV_DIR, projects_dir_name)
         # Creating the project folder
@@ -231,7 +304,7 @@ class NewProject:
         """
         Create a rust project
         """
-        self.projects_path_check(projects_dir_to_check=RUST_PROJECTS_DIR_NAME)
+        projects_path_check(projects_dir_to_check=RUST_PROJECTS_DIR_NAME)
 
         rust_projects_path = os.path.join(DEV_DIR, RUST_PROJECTS_DIR_NAME)
         # Creating the project folder and file structure for the project
@@ -337,73 +410,7 @@ class NewProject:
 
 
 if __name__ == "__main__":
-    # argparse config
-    parser = argparse.ArgumentParser(
-        description="A CLI tool to create a new project",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog=textwrap.dedent(
-            """
-        Examples:
-        new_project --python PROJECT_NAME            #create a new python project
-        new_project --java PROJECT_NAME              #create a new java project
-        new_project --go PROJECT_NAME                #create a new go project
-        new_project --none PROJECT_NAME              #create a new non-specific project
-        new_project --code --python PROJECT_NAME     #open the new project in VSCode
-        new_project --pycharm --python PROJECT_NAME  #open the new project in PyCharm
-        """
-        ),
-    )
-    parser.add_argument(
-        "--python",
-        type=str,
-        help="create a new python project",
-    )
-    parser.add_argument(
-        "--java",
-        type=str,
-        help="create a new java project",
-    )
-    parser.add_argument(
-        "--go",
-        type=str,
-        help="create a new go project",
-    )
-    parser.add_argument(
-        "--bash",
-        type=str,
-        help="create a new bash project",
-    )
-    parser.add_argument(
-        "--rust",
-        type=str,
-        help="create a new rust project",
-    )
-    parser.add_argument(
-        "--cpp",
-        type=str,
-        help="create a new cpp project",
-    )
-    parser.add_argument(
-        "--clang",
-        type=str,
-        help="create a new c project",
-    )
-    parser.add_argument(
-        "--none",
-        type=str,
-        help="create a non-specific project",
-    )
-    parser.add_argument(
-        "--code",
-        action="store_true",
-        help="open the project in Visual Studio Code",
-    )
-    parser.add_argument(
-        "--pycharm",
-        action="store_true",
-        help="open the project in PyCharm",
-    )
-    args = parser.parse_args()
+    args = argparse_config()
 
     new_project = NewProject(cli_args=args)
     new_project.run()
