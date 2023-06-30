@@ -57,6 +57,7 @@ def argparse_config():
         new_project --none PROJECT_NAME              #create a new non-specific project
         new_project --code --python PROJECT_NAME     #open the new project in VSCode
         new_project --pycharm --python PROJECT_NAME  #open the new project in PyCharm
+        new_project --idea --python PROJECT_NAME  #open the new project in Intellij IDEA
         """
         ),
     )
@@ -110,6 +111,11 @@ def argparse_config():
         action="store_true",
         help="open the project in PyCharm",
     )
+    parser.add_argument(
+        "--idea",
+        action="store_true",
+        help="open the project in IntelliJ IDEA",
+    )
 
     return parser.parse_args()
 
@@ -149,20 +155,16 @@ class NewProject:
         self.handler()
 
     @staticmethod
-    def open_in_vscode(project_dir: str) -> None:
+    def open_in_ide(ide_command: str, project_dir: str) -> None:
         """
-        Open the project in Visual Studio Code
-        :param project_dir: (str) project directory
+        Open the project in the specified IDE
+        :param ide_command: (str) the console command to open the IDE
+        :param project_dir: (str) the project directory to open in the IDE
         """
-        subprocess.run(["code", f"{project_dir}"])
-
-    @staticmethod
-    def open_in_pycharm(project_dir: str) -> None:
-        """
-        Open the python project in PyCharm
-        :param project_dir: (str) project directory
-        """
-        subprocess.run(["pycharm", f"{project_dir}"])
+        try:
+            subprocess.run([f"{ide_command}", f"{project_dir}"])
+        except Exception as open_in_ide_error:
+            print(f"Error: {open_in_ide_error}\nCould not open project in IDE")
 
     def git_init_command(self, project_dir: str) -> None:
         """
@@ -246,11 +248,13 @@ class NewProject:
             # git init
             self.git_init_command(project_dir=new_project_dir)
 
+            # Open in IDE
             if self.cli_args.code:
-                self.open_in_vscode(project_dir=new_project_dir)
-
-            if self.cli_args.pycharm:
-                self.open_in_pycharm(project_dir=new_project_dir)
+                self.open_in_ide(ide_command="code", project_dir=new_project_dir)
+            elif self.cli_args.pycharm:
+                self.open_in_ide(ide_command="pycharm", project_dir=new_project_dir)
+            elif self.cli_args.idea:
+                self.open_in_ide(ide_command="idea", project_dir=new_project_dir)
 
             console.print("[gold1]⫸ Happy Coding![/gold1]")
 
@@ -296,25 +300,6 @@ class NewProject:
             project_name=self.cli_args.go,
             file_name="main.go"
         )
-
-    # * RUST
-    def create_rust_project(self) -> None:
-        """
-        Create a rust project
-        """
-        projects_path_check(projects_dir_to_check=RUST_PROJECTS_DIR_NAME)
-
-        rust_projects_path = os.path.join(DEV_DIR, RUST_PROJECTS_DIR_NAME)
-        # Creating the project folder and file structure for the project
-        console.print(f"[dodger_blue1]Creating the file structure...[/dodger_blue1]")
-        new_rust_project_dir = f"{rust_projects_path}/{self.cli_args.rust}"
-        subprocess.run(["cargo", "new", new_rust_project_dir])
-        console.print("✓ Done." + "\n")
-
-        if self.cli_args.code:
-            self.open_in_vscode(project_dir=new_rust_project_dir)
-
-        console.print("[gold1]⫸ Happy Coding![/gold1]")
 
     # * BASH
     def create_bash_project(self) -> None:
@@ -387,6 +372,30 @@ class NewProject:
             projects_dir_name=NON_SPECIFIC_PROJECTS_DIR_NAME,
             project_name=self.cli_args.none,
         )
+
+    # * RUST
+    def create_rust_project(self) -> None:
+        """
+        Create a rust project
+        """
+        projects_path_check(projects_dir_to_check=RUST_PROJECTS_DIR_NAME)
+
+        rust_projects_path = os.path.join(DEV_DIR, RUST_PROJECTS_DIR_NAME)
+        # Creating the project folder and file structure for the project
+        console.print(f"[dodger_blue1]Creating the file structure...[/dodger_blue1]")
+        new_rust_project_dir = f"{rust_projects_path}/{self.cli_args.rust}"
+        subprocess.run(["cargo", "new", new_rust_project_dir])
+        console.print("✓ Done." + "\n")
+
+        # Open in IDE
+        if self.cli_args.code:
+            self.open_in_ide(ide_command="code", project_dir=new_rust_project_dir)
+        elif self.cli_args.pycharm:
+            self.open_in_ide(ide_command="pycharm", project_dir=new_rust_project_dir)
+        elif self.cli_args.idea:
+            self.open_in_ide(ide_command="idea", project_dir=new_rust_project_dir)
+
+        console.print("[gold1]⫸ Happy Coding![/gold1]")
 
     def handler(self):
         if self.cli_args.python:
