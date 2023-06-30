@@ -111,8 +111,6 @@ def argparse_config():
         help="open the project in PyCharm",
     )
 
-    print(type(parser.parse_args))
-
     return parser.parse_args()
 
 
