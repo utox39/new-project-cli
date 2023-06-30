@@ -40,7 +40,7 @@ if [ -f ./requirements.txt ]; then
         if [ "$UNAME" == "Linux" ]; then
             sudo mv ./new-project /usr/local/bin/new-project
         elif [ "$UNAME" == "Darwin" ]; then
-            mv ./new-project ~/bin/
+            sudo mv ./new-project /usr/local/bin/new-project
         fi
     else
         echo "Could not find new_project.py file"
