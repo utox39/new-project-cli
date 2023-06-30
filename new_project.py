@@ -7,6 +7,7 @@ import json
 import subprocess
 import sys
 import textwrap
+import venv
 
 from pathlib import Path
 from typing import Final
@@ -131,6 +132,18 @@ class NewProject:
 
         console.print("✓ Done." + "\n")
 
+    @staticmethod
+    def create_python_venv(new_project_path):
+        console.print(
+            "[dodger_blue1]Generating the [underline]venv[/underline]...[/dodger_blue1]"
+        )
+        try:
+            venv.create(f"{new_project_path}/venv")
+            console.print("✓ Done." + "\n")
+        except Exception as venv_exception:
+            print(f"Error: {venv_exception}")
+            sys.exit(1)
+
     def create_project(self, projects_dir_name: str, project_name: str, file_name: str):
         # check if the specified projects folder exists
         self.projects_path_check(projects_dir_to_check=projects_dir_name)
@@ -143,19 +156,8 @@ class NewProject:
             os.mkdir(new_project_dir)
 
             if self.cli_args.python:
-                # python -m venv NEW_PROJECT_DIR/venv
-                console.print(
-                    "[dodger_blue1]Generating the [underline]venv[/underline]...[/dodger_blue1]"
-                )
-                # MacOS/Linux
-                if sys.platform.startswith("darwin") or sys.platform.startswith("linux"):
-                    with console.status("[dodger_blue1]Generating...[/dodger_blue1]", spinner="aesthetic"):
-                        subprocess.run(["python3", "-m", "venv", f"{new_project_dir}/venv"])
-                # Windows
-                if sys.platform.startswith("win32"):
-                    with console.status("[dodger_blue1]Generating...[/dodger_blue1]", spinner="aesthetic"):
-                        subprocess.run(["virtualenv", f"{new_project_dir}/venv"])
-                console.print("✓ Done." + "\n")
+                # Generating a python venv for the project
+                self.create_python_venv(new_project_path=new_project_dir)
 
             # Creating the file structure
             console.print(f"[dodger_blue1]Creating the file structure...[/dodger_blue1]")
