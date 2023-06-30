@@ -206,7 +206,7 @@ class NewProject:
         console.print("✓ Done." + "\n")
 
     @staticmethod
-    def create_and_write_file(new_project_dir, file_name, content):
+    def create_and_write_file(new_project_dir: str, file_name: str, content: str) -> None:
         # Creating the file structure
         console.print(f"[dodger_blue1]Creating the file structure...[/dodger_blue1]")
         with open(f"{new_project_dir}/{file_name}", "w") as project_file:
@@ -215,7 +215,7 @@ class NewProject:
         console.print("✓ Done." + "\n")
 
     @staticmethod
-    def create_python_venv(new_project_path):
+    def create_python_venv(new_project_path: str) -> None:
         console.print(
             "[dodger_blue1]Generating the [underline]venv[/underline]...[/dodger_blue1]"
         )
