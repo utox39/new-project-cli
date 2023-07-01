@@ -220,8 +220,13 @@ class NewProject:
             "[dodger_blue1]Generating the [underline]venv[/underline]...[/dodger_blue1]"
         )
         try:
-            venv.create(f"{new_project_path}/venv")
-            console.print("✓ Done." + "\n")
+            if sys.platform.startswith("darwin") or sys.platform.startswith("linux"):
+                with console.status("[dodger_blue1]Generating...[/dodger_blue1]", spinner="aesthetic"):
+                    subprocess.run(["python3", "-m", "venv", f"{new_project_path}/venv"])
+                # Windows
+            if sys.platform.startswith("win32"):
+                with console.status("[dodger_blue1]Generating...[/dodger_blue1]", spinner="aesthetic"):
+                    subprocess.run(["virtualenv", f"{new_project_path}/venv"])
         except Exception as venv_exception:
             print(f"Error: {venv_exception}")
             sys.exit(1)
