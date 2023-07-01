@@ -166,8 +166,6 @@ def create_project(
         project_name: str,
         file_name: str = "",
         file_content: str = "",
-        create_venv: bool = False,
-        none_project: bool = False,
         ide: str = "",
 ):
     """
@@ -176,8 +174,6 @@ def create_project(
     :param project_name: (str) the name of the new project
     :param file_name: (str) the name of the file
     :param file_content: (str) content to write to file
-    :param create_venv: (bool) if true creates a venv
-    :param none_project: (bool) if true creates a non-specific project
     :param ide: (str) the name of the IDE where you want to open the new project
     """
     # check if the specified projects folder exists
@@ -190,12 +186,12 @@ def create_project(
     try:
         os.mkdir(new_project_dir)
 
-        if create_venv:
+        if projects_dir_name == PY_PROJECTS_DIR_NAME:
             # Generating a python venv for the project
             create_python_venv(new_project_path=new_project_dir)
 
         # Creating the file structure
-        if not none_project:
+        if projects_dir_name != NON_SPECIFIC_PROJECTS_DIR_NAME:
             create_and_write_file(new_project_dir=new_project_dir, file_name=file_name, content=file_content)
 
         # git init
@@ -260,19 +256,9 @@ def handle(
 
 ):
     """
-    Handles the command line arguments and options
-    :param project_name: (str) the name of the new project
-    :param python: (bool) if true creates a python project
-    :param java: (bool) if true creates a java project
-    :param go: (bool) if true creates a go project
-    :param bash: (bool) if true creates a bash project
-    :param cpp: (bool) if true creates a cpp project
-    :param clang: (bool) if true creates a c project
-    :param rust: (bool) if true creates a rust project
-    :param none: (bool) if true creates a non-specific project
-    :param code: (bool) if true opens the project in VS Code
-    :param pycharm: (bool) if true opens the project in PyCharm
-    :param idea: (bool) if true opens the project in Intellij IDEA
+    Create a new project via terminal
+
+    Coded with <3 by utox39
     """
     ide_name = ""
     if code:
@@ -289,7 +275,6 @@ def handle(
                 project_name=project_name,
                 file_name="main.py",
                 file_content="#!/usr/bin/env python3",
-                create_venv=True,
                 ide=ide_name,
             )
         elif java:
@@ -361,7 +346,6 @@ def handle(
             create_project(
                 projects_dir_name=NON_SPECIFIC_PROJECTS_DIR_NAME,
                 project_name=project_name,
-                none_project=True,
                 ide=ide_name,
             )
         else:
