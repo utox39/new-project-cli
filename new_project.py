@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 
-import argparse
 import errno
 import os
 import json
 import subprocess
 import sys
 import textwrap
-import venv
+import typer
 
 from pathlib import Path
+from typing_extensions import Annotated
 from typing import Final
 
 # rich
@@ -43,84 +43,7 @@ CLANG_PROJECTS_DIR_NAME: Final[str] = dir_name["clang_projects_dir_name"]
 NON_SPECIFIC_PROJECTS_DIR_NAME: Final[str] = dir_name["non_specific_projects_dir_name"]
 
 
-def argparse_config():
-    # argparse config
-    parser = argparse.ArgumentParser(
-        description="A CLI tool to create a new project",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog=textwrap.dedent(
-            """
-        Examples:
-        new_project --python PROJECT_NAME            #create a new python project
-        new_project --java PROJECT_NAME              #create a new java project
-        new_project --go PROJECT_NAME                #create a new go project
-        new_project --none PROJECT_NAME              #create a new non-specific project
-        new_project --code --python PROJECT_NAME     #open the new project in VSCode
-        new_project --pycharm --python PROJECT_NAME  #open the new project in PyCharm
-        new_project --idea --python PROJECT_NAME  #open the new project in Intellij IDEA
-        """
-        ),
-    )
-    parser.add_argument(
-        "--python",
-        type=str,
-        help="create a new python project",
-    )
-    parser.add_argument(
-        "--java",
-        type=str,
-        help="create a new java project",
-    )
-    parser.add_argument(
-        "--go",
-        type=str,
-        help="create a new go project",
-    )
-    parser.add_argument(
-        "--bash",
-        type=str,
-        help="create a new bash project",
-    )
-    parser.add_argument(
-        "--rust",
-        type=str,
-        help="create a new rust project",
-    )
-    parser.add_argument(
-        "--cpp",
-        type=str,
-        help="create a new cpp project",
-    )
-    parser.add_argument(
-        "--clang",
-        type=str,
-        help="create a new c project",
-    )
-    parser.add_argument(
-        "--none",
-        type=str,
-        help="create a non-specific project",
-    )
-    parser.add_argument(
-        "--code",
-        action="store_true",
-        help="open the project in Visual Studio Code",
-    )
-    parser.add_argument(
-        "--pycharm",
-        action="store_true",
-        help="open the project in PyCharm",
-    )
-    parser.add_argument(
-        "--idea",
-        action="store_true",
-        help="open the project in IntelliJ IDEA",
-    )
-
-    return parser.parse_args()
-
-
-def dev_dir_check() -> None:
+def dev_dir_check() -> bool:
     """
     Check if the development folder exists
     """
@@ -130,6 +53,8 @@ def dev_dir_check() -> None:
     except FileNotFoundError:
         print(f"Error: {DEV_DIR} does not exists")
         sys.exit(errno.ENOENT)
+    else:
+        return True
 
 
 def projects_path_check(projects_dir_to_check: str) -> None:
@@ -146,283 +71,268 @@ def projects_path_check(projects_dir_to_check: str) -> None:
         sys.exit(errno.ENOENT)
 
 
-class NewProject:
-    def __init__(self, cli_args):
-        self.cli_args = cli_args
+def open_in_ide(ide_command: str, project_dir: str) -> None:
+    """
+    Open the project in the specified IDE
+    :param ide_command: (str) the console command to open the IDE
+    :param project_dir: (str) the project directory to open in the IDE
+    """
+    try:
+        subprocess.run([f"{ide_command}", f"{project_dir}"])
+    except Exception as open_in_ide_error:
+        print(f"Error: {open_in_ide_error}\nCould not open project in IDE")
 
-    def run(self):
-        dev_dir_check()
-        self.handler()
 
-    @staticmethod
-    def open_in_ide(ide_command: str, project_dir: str) -> None:
-        """
-        Open the project in the specified IDE
-        :param ide_command: (str) the console command to open the IDE
-        :param project_dir: (str) the project directory to open in the IDE
-        """
-        try:
-            subprocess.run([f"{ide_command}", f"{project_dir}"])
-        except Exception as open_in_ide_error:
-            print(f"Error: {open_in_ide_error}\nCould not open project in IDE")
+def git_init_command(project_dir: str, projects_dir_name: str) -> None:
+    """
+    Initialize a local git repository
+    :param project_dir: (str) project directory
+    :param projects_dir_name: (str)
+    """
+    console.print(
+        "[dodger_blue1]Initializing [underline]git[/underline] repository[/dodger_blue1]"
+    )
+    subprocess.run(["git", "init", f"{project_dir}"])
 
-    def git_init_command(self, project_dir: str) -> None:
-        """
-        Initialize a local git repository
-        :param project_dir: (str) project directory
-        """
-        console.print(
-            "[dodger_blue1]Initializing [underline]git[/underline] repository[/dodger_blue1]"
-        )
-        subprocess.run(["git", "init", f"{project_dir}"])
-
-        with open(f"{project_dir}/.gitignore", "w") as git_ignore_f:
-            if self.cli_args.python:
-                git_ignore_f.write(
-                    textwrap.dedent(
-                        """\
-                    .DS_Store
-                    .env
-                    .vscode/
-                    .idea/
-                    test/
-                    venv/"""
-                    )
+    with open(f"{project_dir}/.gitignore", "w") as git_ignore_f:
+        if projects_dir_name == PY_PROJECTS_DIR_NAME:
+            git_ignore_f.write(
+                textwrap.dedent(
+                    """\
+                .DS_Store
+                .env
+                .vscode/
+                .idea/
+                test/
+                venv/"""
                 )
-            else:
-                git_ignore_f.write(
-                    textwrap.dedent(
-                        """\
-                    .DS_Store
-                    .env
-                    .vscode/
-                    .idea/
-                    test/"""
-                    )
-                )
-
-            console.print("▶ [underline].gitignore[/underline] created.")
-
-        console.print("✓ Done." + "\n")
-
-    @staticmethod
-    def create_and_write_file(new_project_dir: str, file_name: str, content: str) -> None:
-        # Creating the file structure
-        console.print(f"[dodger_blue1]Creating the file structure...[/dodger_blue1]")
-        with open(f"{new_project_dir}/{file_name}", "w") as project_file:
-            project_file.write(content)
-            console.print(f"▶ [underline]{file_name}[/underline] created.")
-        console.print("✓ Done." + "\n")
-
-    @staticmethod
-    def create_python_venv(new_project_path: str) -> None:
-        console.print(
-            "[dodger_blue1]Generating the [underline]venv[/underline]...[/dodger_blue1]"
-        )
-        try:
-            if sys.platform.startswith("darwin") or sys.platform.startswith("linux"):
-                with console.status("[dodger_blue1]Generating...[/dodger_blue1]", spinner="aesthetic"):
-                    subprocess.run(["python3", "-m", "venv", f"{new_project_path}/venv"])
-                # Windows
-            if sys.platform.startswith("win32"):
-                with console.status("[dodger_blue1]Generating...[/dodger_blue1]", spinner="aesthetic"):
-                    subprocess.run(["virtualenv", f"{new_project_path}/venv"])
-        except Exception as venv_exception:
-            print(f"Error: {venv_exception}")
-            sys.exit(1)
-
-    def create_project(self, projects_dir_name: str, project_name: str, file_name: str = "", file_content: str = ""):
-        # check if the specified projects folder exists
-        projects_path_check(projects_dir_to_check=projects_dir_name)
-
-        projects_path = os.path.join(DEV_DIR, projects_dir_name)
-        # Creating the project folder
-        new_project_dir = f"{projects_path}/{project_name}"
-
-        try:
-            os.mkdir(new_project_dir)
-
-            if self.cli_args.python:
-                # Generating a python venv for the project
-                self.create_python_venv(new_project_path=new_project_dir)
-
-            # Creating the file structure
-            if not self.cli_args.none:
-                self.create_and_write_file(new_project_dir=new_project_dir, file_name=file_name, content=file_content)
-
-            # git init
-            self.git_init_command(project_dir=new_project_dir)
-
-            # Open in IDE
-            if self.cli_args.code:
-                self.open_in_ide(ide_command="code", project_dir=new_project_dir)
-            elif self.cli_args.pycharm:
-                self.open_in_ide(ide_command="pycharm", project_dir=new_project_dir)
-            elif self.cli_args.idea:
-                self.open_in_ide(ide_command="idea", project_dir=new_project_dir)
-
-            console.print("[gold1]⫸ Happy Coding![/gold1]")
-
-            # cd into the new project dir
-        except FileExistsError:
-            console.print(
-                f"{new_project_dir} [bold red3]already exists![/bold red3]"
             )
-            sys.exit(errno.EEXIST)
+        else:
+            git_ignore_f.write(
+                textwrap.dedent(
+                    """\
+                .DS_Store
+                .env
+                .vscode/
+                .idea/
+                test/"""
+                )
+            )
 
-    # * PYTHON
-    def create_python_project(self) -> None:
-        """
-        Creates a python project and generates a venv
-        """
+        console.print("▶ [underline].gitignore[/underline] created.")
 
-        self.create_project(
-            projects_dir_name=PY_PROJECTS_DIR_NAME,
-            project_name=self.cli_args.python,
-            file_name="main.py"
-        )
+    console.print("✓ Done." + "\n")
 
-    # * JAVA
-    def create_java_project(self) -> None:
-        """
-        Create a java projects
-        """
 
-        self.create_project(
-            projects_dir_name=JAVA_PROJECTS_DIR_NAME,
-            project_name=self.cli_args.java,
-            file_name="Main.java"
-        )
+def create_and_write_file(new_project_dir: str, file_name: str, content: str) -> None:
+    # Creating the file structure
+    console.print(f"[dodger_blue1]Creating the file structure...[/dodger_blue1]")
+    with open(f"{new_project_dir}/{file_name}", "w") as project_file:
+        project_file.write(content)
+        console.print(f"▶ [underline]{file_name}[/underline] created.")
+    console.print("✓ Done." + "\n")
 
-    # * GO
-    def create_go_project(self) -> None:
-        """
-        Create a go projects
-        """
 
-        self.create_project(
-            projects_dir_name=GO_PROJECTS_DIR_NAME,
-            project_name=self.cli_args.go,
-            file_name="main.go"
-        )
+def create_python_venv(new_project_path: str) -> None:
+    console.print(
+        "[dodger_blue1]Generating the [underline]venv[/underline]...[/dodger_blue1]"
+    )
+    try:
+        if sys.platform.startswith("darwin") or sys.platform.startswith("linux"):
+            with console.status("[dodger_blue1]Generating...[/dodger_blue1]", spinner="aesthetic"):
+                subprocess.run(["python3", "-m", "venv", f"{new_project_path}/venv"])
+            # Windows
+        if sys.platform.startswith("win32"):
+            with console.status("[dodger_blue1]Generating...[/dodger_blue1]", spinner="aesthetic"):
+                subprocess.run(["virtualenv", f"{new_project_path}/venv"])
+    except Exception as venv_exception:
+        print(f"Error: {venv_exception}")
+        sys.exit(1)
 
-    # * BASH
-    def create_bash_project(self) -> None:
-        """
-        Create a bash project
-        """
 
-        bash_file_content: Final[str] = "#!/bin/bash"
+def create_project(
+        projects_dir_name: str,
+        project_name: str,
+        file_name: str = "",
+        file_content: str = "",
+        create_venv: bool = False,
+        none_project: bool = False,
+        ide: str = "",
+):
+    # check if the specified projects folder exists
+    projects_path_check(projects_dir_to_check=projects_dir_name)
 
-        self.create_project(
-            projects_dir_name=BASH_PROJECTS_DIR_NAME,
-            project_name=self.cli_args.bash,
-            file_name=f"{self.cli_args.bash}.sh",
-            file_content=bash_file_content
-        )
+    projects_path = os.path.join(DEV_DIR, projects_dir_name)
+    # Creating the project folder
+    new_project_dir = f"{projects_path}/{project_name}"
 
-    # * CPP
-    def create_cpp_project(self) -> None:
-        """
-        Create a cpp project
-        """
+    try:
+        os.mkdir(new_project_dir)
 
-        cpp_file_content: Final[str] = textwrap.dedent(
-            """\
-           #include <iostream>
-   
-           int main()
-           {
-               return 0;
-           }"""
-        )
+        if create_venv:
+            # Generating a python venv for the project
+            create_python_venv(new_project_path=new_project_dir)
 
-        self.create_project(
-            projects_dir_name=CPP_PROJECTS_DIR_NAME,
-            project_name=self.cli_args.cpp,
-            file_name=f"main.cpp",
-            file_content=cpp_file_content
-        )
+        # Creating the file structure
+        if not none_project:
+            create_and_write_file(new_project_dir=new_project_dir, file_name=file_name, content=file_content)
 
-    # * C
-    def create_clang_project(self) -> None:
-        """
-        Create a c project
-        """
-
-        c_file_content: Final[str] = textwrap.dedent(
-            """\
-           #include <stdio.h>
-
-           int main()
-           {
-               return 0;
-           }"""
-        )
-
-        self.create_project(
-            projects_dir_name=CLANG_PROJECTS_DIR_NAME,
-            project_name=self.cli_args.clang,
-            file_name=f"main.c",
-            file_content=c_file_content
-        )
-
-    # * NON-SPECIFIC PROJECTS
-    def create_non_specific_project(self) -> None:
-        """
-        Create a non specific project
-        """
-
-        self.create_project(
-            projects_dir_name=NON_SPECIFIC_PROJECTS_DIR_NAME,
-            project_name=self.cli_args.none,
-        )
-
-    # * RUST
-    def create_rust_project(self) -> None:
-        """
-        Create a rust project
-        """
-        projects_path_check(projects_dir_to_check=RUST_PROJECTS_DIR_NAME)
-
-        rust_projects_path = os.path.join(DEV_DIR, RUST_PROJECTS_DIR_NAME)
-        # Creating the project folder and file structure for the project
-        console.print(f"[dodger_blue1]Creating the file structure...[/dodger_blue1]")
-        new_rust_project_dir = f"{rust_projects_path}/{self.cli_args.rust}"
-        subprocess.run(["cargo", "new", new_rust_project_dir])
-        console.print("✓ Done." + "\n")
+        # git init
+        git_init_command(project_dir=new_project_dir, projects_dir_name=projects_dir_name)
 
         # Open in IDE
-        if self.cli_args.code:
-            self.open_in_ide(ide_command="code", project_dir=new_rust_project_dir)
-        elif self.cli_args.pycharm:
-            self.open_in_ide(ide_command="pycharm", project_dir=new_rust_project_dir)
-        elif self.cli_args.idea:
-            self.open_in_ide(ide_command="idea", project_dir=new_rust_project_dir)
+        if ide == "code":
+            open_in_ide(ide_command=ide, project_dir=new_project_dir)
+        elif ide == "pycharm":
+            open_in_ide(ide_command=ide, project_dir=new_project_dir)
+        elif ide == "idea":
+            open_in_ide(ide_command=ide, project_dir=new_project_dir)
 
         console.print("[gold1]⫸ Happy Coding![/gold1]")
 
-    def handler(self):
-        if self.cli_args.python:
-            self.create_python_project()
-        elif self.cli_args.java:
-            self.create_java_project()
-        elif self.cli_args.go:
-            self.create_go_project()
-        elif self.cli_args.bash:
-            self.create_bash_project()
-        elif self.cli_args.rust:
-            self.create_rust_project()
-        elif self.cli_args.cpp:
-            self.create_cpp_project()
-        elif self.cli_args.clang:
-            self.create_clang_project()
-        elif self.cli_args.none:
-            self.create_non_specific_project()
+    except FileExistsError:
+        console.print(
+            f"{new_project_dir} [bold red3]already exists![/bold red3]"
+        )
+        sys.exit(errno.EEXIST)
+
+
+def create_rust_project(project_name: str, ide: str = "") -> None:
+    """
+    Create a rust project
+    """
+    projects_path_check(projects_dir_to_check=RUST_PROJECTS_DIR_NAME)
+
+    rust_projects_path = os.path.join(DEV_DIR, RUST_PROJECTS_DIR_NAME)
+    # Creating the project folder and file structure for the project
+    console.print(f"[dodger_blue1]Creating the file structure...[/dodger_blue1]")
+    new_rust_project_dir = f"{rust_projects_path}/{project_name}"
+    subprocess.run(["cargo", "new", new_rust_project_dir])
+    console.print("✓ Done." + "\n")
+
+    # Open in IDE
+    if ide == "code":
+        open_in_ide(ide_command=ide, project_dir=new_rust_project_dir)
+    elif ide == "pycharm":
+        open_in_ide(ide_command=ide, project_dir=new_rust_project_dir)
+    elif ide == "idea":
+        open_in_ide(ide_command=ide, project_dir=new_rust_project_dir)
+
+    console.print("[gold1]⫸ Happy Coding![/gold1]")
+
+
+def handle(
+        project_name: str,
+        python: Annotated[bool, typer.Option(help="create a python project")] = False,
+        java: Annotated[bool, typer.Option(help="create a java project")] = False,
+        go: Annotated[bool, typer.Option(help="create a go project")] = False,
+        bash: Annotated[bool, typer.Option(help="create a bash project")] = False,
+        cpp: Annotated[bool, typer.Option(help="create a cpp project")] = False,
+        clang: Annotated[bool, typer.Option(help="create a c project")] = False,
+        rust: Annotated[bool, typer.Option(help="create a rust project")] = False,
+        none: Annotated[bool, typer.Option(help="create a non-specific project")] = False,
+        code: Annotated[bool, typer.Option(help="open the project in VS Code")] = False,
+        pycharm: Annotated[bool, typer.Option(help="open the project in PyCharm")] = False,
+        idea: Annotated[bool, typer.Option(help="open the project in Intellij IDEA")] = False
+
+):
+    ide_name = ""
+    if code:
+        ide_name = "code"
+    elif pycharm:
+        ide_name = "pycharm"
+    elif idea:
+        ide_name = "idea"
+
+    if dev_dir_check():
+        if python:
+            create_project(
+                projects_dir_name=PY_PROJECTS_DIR_NAME,
+                project_name=project_name,
+                file_name="main.py",
+                file_content="#!/usr/bin/env python3",
+                create_venv=True,
+                ide=ide_name,
+            )
+        elif java:
+            create_project(
+                projects_dir_name=JAVA_PROJECTS_DIR_NAME,
+                project_name=project_name,
+                file_name="Main.java",
+                ide=ide_name,
+            )
+        elif go:
+            create_project(
+                projects_dir_name=GO_PROJECTS_DIR_NAME,
+                project_name=project_name,
+                file_name="main.go",
+                ide=ide_name,
+            )
+        elif bash:
+            bash_file_content: Final[str] = "#!/bin/bash"
+            create_project(
+                projects_dir_name=BASH_PROJECTS_DIR_NAME,
+                project_name=project_name,
+                file_name=f"{project_name}.sh",
+                file_content=bash_file_content,
+                ide=ide_name,
+            )
+        elif cpp:
+            cpp_file_content: Final[str] = textwrap.dedent(
+                """\
+               #include <iostream>
+
+               int main()
+               {
+                   return 0;
+               }"""
+            )
+
+            create_project(
+                projects_dir_name=BASH_PROJECTS_DIR_NAME,
+                project_name=project_name,
+                file_name="main.cpp",
+                file_content=cpp_file_content,
+                ide=ide_name,
+            )
+
+        elif clang:
+            c_file_content: Final[str] = textwrap.dedent(
+                """\
+               #include <stdio.h>
+
+               int main()
+               {
+                   return 0;
+               }"""
+            )
+
+            create_project(
+                projects_dir_name=CLANG_PROJECTS_DIR_NAME,
+                project_name=project_name,
+                file_name=f"main.c",
+                file_content=c_file_content,
+                ide=ide_name,
+            )
+        elif rust:
+            create_rust_project(
+                project_name=project_name,
+                ide=ide_name,
+            )
+        elif none:
+            create_project(
+                projects_dir_name=NON_SPECIFIC_PROJECTS_DIR_NAME,
+                project_name=project_name,
+                none_project=True,
+                ide=ide_name,
+            )
+        else:
+            console.print("[bold red]No option provided[/bold red]")
+
+
+def main():
+    typer.run(handle)
 
 
 if __name__ == "__main__":
-    args = argparse_config()
-
-    new_project = NewProject(cli_args=args)
-    new_project.run()
+    main()
