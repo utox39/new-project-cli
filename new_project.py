@@ -46,6 +46,7 @@ NON_SPECIFIC_PROJECTS_DIR_NAME: Final[str] = dir_name["non_specific_projects_dir
 def dev_dir_check() -> bool:
     """
     Check if the development folder exists
+    :return bool: True if the development folder exists
     """
     try:
         if not os.path.isdir(DEV_DIR):
@@ -87,7 +88,7 @@ def git_init_command(project_dir: str, projects_dir_name: str) -> None:
     """
     Initialize a local git repository
     :param project_dir: (str) project directory
-    :param projects_dir_name: (str)
+    :param projects_dir_name: (str) projects directory name
     """
     console.print(
         "[dodger_blue1]Initializing [underline]git[/underline] repository[/dodger_blue1]"
@@ -125,6 +126,12 @@ def git_init_command(project_dir: str, projects_dir_name: str) -> None:
 
 
 def create_and_write_file(new_project_dir: str, file_name: str, content: str) -> None:
+    """
+    Creates and writes a file
+    :param new_project_dir: (str) the directory of the new project
+    :param file_name: (str) file's name
+    :param content: (str) content to write to file
+    """
     # Creating the file structure
     console.print(f"[dodger_blue1]Creating the file structure...[/dodger_blue1]")
     with open(f"{new_project_dir}/{file_name}", "w") as project_file:
@@ -134,6 +141,10 @@ def create_and_write_file(new_project_dir: str, file_name: str, content: str) ->
 
 
 def create_python_venv(new_project_path: str) -> None:
+    """
+    Create a python venv
+    :param new_project_path: (str) path of the new python project
+    """
     console.print(
         "[dodger_blue1]Generating the [underline]venv[/underline]...[/dodger_blue1]"
     )
@@ -159,6 +170,16 @@ def create_project(
         none_project: bool = False,
         ide: str = "",
 ):
+    """
+    Create a new project
+    :param projects_dir_name: (str) the name of the specified programming language's directory
+    :param project_name: (str) the name of the new project
+    :param file_name: (str) the name of the file
+    :param file_content: (str) content to write to file
+    :param create_venv: (bool) if true creates a venv
+    :param none_project: (bool) if true creates a non-specific project
+    :param ide: (str) the name of the IDE where you want to open the new project
+    """
     # check if the specified projects folder exists
     projects_path_check(projects_dir_to_check=projects_dir_name)
 
@@ -200,6 +221,8 @@ def create_project(
 def create_rust_project(project_name: str, ide: str = "") -> None:
     """
     Create a rust project
+    :param project_name: (str) the name of the new project
+    :param ide: (str): the name of the IDE where you want to open the new project
     """
     projects_path_check(projects_dir_to_check=RUST_PROJECTS_DIR_NAME)
 
@@ -236,6 +259,21 @@ def handle(
         idea: Annotated[bool, typer.Option(help="open the project in Intellij IDEA")] = False
 
 ):
+    """
+    Handles the command line arguments and options
+    :param project_name: (str) the name of the new project
+    :param python: (bool) if true creates a python project
+    :param java: (bool) if true creates a java project
+    :param go: (bool) if true creates a go project
+    :param bash: (bool) if true creates a bash project
+    :param cpp: (bool) if true creates a cpp project
+    :param clang: (bool) if true creates a c project
+    :param rust: (bool) if true creates a rust project
+    :param none: (bool) if true creates a non-specific project
+    :param code: (bool) if true opens the project in VS Code
+    :param pycharm: (bool) if true opens the project in PyCharm
+    :param idea: (bool) if true opens the project in Intellij IDEA
+    """
     ide_name = ""
     if code:
         ide_name = "code"
