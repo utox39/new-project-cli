@@ -26,7 +26,7 @@ try:
     with open(CONFIG_FILE) as config_file:
         dir_name = json.load(config_file)
 except FileNotFoundError:
-    print(f"Error: Json config file not found")
+    print("Error: Json config file not found")
     sys.exit(errno.ENOENT)
 
 # Default Development folder
@@ -41,6 +41,8 @@ RUST_PROJECTS_DIR_NAME: Final[str] = dir_name["rust_projects_dir_name"]
 CPP_PROJECTS_DIR_NAME: Final[str] = dir_name["cpp_projects_dir_name"]
 CLANG_PROJECTS_DIR_NAME: Final[str] = dir_name["clang_projects_dir_name"]
 NON_SPECIFIC_PROJECTS_DIR_NAME: Final[str] = dir_name["non_specific_projects_dir_name"]
+
+DONE: Final[str] = "✓ Done."
 
 
 def dev_dir_check() -> bool:
@@ -122,7 +124,7 @@ def git_init_command(project_dir: str, projects_dir_name: str) -> None:
 
         console.print("▶ [underline].gitignore[/underline] created.")
 
-    console.print("✓ Done." + "\n")
+    console.print(DONE + "\n")
 
 
 def create_and_write_file(new_project_dir: str, file_name: str, content: str) -> None:
@@ -133,11 +135,11 @@ def create_and_write_file(new_project_dir: str, file_name: str, content: str) ->
     :param content: (str) content to write to file
     """
     # Creating the file structure
-    console.print(f"[dodger_blue1]Creating the file structure...[/dodger_blue1]")
+    console.print("[dodger_blue1]Creating the file structure...[/dodger_blue1]")
     with open(f"{new_project_dir}/{file_name}", "w") as project_file:
         project_file.write(content)
         console.print(f"▶ [underline]{file_name}[/underline] created.")
-    console.print("✓ Done." + "\n")
+    console.print(DONE + "\n")
 
 
 def create_python_venv(new_project_path: str) -> None:
@@ -198,12 +200,13 @@ def create_project(
         git_init_command(project_dir=new_project_dir, projects_dir_name=projects_dir_name)
 
         # Open in IDE
-        if ide == "code":
-            open_in_ide(ide_command=ide, project_dir=new_project_dir)
-        elif ide == "pycharm":
-            open_in_ide(ide_command=ide, project_dir=new_project_dir)
-        elif ide == "idea":
-            open_in_ide(ide_command=ide, project_dir=new_project_dir)
+        match ide:
+            case 'code':
+                open_in_ide(ide_command=ide, project_dir=new_project_dir)
+            case 'pycharm':
+                open_in_ide(ide_command=ide, project_dir=new_project_dir)
+            case 'idea':
+                open_in_ide(ide_command=ide, project_dir=new_project_dir)
 
         console.print("[gold1]⫸ Happy Coding![/gold1]")
 
@@ -224,18 +227,19 @@ def create_rust_project(project_name: str, ide: str = "") -> None:
 
     rust_projects_path = os.path.join(DEV_DIR, RUST_PROJECTS_DIR_NAME)
     # Creating the project folder and file structure for the project
-    console.print(f"[dodger_blue1]Creating the file structure...[/dodger_blue1]")
+    console.print("[dodger_blue1]Creating the file structure...[/dodger_blue1]")
     new_rust_project_dir = f"{rust_projects_path}/{project_name}"
     subprocess.run(["cargo", "new", new_rust_project_dir])
     console.print("✓ Done." + "\n")
 
     # Open in IDE
-    if ide == "code":
-        open_in_ide(ide_command=ide, project_dir=new_rust_project_dir)
-    elif ide == "pycharm":
-        open_in_ide(ide_command=ide, project_dir=new_rust_project_dir)
-    elif ide == "idea":
-        open_in_ide(ide_command=ide, project_dir=new_rust_project_dir)
+    match ide:
+        case 'code':
+            open_in_ide(ide_command=ide, project_dir=new_rust_project_dir)
+        case 'pycharm':
+            open_in_ide(ide_command=ide, project_dir=new_rust_project_dir)
+        case 'idea':
+            open_in_ide(ide_command=ide, project_dir=new_rust_project_dir)
 
     console.print("[gold1]⫸ Happy Coding![/gold1]")
 
@@ -333,7 +337,7 @@ def handle(
             create_project(
                 projects_dir_name=CLANG_PROJECTS_DIR_NAME,
                 project_name=project_name,
-                file_name=f"main.c",
+                file_name="main.c",
                 file_content=c_file_content,
                 ide=ide_name,
             )
