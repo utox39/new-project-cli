@@ -27,8 +27,7 @@ if [ -f ./requirements.txt ]; then
       if [ -f ./new_project_config.json ]; then
           cp ./new_project_config.json ~/.config/new_project_cli_tool/new_project_config.json
       else
-          echo "Could not find new_project_config.json file"
-          exit 1
+          echo "Could not copy new_project_config.json file"
       fi
     fi
 
@@ -39,8 +38,7 @@ if [ -f ./requirements.txt ]; then
           chmod +x ./new-project
           sudo mv ./new-project /usr/local/bin/new-project
       else
-          echo "Could not find new_project.py file"
-          exit 1
+          echo "Could not install new-project"
       fi
     fi
 
