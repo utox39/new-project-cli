@@ -1,5 +1,7 @@
 # new-project-cli
 
+<script async id="asciicast-Qf5FmiHBwkqpQCm6CDrEIMKEu" src="https://asciinema.org/a/Qf5FmiHBwkqpQCm6CDrEIMKEu.js"></script>
+
 ## Description
 
 Create a new project from the terminal
@@ -14,6 +16,12 @@ You can create new:
 - clang projects
 - rust projects
 - non-specific projects
+
+and open them in:
+
+- Visual Studio Code
+- PyCharm
+- IntelliJ IDEA
 
 ## Installation
 
