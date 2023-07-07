@@ -1,6 +1,6 @@
 # new-project-cli
 
-<script async id="asciicast-Qf5FmiHBwkqpQCm6CDrEIMKEu" src="https://asciinema.org/a/Qf5FmiHBwkqpQCm6CDrEIMKEu.js"></script>
+[![asciicast](https://asciinema.org/a/Qf5FmiHBwkqpQCm6CDrEIMKEu.svg)](https://asciinema.org/a/Qf5FmiHBwkqpQCm6CDrEIMKEu)
 
 ## Description
 
