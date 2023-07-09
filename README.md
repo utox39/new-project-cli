@@ -27,9 +27,20 @@ and open them in:
 
 Easy as you can see here:
 
+#### macOS / Linux:
+
 ```console
 $ cd path/to/this/repo
-$ make install
+$ ./install.sh
+```
+
+#### Windows:
+
+Run as administrator
+
+```console
+$ cd path/to/this/repo
+$ .\install.ps1
 ```
 
 ## Usage
