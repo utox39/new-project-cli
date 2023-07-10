@@ -23,6 +23,21 @@ and open them in:
 - PyCharm
 - IntelliJ IDEA
 
+#### Default development directories tree
+
+```
+Developer
+└── projects
+    ├── bash_projects
+    ├── c_projects 
+    ├── cpp_projects 
+    ├── go_projects
+    ├── java_projects
+    ├── non_specific_projects
+    ├── python_projects
+    └── rust_projects 
+```
+
 ## Installation
 
 Easy as you can see here:
