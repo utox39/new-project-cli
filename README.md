@@ -100,7 +100,10 @@ In ~/.config/new_project_cli_tool/new_project_config.json:
 
 ## Roadmap
 
-This is my first public project and I know I can improve it so much
+- Improve customization
+- Add more programming languages
+- Improve user output and experience
+- Publish this project to package managers
 
 ## Contributing
 
