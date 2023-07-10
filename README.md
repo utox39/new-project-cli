@@ -54,7 +54,7 @@ $ ./install.sh
 Run as administrator
 
 ```console
-$ cd path/to/this/repo
+$ cd path\to\this\repo
 $ .\install.ps1
 ```
 
