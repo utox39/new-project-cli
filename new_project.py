@@ -9,6 +9,7 @@ import textwrap
 import typer
 
 from pathlib import Path
+from shutil import which
 from typing_extensions import Annotated
 from typing import Final
 
@@ -80,10 +81,13 @@ def open_in_ide(ide_command: str, project_dir: str) -> None:
     :param ide_command: (str) the console command to open the IDE
     :param project_dir: (str) the project directory to open in the IDE
     """
-    try:
-        subprocess.run([f"{ide_command}", f"{project_dir}"])
-    except Exception as open_in_ide_error:
-        print(f"Error: {open_in_ide_error}\nCould not open project in IDE")
+    if which(f"{ide_command}") is not None:
+        try:
+            subprocess.run([f"{ide_command}", f"{project_dir}"])
+        except Exception as open_in_ide_error:
+            print(f"Error: {open_in_ide_error}\nCould not open project in IDE")
+    else:
+        console.print(f"[red][underline]{ide_command}[/underline]: command not found...[/red]")
 
 
 def git_init_command(project_dir: str, projects_dir_name: str) -> None:
