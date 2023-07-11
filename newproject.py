@@ -20,7 +20,7 @@ from rich.console import Console
 console = Console()
 
 # Config file
-CONFIG_FILE: Final[str] = f"{Path.home()}/.config/new_project_cli_tool/new_project_config.json"
+CONFIG_FILE: Final[str] = f"{Path.home()}/.config/newproject/newproject_config.json"
 
 # Load json config file
 try:
@@ -99,36 +99,37 @@ def git_init_command(project_dir: str, projects_dir_name: str) -> None:
     console.print(
         "[dodger_blue1]Initializing [underline]git[/underline] repository[/dodger_blue1]"
     )
-    subprocess.run(["git", "init", f"{project_dir}"])
+    if which("git") is not None:
+        subprocess.run(["git", "init", f"{project_dir}"])
 
-    with open(f"{project_dir}/.gitignore", "w") as git_ignore_f:
-        if projects_dir_name == PY_PROJECTS_DIR_NAME:
-            git_ignore_f.write(
-                textwrap.dedent(
-                    """\
-                .DS_Store
-                .env
-                .vscode/
-                .idea/
-                test/
-                venv/"""
+        with open(f"{project_dir}/.gitignore", "w") as git_ignore_f:
+            if projects_dir_name == PY_PROJECTS_DIR_NAME:
+                git_ignore_f.write(
+                    textwrap.dedent(
+                        """\
+                    .DS_Store
+                    .env
+                    .vscode/
+                    .idea/
+                    test/
+                    venv/"""
+                    )
                 )
-            )
-        else:
-            git_ignore_f.write(
-                textwrap.dedent(
-                    """\
-                .DS_Store
-                .env
-                .vscode/
-                .idea/
-                test/"""
+            else:
+                git_ignore_f.write(
+                    textwrap.dedent(
+                        """\
+                    .DS_Store
+                    .env
+                    .vscode/
+                    .idea/
+                    test/"""
+                    )
                 )
-            )
 
-        console.print("▶ [underline].gitignore[/underline] created.")
+            console.print("▶ [underline].gitignore[/underline] created.")
 
-    console.print(DONE + "\n")
+        console.print(DONE + "\n")
 
 
 def create_and_write_file(new_project_dir: str, file_name: str, content: str) -> None:
@@ -161,7 +162,11 @@ def create_python_venv(new_project_path: str) -> None:
             # Windows
         if sys.platform.startswith("win32"):
             with console.status("[dodger_blue1]Generating...[/dodger_blue1]", spinner="aesthetic"):
-                subprocess.run(["virtualenv", f"{new_project_path}/venv"])
+                if which("virtualenv") is not None:
+                    subprocess.run(["virtualenv", f"{new_project_path}/venv"])
+                else:
+                    subprocess.run(["python3", "-m", "venv", f"{new_project_path}/venv"])
+        print(DONE)
     except Exception as venv_exception:
         print(f"Error: {venv_exception}")
         sys.exit(1)
@@ -233,8 +238,14 @@ def create_rust_project(project_name: str, ide: str = "") -> None:
     # Creating the project folder and file structure for the project
     console.print("[dodger_blue1]Creating the file structure...[/dodger_blue1]")
     new_rust_project_dir = f"{rust_projects_path}/{project_name}"
-    subprocess.run(["cargo", "new", new_rust_project_dir])
-    console.print("✓ Done." + "\n")
+    if which("cargo") is not None:
+        try:
+            subprocess.run(["cargo", "new", new_rust_project_dir])
+            console.print("✓ Done." + "\n")
+        except Exception as cargo_exception:
+            print(f"Error: {cargo_exception}\nCould not create rust project")
+    else:
+        console.print("[red][underline]cargo[/underline]: command not found...[/red]")
 
     # Open in IDE
     match ide:

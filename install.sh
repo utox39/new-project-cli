@@ -2,8 +2,8 @@
 
 CMD_EXIT_STATUS=$?
 
-if [ -f /usr/local/bin/new-project ]; then
-  echo "new-project is already installed"
+if [ -f /usr/local/bin/newproject ]; then
+  echo "newproject is already installed"
   exit 0
 fi
 
@@ -17,28 +17,28 @@ if [ -f ./requirements.txt ]; then
 
     # creating new_project_cli_tool config folder
     if [ $CMD_EXIT_STATUS -eq 0 ]; then
-      mkdir ~/.config/new_project_cli_tool
+      mkdir ~/.config/newproject
     else
       exit 1
     fi
 
     # copying config file in config folder
     if [ $CMD_EXIT_STATUS -eq 0 ]; then
-      if [ -f ./new_project_config.json ]; then
-          cp ./new_project_config.json ~/.config/new_project_cli_tool/new_project_config.json
+      if [ -f ./newproject_config.json ]; then
+          cp ./newproject_config.json ~/.config/newproject/newproject_config.json
       else
-          echo "Could not copy new_project_config.json file"
+          echo "Could not copy newproject_config.json file"
       fi
     fi
 
     # making new project.py executable and copying it into the bin folder
     if [ $CMD_EXIT_STATUS -eq 0 ]; then
-      if [ -f ./new_project.py ]; then
-          cp ./new_project.py new-project
-          chmod +x ./new-project
-          sudo mv ./new-project /usr/local/bin/new-project
+      if [ -f ./newproject.py ]; then
+          cp ./newproject.py newproject
+          chmod +x ./newproject
+          sudo mv ./newproject /usr/local/bin/newproject
       else
-          echo "Could not install new-project"
+          echo "Could not install newproject"
       fi
     fi
 
