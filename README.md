@@ -63,24 +63,24 @@ $ .\install.ps1
 ### Create a new python project
 
 ```console
-$ new-project --python project_name
+$ newproject --python project_name
 ```
 
 ### Create a non-specific project
 
 ```console
-$ new-project --none project_name
+$ newproject --none project_name
 ```
 
 ### Create a new project and open it in Visual Studio Code
 
 ```console
-$ new-project --code --python project_name
+$ newproject --code --python project_name
 ```
 
 ### Customize the Development folder
 
-In ~/.config/new_project_cli_tool/new_project_config.json:
+In ~/.config/newproject/newproject_config.json:
 
 ```json
 {
@@ -90,7 +90,7 @@ In ~/.config/new_project_cli_tool/new_project_config.json:
 
 ### Customize a programming language projects folder
 
-In ~/.config/new_project_cli_tool/new_project_config.json:
+In ~/.config/newproject/newproject_config.json:
 
 ```json
 {
