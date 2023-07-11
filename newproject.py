@@ -43,7 +43,7 @@ CPP_PROJECTS_DIR_NAME: Final[str] = dir_name["cpp_projects_dir_name"]
 CLANG_PROJECTS_DIR_NAME: Final[str] = dir_name["clang_projects_dir_name"]
 NON_SPECIFIC_PROJECTS_DIR_NAME: Final[str] = dir_name["non_specific_projects_dir_name"]
 
-DONE: Final[str] = "✓ Done."
+DONE: Final[str] = "✓ Done.\n"
 
 
 def dev_dir_check() -> bool:
@@ -129,7 +129,7 @@ def git_init_command(project_dir: str, projects_dir_name: str) -> None:
 
             console.print("▶ [underline].gitignore[/underline] created.")
 
-        console.print(DONE + "\n")
+        print(DONE)
 
 
 def create_and_write_file(new_project_dir: str, file_name: str, content: str) -> None:
@@ -144,7 +144,7 @@ def create_and_write_file(new_project_dir: str, file_name: str, content: str) ->
     with open(f"{new_project_dir}/{file_name}", "w") as project_file:
         project_file.write(content)
         console.print(f"▶ [underline]{file_name}[/underline] created.")
-    console.print(DONE + "\n")
+    print(DONE)
 
 
 def create_python_venv(new_project_path: str) -> None:
