@@ -26,16 +26,17 @@ and open them in:
 #### Default development directories tree
 
 ```
-Developer
-└── projects
-    ├── bash_projects
-    ├── c_projects 
-    ├── cpp_projects 
-    ├── go_projects
-    ├── java_projects
-    ├── non_specific_projects
-    ├── python_projects
-    └── rust_projects 
+$HOME
+└──Developer
+   └── projects
+       ├── bash_projects
+       ├── c_projects 
+       ├── cpp_projects 
+       ├── go_projects
+       ├── java_projects
+       ├── non_specific_projects
+       ├── python_projects
+       └── rust_projects 
 ```
 
 ## Installation
