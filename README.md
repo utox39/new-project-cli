@@ -10,15 +10,16 @@ This tool will help you create a minimal structure for your new project.
 
 You can create new:
 
-- python projects
-- java projects
-- go projects
 - bash projects
+- c projects
 - cpp projects
-- clang projects
-- rust projects
+- dart projects
+- flutter projects
+- go projects
+- java projects
+- python projects
 - ruby projects
-- non-specific projects
+- rust projects
 
 and open them in:
 
@@ -34,11 +35,13 @@ $HOME
    └── projects
        ├── bash_projects
        ├── c_projects 
-       ├── cpp_projects 
+       ├── cpp_projects
+       ├── dart_projects
+       ├── flutter_projects 
        ├── go_projects
        ├── java_projects
-       ├── non_specific_projects
        ├── python_projects
+       ├── ruby_projects
        └── rust_projects 
 ```
 

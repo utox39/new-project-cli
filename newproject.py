@@ -237,25 +237,20 @@ def create_project_with_commands(
     # Creating the project folder and file structure for the project
     console.print("[dodger_blue1]Creating the file structure...[/dodger_blue1]")
 
-    command = ""
-    creation_command = ""
+    commands = []
 
     if projects_dir_name == RUST_PROJECTS_DIR_NAME:
-        command = "cargo"
-        creation_command = "new"
+        commands = ["cargo", "new", new_project_dir]
     elif projects_dir_name == RUBY_PROJECTS_DIR_NAME:
-        command = "bundler"
-        creation_command = "gem"
+        commands = ["bundler", "gem", new_project_dir]
     elif projects_dir_name == DART_PROJECTS_DIR_NAME:
-        command = "dart"
-        creation_command = "create"
+        commands = ["dart", "create", new_project_dir]
     elif projects_dir_name == FLUTTER_PROJECTS_DIR_NAME:
-        command = "flutter"
-        creation_command = "create"
+        commands = ["flutter", "create", new_project_dir]
 
-    if which(command) is not None:
+    if which(commands[0]) is not None:
         try:
-            subprocess.run([command, creation_command, new_project_dir])
+            subprocess.run(commands)
             print(DONE)
             # Open in IDE
             open_in_ide(ide_command=ide, project_dir=new_project_dir)
@@ -264,7 +259,7 @@ def create_project_with_commands(
         except Exception as command_exception:
             print(f"Error: {command_exception}\nCould not create rust project")
     else:
-        console.print(f"[red][underline]{command}[/underline]: command not found...[/red]")
+        console.print(f"[red][underline]{commands[0]}[/underline]: command not found...[/red]")
 
 
 def handle(
