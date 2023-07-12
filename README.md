@@ -4,7 +4,9 @@
 
 ## Description
 
-Create a new project from the terminal
+Create a new project from the terminal.
+
+This tool will help you create a minimal structure for your new project.
 
 You can create new:
 
@@ -38,6 +40,16 @@ $HOME
        ├── python_projects
        └── rust_projects 
 ```
+
+#### Rust projects
+
+To create a new rust project, newproject use the following command:
+
+```console
+$ cargo new project_name
+```
+
+So it use the default command to create a new cargo package
 
 ## Installation
 
