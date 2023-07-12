@@ -10,15 +10,16 @@ This tool will help you create a minimal structure for your new project.
 
 You can create new:
 
-- python projects
-- java projects
-- go projects
 - bash projects
+- c projects
 - cpp projects
-- clang projects
-- rust projects
+- dart projects
+- flutter projects
+- go projects
+- java projects
+- python projects
 - ruby projects
-- non-specific projects
+- rust projects
 
 and open them in:
 
@@ -34,23 +35,27 @@ $HOME
    └── projects
        ├── bash_projects
        ├── c_projects 
-       ├── cpp_projects 
+       ├── cpp_projects
+       ├── dart_projects
+       ├── flutter_projects 
        ├── go_projects
        ├── java_projects
-       ├── non_specific_projects
        ├── python_projects
+       ├── ruby_projects
        └── rust_projects 
 ```
 
-#### Rust projects
+#### Projects created via commands
 
-To create a new rust project, newproject use the following command:
+E.g: To create a new Rust project, newproject use the following command:
 
 ```console
 $ cargo new project_name
 ```
 
-So it use the default command to create a new cargo package
+So it use the default command to create a new cargo package.
+
+The same is for Ruby, Dart and Flutter.
 
 ## Requirements
 
@@ -97,12 +102,6 @@ $ .\install.ps1
 
 ```console
 $ newproject --python project_name
-```
-
-### Create a non-specific project
-
-```console
-$ newproject --none project_name
 ```
 
 ### Create a new project and open it in Visual Studio Code
