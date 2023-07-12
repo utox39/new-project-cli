@@ -75,6 +75,8 @@ $ newproject --none project_name
 
 ### Create a new project and open it in Visual Studio Code
 
+ATTENTION: In order to open the new project in your favorite IDE you need to have the shell command
+
 ```console
 $ newproject --code --python project_name
 ```
@@ -103,6 +105,7 @@ In ~/.config/newproject/newproject_config.json:
 
 - Improve customization
 - Add more programming languages
+- Add more IDE
 - Improve user output and experience
 - Publish this project to package managers
 
