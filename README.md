@@ -17,6 +17,7 @@ You can create new:
 - cpp projects
 - clang projects
 - rust projects
+- ruby projects
 - non-specific projects
 
 and open them in:
@@ -50,6 +51,17 @@ $ cargo new project_name
 ```
 
 So it use the default command to create a new cargo package
+
+## Requirements
+
+#### To create a rust projects
+
+- [Rust](https://www.rust-lang.org/learn/get-started)
+
+#### To create a ruby projects
+
+- [Ruby](https://www.ruby-lang.org/en/documentation/installation/)
+- [bundler](https://rubygems.org/gems/bundler)
 
 ## Installation
 

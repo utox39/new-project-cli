@@ -7,6 +7,7 @@
   "rust_projects_dir_name": "rust_projects",
   "cpp_projects_dir_name": "cpp_projects",
   "clang_projects_dir_name": "c_projects",
+  "ruby_projects_dir_name": "ruby_projects",
   "non_specific_projects_dir_name": "non_specific_projects",
   "file_content": [
     {
