@@ -25,23 +25,23 @@ CONFIG_FILE: Final[str] = f"{Path.home()}/.config/newproject/newproject_config.j
 # Load json config file
 try:
     with open(CONFIG_FILE) as config_file:
-        dir_name = json.load(config_file)
+        new_project_config = json.load(config_file)
 except FileNotFoundError:
     print("Error: Json config file not found")
     sys.exit(errno.ENOENT)
 
 # Default Development folder
-DEV_DIR: Final[str] = f"{Path.home()}/{dir_name['dev_dir']}"
+DEV_DIR: Final[str] = f"{Path.home()}/{new_project_config['dev_dir']}"
 
 # Projects folder names
-PY_PROJECTS_DIR_NAME: Final[str] = dir_name["py_projects_dir_name"]
-JAVA_PROJECTS_DIR_NAME: Final[str] = dir_name["java_projects_dir_name"]
-GO_PROJECTS_DIR_NAME: Final[str] = dir_name["go_projects_dir_name"]
-BASH_PROJECTS_DIR_NAME: Final[str] = dir_name["bash_projects_dir_name"]
-RUST_PROJECTS_DIR_NAME: Final[str] = dir_name["rust_projects_dir_name"]
-CPP_PROJECTS_DIR_NAME: Final[str] = dir_name["cpp_projects_dir_name"]
-CLANG_PROJECTS_DIR_NAME: Final[str] = dir_name["clang_projects_dir_name"]
-NON_SPECIFIC_PROJECTS_DIR_NAME: Final[str] = dir_name["non_specific_projects_dir_name"]
+PY_PROJECTS_DIR_NAME: Final[str] = new_project_config["py_projects_dir_name"]
+JAVA_PROJECTS_DIR_NAME: Final[str] = new_project_config["java_projects_dir_name"]
+GO_PROJECTS_DIR_NAME: Final[str] = new_project_config["go_projects_dir_name"]
+BASH_PROJECTS_DIR_NAME: Final[str] = new_project_config["bash_projects_dir_name"]
+RUST_PROJECTS_DIR_NAME: Final[str] = new_project_config["rust_projects_dir_name"]
+CPP_PROJECTS_DIR_NAME: Final[str] = new_project_config["cpp_projects_dir_name"]
+CLANG_PROJECTS_DIR_NAME: Final[str] = new_project_config["clang_projects_dir_name"]
+NON_SPECIFIC_PROJECTS_DIR_NAME: Final[str] = new_project_config["non_specific_projects_dir_name"]
 
 DONE: Final[str] = "✓ Done.\n"
 
@@ -293,7 +293,7 @@ def handle(
                 projects_dir_name=PY_PROJECTS_DIR_NAME,
                 project_name=project_name,
                 file_name="main.py",
-                file_content="#!/usr/bin/env python3",
+                file_content=new_project_config["file_content"][0]["python_content"],
                 ide=ide_name,
             )
         elif java:
@@ -311,49 +311,28 @@ def handle(
                 ide=ide_name,
             )
         elif bash:
-            bash_file_content: Final[str] = "#!/bin/bash"
             create_project(
                 projects_dir_name=BASH_PROJECTS_DIR_NAME,
                 project_name=project_name,
                 file_name=f"{project_name}.sh",
-                file_content=bash_file_content,
+                file_content=new_project_config["file_content"][0]["bash_content"],
                 ide=ide_name,
             )
         elif cpp:
-            cpp_file_content: Final[str] = textwrap.dedent(
-                """\
-               #include <iostream>
-
-               int main()
-               {
-                   return 0;
-               }"""
-            )
-
             create_project(
-                projects_dir_name=BASH_PROJECTS_DIR_NAME,
+                projects_dir_name=CPP_PROJECTS_DIR_NAME,
                 project_name=project_name,
                 file_name="main.cpp",
-                file_content=cpp_file_content,
+                file_content=new_project_config["file_content"][0]["cpp_content"],
                 ide=ide_name,
             )
 
         elif clang:
-            c_file_content: Final[str] = textwrap.dedent(
-                """\
-               #include <stdio.h>
-
-               int main()
-               {
-                   return 0;
-               }"""
-            )
-
             create_project(
                 projects_dir_name=CLANG_PROJECTS_DIR_NAME,
                 project_name=project_name,
                 file_name="main.c",
-                file_content=c_file_content,
+                file_content=new_project_config["file_content"][0]["c_lang_content"],
                 ide=ide_name,
             )
         elif rust:

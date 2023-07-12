@@ -7,5 +7,13 @@
   "rust_projects_dir_name": "rust_projects",
   "cpp_projects_dir_name": "cpp_projects",
   "clang_projects_dir_name": "c_projects",
-  "non_specific_projects_dir_name": "non_specific_projects"
+  "non_specific_projects_dir_name": "non_specific_projects",
+  "file_content": [
+    {
+      "python_content": "#!/usr/bin/env python3",
+      "bash_content": "#!/bin/bash",
+      "cpp_content": "#include <iostream>\n\nint main()\n{\n    return 0;\n}",
+      "c_lang_content": "#include <stdio.h>\n\nint main()\n{\n   return 0;\n}"
+    }
+  ]
 }
