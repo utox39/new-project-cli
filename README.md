@@ -45,15 +45,17 @@ $HOME
        └── rust_projects 
 ```
 
-#### Rust projects
+#### Projects created via commands
 
-To create a new rust project, newproject use the following command:
+E.g: To create a new Rust project, newproject use the following command:
 
 ```console
 $ cargo new project_name
 ```
 
-So it use the default command to create a new cargo package
+So it use the default command to create a new cargo package.
+
+The same is for Ruby, Dart and Flutter.
 
 ## Requirements
 
@@ -100,12 +102,6 @@ $ .\install.ps1
 
 ```console
 $ newproject --python project_name
-```
-
-### Create a non-specific project
-
-```console
-$ newproject --none project_name
 ```
 
 ### Create a new project and open it in Visual Studio Code
