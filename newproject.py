@@ -20,8 +20,7 @@ from rich.console import Console
 console = Console()
 
 # Config file
-# CONFIG_FILE: Final[str] = f"{Path.home()}/.config/newproject/newproject_config.json"
-CONFIG_FILE: Final[str] = "./newproject_config.json"
+CONFIG_FILE: Final[str] = f"{Path.home()}/.config/newproject/newproject_config.json"
 
 # Load json config file
 try:
