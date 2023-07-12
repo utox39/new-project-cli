@@ -176,6 +176,11 @@ def create_python_venv(new_project_path: str) -> None:
         sys.exit(1)
 
 
+def create_readme(new_project_dir, project_name):
+    with open(f"{new_project_dir}/README.md", "w") as readme:
+        readme.write(f"#{project_name}")
+
+
 def create_project(
         projects_dir_name: str,
         project_name: str,
@@ -207,6 +212,9 @@ def create_project(
 
         # Creating the file structure
         create_and_write_file(new_project_dir=new_project_dir, file_name=file_name, content=file_content)
+
+        # Creating the README for the new project
+        create_readme(new_project_dir=new_project_dir, project_name=project_name)
 
         # git init
         git_init_command(project_dir=new_project_dir, projects_dir_name=projects_dir_name)
