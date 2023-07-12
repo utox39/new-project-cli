@@ -243,13 +243,13 @@ def create_project_with_commands(
     if projects_dir_name == RUST_PROJECTS_DIR_NAME:
         command = "cargo"
         creation_command = "new"
-    elif project_name == RUBY_PROJECTS_DIR_NAME:
+    elif projects_dir_name == RUBY_PROJECTS_DIR_NAME:
         command = "bundler"
         creation_command = "gem"
-    elif project_name == DART_PROJECTS_DIR_NAME:
+    elif projects_dir_name == DART_PROJECTS_DIR_NAME:
         command = "dart"
         creation_command = "create"
-    elif project_name == FLUTTER_PROJECTS_DIR_NAME:
+    elif projects_dir_name == FLUTTER_PROJECTS_DIR_NAME:
         command = "flutter"
         creation_command = "create"
 
@@ -257,15 +257,14 @@ def create_project_with_commands(
         try:
             subprocess.run([command, creation_command, new_project_dir])
             print(DONE)
+            # Open in IDE
+            open_in_ide(ide_command=ide, project_dir=new_project_dir)
+
+            console.print("[gold1]⫸ Happy Coding![/gold1]")
         except Exception as command_exception:
             print(f"Error: {command_exception}\nCould not create rust project")
     else:
         console.print(f"[red][underline]{command}[/underline]: command not found...[/red]")
-
-    # Open in IDE
-    open_in_ide(ide_command=ide, project_dir=new_project_dir)
-
-    console.print("[gold1]⫸ Happy Coding![/gold1]")
 
 
 def handle(
