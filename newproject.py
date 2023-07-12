@@ -177,7 +177,7 @@ def create_python_venv(new_project_path: str) -> None:
 
 def create_readme(new_project_dir, project_name):
     with open(f"{new_project_dir}/README.md", "w") as readme:
-        readme.write(f"#{project_name}")
+        readme.write(f"# {project_name}")
 
 
 def create_project(
