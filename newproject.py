@@ -20,7 +20,8 @@ from rich.console import Console
 console = Console()
 
 # Config file
-CONFIG_FILE: Final[str] = f"{Path.home()}/.config/newproject/newproject_config.json"
+# CONFIG_FILE: Final[str] = f"{Path.home()}/.config/newproject/newproject_config.json"
+CONFIG_FILE: Final[str] = "./newproject_config.json"
 
 # Load json config file
 try:
@@ -82,13 +83,14 @@ def open_in_ide(ide_command: str, project_dir: str) -> None:
     :param ide_command: (str) the console command to open the IDE
     :param project_dir: (str) the project directory to open in the IDE
     """
-    if which(f"{ide_command}") is not None:
-        try:
-            subprocess.run([f"{ide_command}", f"{project_dir}"])
-        except Exception as open_in_ide_error:
-            print(f"Error: {open_in_ide_error}\nCould not open project in IDE")
-    else:
-        console.print(f"[red][underline]{ide_command}[/underline]: command not found...[/red]")
+    if ide_command == "code" or ide_command == "pycharm" or ide_command == "idea":
+        if which(f"{ide_command}") is not None:
+            try:
+                subprocess.run([f"{ide_command}", f"{project_dir}"])
+            except Exception as open_in_ide_error:
+                print(f"Error: {open_in_ide_error}\nCould not open project in IDE")
+        else:
+            console.print(f"[red][underline]{ide_command}[/underline]: command not found...[/red]")
 
 
 def git_init_command(project_dir: str, projects_dir_name: str) -> None:
@@ -210,13 +212,7 @@ def create_project(
         git_init_command(project_dir=new_project_dir, projects_dir_name=projects_dir_name)
 
         # Open in IDE
-        match ide:
-            case 'code':
-                open_in_ide(ide_command=ide, project_dir=new_project_dir)
-            case 'pycharm':
-                open_in_ide(ide_command=ide, project_dir=new_project_dir)
-            case 'idea':
-                open_in_ide(ide_command=ide, project_dir=new_project_dir)
+        open_in_ide(ide_command=ide, project_dir=new_project_dir)
 
         console.print("[gold1]⫸ Happy Coding![/gold1]")
 
@@ -249,13 +245,7 @@ def create_rust_project(project_name: str, ide: str = "") -> None:
         console.print("[red][underline]cargo[/underline]: command not found...[/red]")
 
     # Open in IDE
-    match ide:
-        case 'code':
-            open_in_ide(ide_command=ide, project_dir=new_rust_project_dir)
-        case 'pycharm':
-            open_in_ide(ide_command=ide, project_dir=new_rust_project_dir)
-        case 'idea':
-            open_in_ide(ide_command=ide, project_dir=new_rust_project_dir)
+    open_in_ide(ide_command=ide, project_dir=new_rust_project_dir)
 
     console.print("[gold1]⫸ Happy Coding![/gold1]")
 
@@ -282,13 +272,7 @@ def create_ruby_project(project_name: str, ide: str = "") -> None:
         console.print("[red][underline]bundler[/underline]: command not found...[/red]")
 
     # Open in IDE
-    match ide:
-        case 'code':
-            open_in_ide(ide_command=ide, project_dir=new_ruby_project_dir)
-        case 'pycharm':
-            open_in_ide(ide_command=ide, project_dir=new_ruby_project_dir)
-        case 'idea':
-            open_in_ide(ide_command=ide, project_dir=new_ruby_project_dir)
+    open_in_ide(ide_command=ide, project_dir=new_ruby_project_dir)
 
     console.print("[gold1]⫸ Happy Coding![/gold1]")
 
