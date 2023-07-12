@@ -45,7 +45,6 @@ CLANG_PROJECTS_DIR_NAME: Final[str] = new_project_config["clang_projects_dir_nam
 RUBY_PROJECTS_DIR_NAME: Final[str] = new_project_config["ruby_projects_dir_name"]
 DART_PROJECTS_DIR_NAME: Final[str] = new_project_config["dart_projects_dir_name"]
 FLUTTER_PROJECTS_DIR_NAME: Final[str] = new_project_config["flutter_projects_dir_name"]
-NON_SPECIFIC_PROJECTS_DIR_NAME: Final[str] = new_project_config["non_specific_projects_dir_name"]
 
 DONE: Final[str] = "✓ Done.\n"
 
@@ -207,8 +206,7 @@ def create_project(
             create_python_venv(new_project_path=new_project_dir)
 
         # Creating the file structure
-        if projects_dir_name != NON_SPECIFIC_PROJECTS_DIR_NAME:
-            create_and_write_file(new_project_dir=new_project_dir, file_name=file_name, content=file_content)
+        create_and_write_file(new_project_dir=new_project_dir, file_name=file_name, content=file_content)
 
         # git init
         git_init_command(project_dir=new_project_dir, projects_dir_name=projects_dir_name)
@@ -225,116 +223,53 @@ def create_project(
         sys.exit(errno.EEXIST)
 
 
-def create_rust_project(project_name: str, ide: str = "") -> None:
-    """
-    Create a rust project
-    :param project_name: (str) the name of the new project
-    :param ide: (str): the name of the IDE where you want to open the new project
-    """
-    projects_path_check(projects_dir_to_check=RUST_PROJECTS_DIR_NAME)
+def create_project_with_commands(
+        projects_dir_name: str,
+        project_name: str,
+        ide: str = "",
+):
+    projects_path_check(projects_dir_to_check=projects_dir_name)
 
-    rust_projects_path = os.path.join(DEV_DIR, RUST_PROJECTS_DIR_NAME)
+    projects_path = os.path.join(DEV_DIR, projects_dir_name)
+    # Creating the project folder
+    new_project_dir = f"{projects_path}/{project_name}"
+
     # Creating the project folder and file structure for the project
     console.print("[dodger_blue1]Creating the file structure...[/dodger_blue1]")
-    new_rust_project_dir = f"{rust_projects_path}/{project_name}"
-    if which("cargo") is not None:
+
+    command = ""
+    creation_command = ""
+
+    if projects_dir_name == RUST_PROJECTS_DIR_NAME:
+        command = "cargo"
+        creation_command = "new"
+    elif project_name == RUBY_PROJECTS_DIR_NAME:
+        command = "bundler"
+        creation_command = "gem"
+    elif project_name == DART_PROJECTS_DIR_NAME:
+        command = "dart"
+        creation_command = "create"
+    elif project_name == FLUTTER_PROJECTS_DIR_NAME:
+        command = "flutter"
+        creation_command = "create"
+
+    if which(command) is not None:
         try:
-            subprocess.run(["cargo", "new", new_rust_project_dir])
+            subprocess.run([command, creation_command, new_project_dir])
             print(DONE)
-        except Exception as cargo_exception:
-            print(f"Error: {cargo_exception}\nCould not create rust project")
+        except Exception as command_exception:
+            print(f"Error: {command_exception}\nCould not create rust project")
     else:
-        console.print("[red][underline]cargo[/underline]: command not found...[/red]")
+        console.print(f"[red][underline]{command}[/underline]: command not found...[/red]")
 
     # Open in IDE
-    open_in_ide(ide_command=ide, project_dir=new_rust_project_dir)
-
-    console.print("[gold1]⫸ Happy Coding![/gold1]")
-
-
-def create_ruby_project(project_name: str, ide: str = "") -> None:
-    """
-    Create a ruby project with bundler (https://rubygems.org/gems/bundler)
-    :param project_name: (str) the name of the new project
-    :param ide: (str): the name of the IDE where you want to open the new project
-    """
-    projects_path_check(projects_dir_to_check=RUBY_PROJECTS_DIR_NAME)
-
-    ruby_projects_path = os.path.join(DEV_DIR, RUBY_PROJECTS_DIR_NAME)
-    # Creating the project folder and file structure for the project
-    console.print("[dodger_blue1]Creating the file structure...[/dodger_blue1]")
-    new_ruby_project_dir = f"{ruby_projects_path}/{project_name}"
-    if which("bundler") is not None:
-        try:
-            subprocess.run(["bundler", "gem", new_ruby_project_dir])
-            print(DONE)
-        except Exception as bundler_exception:
-            print(f"Error: {bundler_exception}\nCould not create ruby project")
-    else:
-        console.print("[red][underline]bundler[/underline]: command not found...[/red]")
-
-    # Open in IDE
-    open_in_ide(ide_command=ide, project_dir=new_ruby_project_dir)
-
-    console.print("[gold1]⫸ Happy Coding![/gold1]")
-
-
-def create_dart_project(project_name: str, ide: str = "") -> None:
-    """
-    Create a dart project
-    :param project_name: (str) the name of the new project
-    :param ide: (str): the name of the IDE where you want to open the new project
-    """
-    projects_path_check(projects_dir_to_check=DART_PROJECTS_DIR_NAME)
-
-    dart_projects_path = os.path.join(DEV_DIR, DART_PROJECTS_DIR_NAME)
-    # Creating the project folder and file structure for the project
-    console.print("[dodger_blue1]Creating the file structure...[/dodger_blue1]")
-    new_dart_project_dir = f"{dart_projects_path}/{project_name}"
-    if which("dart") is not None:
-        try:
-            subprocess.run(["dart", "create", new_dart_project_dir])
-            print(DONE)
-        except Exception as dart_exception:
-            print(f"Error: {dart_exception}\nCould not create dart project")
-    else:
-        console.print("[red][underline]dart[/underline]: command not found...[/red]")
-
-    # Open in IDE
-    open_in_ide(ide_command=ide, project_dir=new_dart_project_dir)
-
-    console.print("[gold1]⫸ Happy Coding![/gold1]")
-
-
-def create_flutter_project(project_name: str, ide: str = "") -> None:
-    """
-    Create a flutter project
-    :param project_name: (str) the name of the new project
-    :param ide: (str): the name of the IDE where you want to open the new project
-    """
-    projects_path_check(projects_dir_to_check=FLUTTER_PROJECTS_DIR_NAME)
-
-    flutter_projects_path = os.path.join(DEV_DIR, FLUTTER_PROJECTS_DIR_NAME)
-    # Creating the project folder and file structure for the project
-    console.print("[dodger_blue1]Creating the file structure...[/dodger_blue1]")
-    new_flutter_project_dir = f"{flutter_projects_path}/{project_name}"
-    if which("dart") is not None:
-        try:
-            subprocess.run(["flutter", "create", new_flutter_project_dir])
-            print(DONE)
-        except Exception as flutter_exception:
-            print(f"Error: {flutter_exception}\nCould not create dart project")
-    else:
-        console.print("[red][underline]flutter[/underline]: command not found...[/red]")
-
-    # Open in IDE
-    open_in_ide(ide_command=ide, project_dir=new_flutter_project_dir)
+    open_in_ide(ide_command=ide, project_dir=new_project_dir)
 
     console.print("[gold1]⫸ Happy Coding![/gold1]")
 
 
 def handle(
-        project_name: str,
+        project_name: Annotated[str, typer.Argument(help="The name of the new project")],
         python: Annotated[bool, typer.Option(help="create a python project")] = False,
         java: Annotated[bool, typer.Option(help="create a java project")] = False,
         go: Annotated[bool, typer.Option(help="create a go project")] = False,
@@ -343,11 +278,11 @@ def handle(
         clang: Annotated[bool, typer.Option(help="create a c project")] = False,
         rust: Annotated[bool, typer.Option(help="create a rust project")] = False,
         ruby: Annotated[bool, typer.Option(help="create a ruby project")] = False,
-        none: Annotated[bool, typer.Option(help="create a non-specific project")] = False,
+        dart: Annotated[bool, typer.Option(help="create a dart project")] = False,
+        flutter: Annotated[bool, typer.Option(help="create a flutter project")] = False,
         code: Annotated[bool, typer.Option(help="open the project in VS Code")] = False,
         pycharm: Annotated[bool, typer.Option(help="open the project in PyCharm")] = False,
         idea: Annotated[bool, typer.Option(help="open the project in Intellij IDEA")] = False
-
 ):
     """
     Create a new project via terminal
@@ -411,20 +346,28 @@ def handle(
                 ide=ide_name,
             )
         elif rust:
-            create_rust_project(
+            create_project_with_commands(
+                projects_dir_name=RUST_PROJECTS_DIR_NAME,
                 project_name=project_name,
-                ide=ide_name,
+                ide=ide_name
             )
         elif ruby:
-            create_ruby_project(
+            create_project_with_commands(
+                projects_dir_name=RUBY_PROJECTS_DIR_NAME,
                 project_name=project_name,
-                ide=ide_name,
+                ide=ide_name
             )
-        elif none:
-            create_project(
-                projects_dir_name=NON_SPECIFIC_PROJECTS_DIR_NAME,
+        elif dart:
+            create_project_with_commands(
+                projects_dir_name=DART_PROJECTS_DIR_NAME,
                 project_name=project_name,
-                ide=ide_name,
+                ide=ide_name
+            )
+        elif flutter:
+            create_project_with_commands(
+                projects_dir_name=FLUTTER_PROJECTS_DIR_NAME,
+                project_name=project_name,
+                ide=ide_name
             )
         else:
             console.print("[bold red]No option provided[/bold red]")

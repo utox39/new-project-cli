@@ -10,7 +10,6 @@
   "ruby_projects_dir_name": "ruby_projects",
   "dart_projects_dir_name": "dart_projects",
   "flutter_projects_dir_name": "flutter_projects",
-  "non_specific_projects_dir_name": "non_specific_projects",
   "file_content": [
     {
       "python_content": "#!/usr/bin/env python3",
