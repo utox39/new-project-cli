@@ -43,6 +43,8 @@ RUST_PROJECTS_DIR_NAME: Final[str] = new_project_config["rust_projects_dir_name"
 CPP_PROJECTS_DIR_NAME: Final[str] = new_project_config["cpp_projects_dir_name"]
 CLANG_PROJECTS_DIR_NAME: Final[str] = new_project_config["clang_projects_dir_name"]
 RUBY_PROJECTS_DIR_NAME: Final[str] = new_project_config["ruby_projects_dir_name"]
+DART_PROJECTS_DIR_NAME: Final[str] = new_project_config["dart_projects_dir_name"]
+FLUTTER_PROJECTS_DIR_NAME: Final[str] = new_project_config["flutter_projects_dir_name"]
 NON_SPECIFIC_PROJECTS_DIR_NAME: Final[str] = new_project_config["non_specific_projects_dir_name"]
 
 DONE: Final[str] = "✓ Done.\n"
@@ -273,6 +275,60 @@ def create_ruby_project(project_name: str, ide: str = "") -> None:
 
     # Open in IDE
     open_in_ide(ide_command=ide, project_dir=new_ruby_project_dir)
+
+    console.print("[gold1]⫸ Happy Coding![/gold1]")
+
+
+def create_dart_project(project_name: str, ide: str = "") -> None:
+    """
+    Create a dart project
+    :param project_name: (str) the name of the new project
+    :param ide: (str): the name of the IDE where you want to open the new project
+    """
+    projects_path_check(projects_dir_to_check=DART_PROJECTS_DIR_NAME)
+
+    dart_projects_path = os.path.join(DEV_DIR, DART_PROJECTS_DIR_NAME)
+    # Creating the project folder and file structure for the project
+    console.print("[dodger_blue1]Creating the file structure...[/dodger_blue1]")
+    new_dart_project_dir = f"{dart_projects_path}/{project_name}"
+    if which("dart") is not None:
+        try:
+            subprocess.run(["dart", "create", new_dart_project_dir])
+            print(DONE)
+        except Exception as dart_exception:
+            print(f"Error: {dart_exception}\nCould not create dart project")
+    else:
+        console.print("[red][underline]dart[/underline]: command not found...[/red]")
+
+    # Open in IDE
+    open_in_ide(ide_command=ide, project_dir=new_dart_project_dir)
+
+    console.print("[gold1]⫸ Happy Coding![/gold1]")
+
+
+def create_flutter_project(project_name: str, ide: str = "") -> None:
+    """
+    Create a flutter project
+    :param project_name: (str) the name of the new project
+    :param ide: (str): the name of the IDE where you want to open the new project
+    """
+    projects_path_check(projects_dir_to_check=FLUTTER_PROJECTS_DIR_NAME)
+
+    flutter_projects_path = os.path.join(DEV_DIR, FLUTTER_PROJECTS_DIR_NAME)
+    # Creating the project folder and file structure for the project
+    console.print("[dodger_blue1]Creating the file structure...[/dodger_blue1]")
+    new_flutter_project_dir = f"{flutter_projects_path}/{project_name}"
+    if which("dart") is not None:
+        try:
+            subprocess.run(["flutter", "create", new_flutter_project_dir])
+            print(DONE)
+        except Exception as flutter_exception:
+            print(f"Error: {flutter_exception}\nCould not create dart project")
+    else:
+        console.print("[red][underline]flutter[/underline]: command not found...[/red]")
+
+    # Open in IDE
+    open_in_ide(ide_command=ide, project_dir=new_flutter_project_dir)
 
     console.print("[gold1]⫸ Happy Coding![/gold1]")
 

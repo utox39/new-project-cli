@@ -8,6 +8,8 @@
   "cpp_projects_dir_name": "cpp_projects",
   "clang_projects_dir_name": "c_projects",
   "ruby_projects_dir_name": "ruby_projects",
+  "dart_projects_dir_name": "dart_projects",
+  "flutter_projects_dir_name": "flutter_projects",
   "non_specific_projects_dir_name": "non_specific_projects",
   "file_content": [
     {

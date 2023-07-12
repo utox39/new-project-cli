@@ -54,14 +54,22 @@ So it use the default command to create a new cargo package
 
 ## Requirements
 
-#### To create a rust projects
+#### To create a Rust projects
 
 - [Rust](https://www.rust-lang.org/learn/get-started)
 
-#### To create a ruby projects
+#### To create a Ruby projects
 
 - [Ruby](https://www.ruby-lang.org/en/documentation/installation/)
 - [bundler](https://rubygems.org/gems/bundler)
+
+#### To create a Dart project
+
+- [Dart](https://dart.dev/get-dart)
+
+#### To create a Flutter project
+
+- [Flutter](https://docs.flutter.dev/get-started/install)
 
 ## Installation
 
