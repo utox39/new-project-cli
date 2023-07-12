@@ -9,12 +9,10 @@ import textwrap
 import typer
 
 from pathlib import Path
+from rich.console import Console
 from shutil import which
 from typing_extensions import Annotated
 from typing import Final
-
-# rich
-from rich.console import Console
 
 # rich config
 console = Console()
