@@ -39,7 +39,7 @@ for the
 section, and I selected the most used languages and those
 that I consider to be the most promising or interesting
 
-#### Default development directories tree
+### Default development directories tree
 
 ```
 $HOME
@@ -60,7 +60,7 @@ $HOME
        └── web_projects 
 ```
 
-#### Projects created via commands
+### Projects created via commands
 
 E.g: To create a new Rust project, newproject use the following command:
 
