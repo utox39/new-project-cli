@@ -42,6 +42,7 @@ CLANG_PROJECTS_DIR_NAME: Final[str] = new_project_config["clang_projects_dir_nam
 RUBY_PROJECTS_DIR_NAME: Final[str] = new_project_config["ruby_projects_dir_name"]
 DART_PROJECTS_DIR_NAME: Final[str] = new_project_config["dart_projects_dir_name"]
 FLUTTER_PROJECTS_DIR_NAME: Final[str] = new_project_config["flutter_projects_dir_name"]
+OCAML_PROJECTS_DIR_NAME: Final[str] = new_project_config["ocaml_projects_dir_name"]
 
 DONE: Final[str] = "✓ Done.\n"
 
@@ -252,6 +253,8 @@ def create_project_with_commands(
         commands = ["dart", "create", new_project_dir]
     elif projects_dir_name == FLUTTER_PROJECTS_DIR_NAME:
         commands = ["flutter", "create", new_project_dir]
+    elif projects_dir_name == OCAML_PROJECTS_DIR_NAME:
+        commands = ["dune", "init", "project", new_project_dir]
 
     if which(commands[0]) is not None:
         try:
@@ -262,7 +265,7 @@ def create_project_with_commands(
 
             console.print("[gold1]⫸ Happy Coding![/gold1]")
         except Exception as command_exception:
-            print(f"Error: {command_exception}\nCould not create rust project")
+            print(f"Error: {command_exception}\nCould not create the project")
     else:
         console.print(f"[red][underline]{commands[0]}[/underline]: command not found...[/red]")
 
@@ -279,6 +282,7 @@ def handle(
         ruby: Annotated[bool, typer.Option(help="create a ruby project")] = False,
         dart: Annotated[bool, typer.Option(help="create a dart project")] = False,
         flutter: Annotated[bool, typer.Option(help="create a flutter project")] = False,
+        ocaml: Annotated[bool, typer.Option(help="create an ocaml project")] = False,
         code: Annotated[bool, typer.Option(help="open the project in VS Code")] = False,
         pycharm: Annotated[bool, typer.Option(help="open the project in PyCharm")] = False,
         idea: Annotated[bool, typer.Option(help="open the project in Intellij IDEA")] = False
@@ -365,6 +369,12 @@ def handle(
         elif flutter:
             create_project_with_commands(
                 projects_dir_name=FLUTTER_PROJECTS_DIR_NAME,
+                project_name=project_name,
+                ide=ide_name
+            )
+        elif ocaml:
+            create_project_with_commands(
+                projects_dir_name=OCAML_PROJECTS_DIR_NAME,
                 project_name=project_name,
                 ide=ide_name
             )

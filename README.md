@@ -10,16 +10,17 @@ This tool will help you create a minimal structure for your new project.
 
 You can create new:
 
-- bash projects
-- c projects
-- cpp projects
-- dart projects
-- flutter projects
-- go projects
-- java projects
-- python projects
-- ruby projects
-- rust projects
+- Bash projects
+- C projects
+- CPP projects
+- Dart projects
+- Flutter projects
+- Go projects
+- Java projects
+- OCaml projects
+- Python projects
+- Ruby projects
+- Rust projects
 
 and open them in:
 
@@ -40,6 +41,7 @@ $HOME
        ├── flutter_projects 
        ├── go_projects
        ├── java_projects
+       ├── ocaml_projects
        ├── python_projects
        ├── ruby_projects
        └── rust_projects 
@@ -68,13 +70,18 @@ The same is for Ruby, Dart and Flutter.
 - [Ruby](https://www.ruby-lang.org/en/documentation/installation/)
 - [bundler](https://rubygems.org/gems/bundler)
 
-#### To create a Dart project
+#### To create a Dart projects
 
 - [Dart](https://dart.dev/get-dart)
 
-#### To create a Flutter project
+#### To create a Flutter projects
 
 - [Flutter](https://docs.flutter.dev/get-started/install)
+
+#### To create a OCaml projects
+
+- [OCaml](https://ocaml.org/install)
+- [dune](https://ocaml.org/install)
 
 ## Installation
 
