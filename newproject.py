@@ -39,10 +39,12 @@ BASH_PROJECTS_DIR_NAME: Final[str] = new_project_config["bash_projects_dir_name"
 RUST_PROJECTS_DIR_NAME: Final[str] = new_project_config["rust_projects_dir_name"]
 CPP_PROJECTS_DIR_NAME: Final[str] = new_project_config["cpp_projects_dir_name"]
 CLANG_PROJECTS_DIR_NAME: Final[str] = new_project_config["clang_projects_dir_name"]
+PHP_PROJECTS_DIR_NAME: Final[str] = new_project_config["php_projects_dir_name"]
 RUBY_PROJECTS_DIR_NAME: Final[str] = new_project_config["ruby_projects_dir_name"]
 DART_PROJECTS_DIR_NAME: Final[str] = new_project_config["dart_projects_dir_name"]
 FLUTTER_PROJECTS_DIR_NAME: Final[str] = new_project_config["flutter_projects_dir_name"]
 OCAML_PROJECTS_DIR_NAME: Final[str] = new_project_config["ocaml_projects_dir_name"]
+WEB_PROJECTS_DIR_NAME: Final[str] = new_project_config["web_projects_dir_name"]
 
 DONE: Final[str] = "✓ Done.\n"
 
@@ -202,6 +204,8 @@ def create_project(
     new_project_dir = f"{projects_path}/{project_name}"
 
     try:
+        console.print("[dodger_blue1]Creating the project structure...[/dodger_blue1]")
+
         os.mkdir(new_project_dir)
 
         if projects_dir_name == PY_PROJECTS_DIR_NAME:
@@ -234,6 +238,12 @@ def create_project_with_commands(
         project_name: str,
         ide: str = "",
 ):
+    """
+    Create a new project via dedicated commands.
+    :param projects_dir_name: (str) the name of the specified programming language's directory
+    :param project_name: (str) the name of the new project
+    :param ide: (str) the name of the IDE where you want to open the new project
+    """
     projects_path_check(projects_dir_to_check=projects_dir_name)
 
     projects_path = os.path.join(DEV_DIR, projects_dir_name)
@@ -241,7 +251,7 @@ def create_project_with_commands(
     new_project_dir = f"{projects_path}/{project_name}"
 
     # Creating the project folder and file structure for the project
-    console.print("[dodger_blue1]Creating the file structure...[/dodger_blue1]")
+    console.print("[dodger_blue1]Creating the project structure...[/dodger_blue1]")
 
     commands = []
 
@@ -270,6 +280,60 @@ def create_project_with_commands(
         console.print(f"[red][underline]{commands[0]}[/underline]: command not found...[/red]")
 
 
+def create_web_project(
+        projects_dir_name: str,
+        project_name: str,
+        file_content: str = "",
+        ide: str = "",
+):
+    """
+    Create a basic new web project
+    :param projects_dir_name:
+    :param project_name:
+    :param file_content:
+    :param ide:
+    """
+    # check if the specified projects folder exists
+    projects_path_check(projects_dir_to_check=projects_dir_name)
+
+    projects_path = os.path.join(DEV_DIR, projects_dir_name)
+    # Creating the project folder
+    new_project_dir = f"{projects_path}/{project_name}"
+
+    try:
+        console.print("[dodger_blue1]Creating the project structure...[/dodger_blue1]")
+
+        os.mkdir(new_project_dir)
+        os.mkdir(f"{new_project_dir}/styles")
+        os.mkdir(f"{new_project_dir}/scripts")
+
+        # Creating the file structure
+
+        # Creating Html file
+        create_and_write_file(new_project_dir=new_project_dir, file_name="index.html", content=file_content)
+        # Creating Css file
+        create_and_write_file(new_project_dir=f"{new_project_dir}/styles", file_name="style.css", content=file_content)
+        # Creating Javascript file
+        create_and_write_file(new_project_dir=f"{new_project_dir}/scripts", file_name="index.js", content=file_content)
+
+        # Creating the README for the new project
+        create_readme(new_project_dir=new_project_dir, project_name=project_name)
+
+        # git init
+        git_init_command(project_dir=new_project_dir, projects_dir_name=projects_dir_name)
+
+        # Open in IDE
+        open_in_ide(ide_command=ide, project_dir=new_project_dir)
+
+        console.print("[gold1]⫸ Happy Coding![/gold1]")
+
+    except FileExistsError:
+        console.print(
+            f"{new_project_dir} [bold red3]already exists![/bold red3]"
+        )
+        sys.exit(errno.EEXIST)
+
+
 def handle(
         project_name: Annotated[str, typer.Argument(help="The name of the new project")],
         python: Annotated[bool, typer.Option(help="create a python project")] = False,
@@ -278,11 +342,13 @@ def handle(
         bash: Annotated[bool, typer.Option(help="create a bash project")] = False,
         cpp: Annotated[bool, typer.Option(help="create a cpp project")] = False,
         clang: Annotated[bool, typer.Option(help="create a c project")] = False,
+        php: Annotated[bool, typer.Option(help="create a php project")] = False,
         rust: Annotated[bool, typer.Option(help="create a rust project")] = False,
         ruby: Annotated[bool, typer.Option(help="create a ruby project")] = False,
         dart: Annotated[bool, typer.Option(help="create a dart project")] = False,
         flutter: Annotated[bool, typer.Option(help="create a flutter project")] = False,
         ocaml: Annotated[bool, typer.Option(help="create an ocaml project")] = False,
+        web: Annotated[bool, typer.Option(help="create a basic web project")] = False,
         code: Annotated[bool, typer.Option(help="open the project in VS Code")] = False,
         pycharm: Annotated[bool, typer.Option(help="open the project in PyCharm")] = False,
         idea: Annotated[bool, typer.Option(help="open the project in Intellij IDEA")] = False
@@ -348,6 +414,13 @@ def handle(
                 file_content=new_project_config["file_content"][0]["c_lang_content"],
                 ide=ide_name,
             )
+        elif php:
+            create_project(
+                projects_dir_name=PHP_PROJECTS_DIR_NAME,
+                project_name=project_name,
+                file_name="index.php",
+                ide=ide_name,
+            )
         elif rust:
             create_project_with_commands(
                 projects_dir_name=RUST_PROJECTS_DIR_NAME,
@@ -375,6 +448,13 @@ def handle(
         elif ocaml:
             create_project_with_commands(
                 projects_dir_name=OCAML_PROJECTS_DIR_NAME,
+                project_name=project_name,
+                ide=ide_name
+            )
+
+        elif web:
+            create_web_project(
+                projects_dir_name=WEB_PROJECTS_DIR_NAME,
                 project_name=project_name,
                 ide=ide_name
             )

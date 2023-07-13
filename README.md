@@ -18,15 +18,26 @@ You can create new:
 - Go projects
 - Java projects
 - OCaml projects
+- PHP projects
 - Python projects
 - Ruby projects
 - Rust projects
+- Web projects
 
 and open them in:
 
 - Visual Studio Code
 - PyCharm
 - IntelliJ IDEA
+
+### Why this programming languages? (Yes, I know Flutter is a Framework)
+
+I mainly based myself on the percentages reported by
+[Stackoverflow's 2023 Developer Survey](https://survey.stackoverflow.co/2023/)
+for the
+["Programming, scripting, and markup languages"](https://survey.stackoverflow.co/2023/#section-most-popular-technologies-programming-scripting-and-markup-languages)
+section, and I selected the most used languages and those
+that I consider to be the most promising or interesting
 
 #### Default development directories tree
 
@@ -42,9 +53,11 @@ $HOME
        ├── go_projects
        ├── java_projects
        ├── ocaml_projects
+       ├── php_projects
        ├── python_projects
        ├── ruby_projects
-       └── rust_projects 
+       ├── rust_projects
+       └── web_projects 
 ```
 
 #### Projects created via commands
@@ -105,13 +118,31 @@ $ .\install.ps1
 
 ## Usage
 
-### Create a new python project
+#### Create a new python project
 
 ```console
 $ newproject --python project_name
 ```
 
-### Create a new project and open it in Visual Studio Code
+#### Create a new web project
+
+```console
+$ newproject --web project_name
+```
+
+This command will create a very simple web project with this structure:
+
+```
+project_name
+├── README.md
+├── index.html
+├── scripts
+│   └── index.js
+└── styles
+    └── style.css 
+```
+
+#### Create a new project and open it in Visual Studio Code
 
 ATTENTION: In order to open the new project in your favorite IDE you need to have the shell command
 
@@ -119,7 +150,9 @@ ATTENTION: In order to open the new project in your favorite IDE you need to hav
 $ newproject --code --python project_name
 ```
 
-### Customize the Development folder
+### Customization
+
+#### Customize the Development folder
 
 In ~/.config/newproject/newproject_config.json:
 
@@ -129,7 +162,7 @@ In ~/.config/newproject/newproject_config.json:
 }
 ```
 
-### Customize a programming language projects folder
+#### Customize a programming language projects folder
 
 In ~/.config/newproject/newproject_config.json:
 

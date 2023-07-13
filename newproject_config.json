@@ -7,10 +7,12 @@
   "rust_projects_dir_name": "rust_projects",
   "cpp_projects_dir_name": "cpp_projects",
   "clang_projects_dir_name": "c_projects",
+  "php_projects_dir_name": "php_projects",
   "ruby_projects_dir_name": "ruby_projects",
   "dart_projects_dir_name": "dart_projects",
   "flutter_projects_dir_name": "flutter_projects",
   "ocaml_projects_dir_name": "ocaml_projects",
+  "web_projects_dir_name": "web_projects",
   "file_content": [
     {
       "python_content": "#!/usr/bin/env python3",
