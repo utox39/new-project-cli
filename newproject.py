@@ -351,7 +351,7 @@ def handle(
         dart: Annotated[bool, typer.Option(help="create a dart project")] = False,
         flutter: Annotated[bool, typer.Option(help="create a flutter project")] = False,
         ocaml: Annotated[bool, typer.Option(help="create an ocaml project")] = False,
-        vlang: Annotated[bool, typer.Option(help="create an vlang project")] = False,
+        vlang: Annotated[bool, typer.Option(help="create a vlang project")] = False,
         web: Annotated[bool, typer.Option(help="create a basic web project")] = False,
         code: Annotated[bool, typer.Option(help="open the project in VS Code")] = False,
         pycharm: Annotated[bool, typer.Option(help="open the project in PyCharm")] = False,
