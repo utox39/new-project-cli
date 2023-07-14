@@ -12,6 +12,7 @@
   "dart_projects_dir_name": "dart_projects",
   "flutter_projects_dir_name": "flutter_projects",
   "ocaml_projects_dir_name": "ocaml_projects",
+  "vlang_projects_dir_name": "vlang_projects",
   "web_projects_dir_name": "web_projects",
   "file_content": [
     {
