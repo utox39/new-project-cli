@@ -9,7 +9,7 @@ fi
 
 if [ -f ./requirements.txt ]; then
     # installing requirements.txt
-    if [ $CMD_EXIT_STATUS -eq 0 ]; then
+    if [ $CMD_EXIT_STATUS -eq 0 ] && command -v pip3; then
       pip3 install -r requirements.txt
     else
       exit 1
