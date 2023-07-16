@@ -2,11 +2,11 @@
 
 import errno
 import os
-import json
 import subprocess
 import sys
 import textwrap
 import typer
+import yaml
 
 from pathlib import Path
 from rich.console import Console
@@ -18,40 +18,44 @@ from typing import Final
 console = Console()
 
 # Config file
-CONFIG_FILE: Final[str] = f"{Path.home()}/.config/newproject/newproject_config.json"
+CONFIG_FILE: Final[str] = f"{Path.home()}/.config/newproject/newproject_config.yaml"
 
-# Load json config file
+# Load YAML config file
 try:
     with open(CONFIG_FILE) as config_file:
-        new_project_config = json.load(config_file)
+        new_project_config = yaml.safe_load(config_file)
 except FileNotFoundError:
-    print("Error: Json config file not found")
+    print("Error: YAML config file not found")
     sys.exit(errno.ENOENT)
 
 # Default Development folder
-DEV_DIR: Final[str] = f"{Path.home()}/{new_project_config['dev_dir']}"
+DEV_DIR: Final[str] = f"{Path.home()}/{new_project_config['development_dir_path']}"
 
-# Projects folder names
-PY_PROJECTS_DIR_NAME: Final[str] = new_project_config["py_projects_dir_name"]
-JAVA_PROJECTS_DIR_NAME: Final[str] = new_project_config["java_projects_dir_name"]
-GO_PROJECTS_DIR_NAME: Final[str] = new_project_config["go_projects_dir_name"]
-BASH_PROJECTS_DIR_NAME: Final[str] = new_project_config["bash_projects_dir_name"]
-RUST_PROJECTS_DIR_NAME: Final[str] = new_project_config["rust_projects_dir_name"]
-CPP_PROJECTS_DIR_NAME: Final[str] = new_project_config["cpp_projects_dir_name"]
-CLANG_PROJECTS_DIR_NAME: Final[str] = new_project_config["clang_projects_dir_name"]
-PHP_PROJECTS_DIR_NAME: Final[str] = new_project_config["php_projects_dir_name"]
-LUA_PROJECTS_DIR_NAME: Final[str] = new_project_config["lua_projects_dir_name"]
-RUBY_PROJECTS_DIR_NAME: Final[str] = new_project_config["ruby_projects_dir_name"]
-DART_PROJECTS_DIR_NAME: Final[str] = new_project_config["dart_projects_dir_name"]
-FLUTTER_PROJECTS_DIR_NAME: Final[str] = new_project_config["flutter_projects_dir_name"]
-OCAML_PROJECTS_DIR_NAME: Final[str] = new_project_config["ocaml_projects_dir_name"]
-VLANG_PROJECTS_DIR_NAME: Final[str] = new_project_config["vlang_projects_dir_name"]
-WEB_PROJECTS_DIR_NAME: Final[str] = new_project_config["web_projects_dir_name"]
+# Project folder names
+PY_PROJECTS_DIR_NAME: Final[str] = new_project_config["project_folder_names"]["python_projects_dir_name"]
+JAVA_PROJECTS_DIR_NAME: Final[str] = new_project_config["project_folder_names"]["java_projects_dir_name"]
+GO_PROJECTS_DIR_NAME: Final[str] = new_project_config["project_folder_names"]["go_projects_dir_name"]
+BASH_PROJECTS_DIR_NAME: Final[str] = new_project_config["project_folder_names"]["bash_projects_dir_name"]
+RUST_PROJECTS_DIR_NAME: Final[str] = new_project_config["project_folder_names"]["rust_projects_dir_name"]
+CPP_PROJECTS_DIR_NAME: Final[str] = new_project_config["project_folder_names"]["cpp_projects_dir_name"]
+CLANG_PROJECTS_DIR_NAME: Final[str] = new_project_config["project_folder_names"]["clang_projects_dir_name"]
+PHP_PROJECTS_DIR_NAME: Final[str] = new_project_config["project_folder_names"]["php_projects_dir_name"]
+LUA_PROJECTS_DIR_NAME: Final[str] = new_project_config["project_folder_names"]["lua_projects_dir_name"]
+RUBY_PROJECTS_DIR_NAME: Final[str] = new_project_config["project_folder_names"]["ruby_projects_dir_name"]
+DART_PROJECTS_DIR_NAME: Final[str] = new_project_config["project_folder_names"]["dart_projects_dir_name"]
+FLUTTER_PROJECTS_DIR_NAME: Final[str] = new_project_config["project_folder_names"]["flutter_projects_dir_name"]
+OCAML_PROJECTS_DIR_NAME: Final[str] = new_project_config["project_folder_names"]["ocaml_projects_dir_name"]
+VLANG_PROJECTS_DIR_NAME: Final[str] = new_project_config["project_folder_names"]["vlang_projects_dir_name"]
+WEB_PROJECTS_DIR_NAME: Final[str] = new_project_config["project_folder_names"]["web_projects_dir_name"]
 
 # Outputs
 DONE: Final[str] = "✓ Done.\n"
 PROJECT_STRUCTURE_GEN: Final[str] = "[dodger_blue1]Creating the project structure...[/dodger_blue1]"
 HAPPY_CODING: Final[str] = "[gold1]⫸ Happy Coding![/gold1]"
+
+
+def main():
+    typer.run(handle)
 
 
 def dev_dir_check() -> bool:
@@ -381,7 +385,7 @@ def handle(
                 projects_dir_name=PY_PROJECTS_DIR_NAME,
                 project_name=project_name,
                 file_name="main.py",
-                file_content=new_project_config["file_content"][0]["python_content"],
+                file_content=new_project_config["file_content"]["python_file_content"],
                 ide=ide_name,
             )
         elif java:
@@ -396,6 +400,7 @@ def handle(
                 projects_dir_name=GO_PROJECTS_DIR_NAME,
                 project_name=project_name,
                 file_name="main.go",
+                file_content=new_project_config["file_content"]["go_file_content"],
                 ide=ide_name,
             )
         elif bash:
@@ -403,7 +408,7 @@ def handle(
                 projects_dir_name=BASH_PROJECTS_DIR_NAME,
                 project_name=project_name,
                 file_name=f"{project_name}.sh",
-                file_content=new_project_config["file_content"][0]["bash_content"],
+                file_content=new_project_config["file_content"]["bash_file_content"],
                 ide=ide_name,
             )
         elif cpp:
@@ -411,7 +416,7 @@ def handle(
                 projects_dir_name=CPP_PROJECTS_DIR_NAME,
                 project_name=project_name,
                 file_name="main.cpp",
-                file_content=new_project_config["file_content"][0]["cpp_content"],
+                file_content=new_project_config["file_content"]["cpp_file_content"],
                 ide=ide_name,
             )
 
@@ -420,7 +425,7 @@ def handle(
                 projects_dir_name=CLANG_PROJECTS_DIR_NAME,
                 project_name=project_name,
                 file_name="main.c",
-                file_content=new_project_config["file_content"][0]["c_lang_content"],
+                file_content=new_project_config["file_content"]["c_lang_file_content"],
                 ide=ide_name,
             )
         elif php:
@@ -482,10 +487,6 @@ def handle(
             )
         else:
             console.print("[bold red]No option provided[/bold red]")
-
-
-def main():
-    typer.run(handle)
 
 
 if __name__ == "__main__":
