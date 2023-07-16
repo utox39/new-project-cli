@@ -53,6 +53,10 @@ PROJECT_STRUCTURE_GEN: Final[str] = "[dodger_blue1]Creating the project structur
 HAPPY_CODING: Final[str] = "[gold1]⫸ Happy Coding![/gold1]"
 
 
+def main():
+    typer.run(handle)
+
+
 def dev_dir_check() -> bool:
     """
     Check if the development folder exists
@@ -482,10 +486,6 @@ def handle(
             )
         else:
             console.print("[bold red]No option provided[/bold red]")
-
-
-def main():
-    typer.run(handle)
 
 
 if __name__ == "__main__":
