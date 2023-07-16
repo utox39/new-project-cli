@@ -40,6 +40,7 @@ RUST_PROJECTS_DIR_NAME: Final[str] = new_project_config["rust_projects_dir_name"
 CPP_PROJECTS_DIR_NAME: Final[str] = new_project_config["cpp_projects_dir_name"]
 CLANG_PROJECTS_DIR_NAME: Final[str] = new_project_config["clang_projects_dir_name"]
 PHP_PROJECTS_DIR_NAME: Final[str] = new_project_config["php_projects_dir_name"]
+LUA_PROJECTS_DIR_NAME: Final[str] = new_project_config["lua_projects_dir_name"]
 RUBY_PROJECTS_DIR_NAME: Final[str] = new_project_config["ruby_projects_dir_name"]
 DART_PROJECTS_DIR_NAME: Final[str] = new_project_config["dart_projects_dir_name"]
 FLUTTER_PROJECTS_DIR_NAME: Final[str] = new_project_config["flutter_projects_dir_name"]
@@ -346,6 +347,7 @@ def handle(
         cpp: Annotated[bool, typer.Option(help="create a cpp project")] = False,
         clang: Annotated[bool, typer.Option(help="create a c project")] = False,
         php: Annotated[bool, typer.Option(help="create a php project")] = False,
+        lua: Annotated[bool, typer.Option(help="create a lua project")] = False,
         rust: Annotated[bool, typer.Option(help="create a rust project")] = False,
         ruby: Annotated[bool, typer.Option(help="create a ruby project")] = False,
         dart: Annotated[bool, typer.Option(help="create a dart project")] = False,
@@ -423,6 +425,13 @@ def handle(
                 projects_dir_name=PHP_PROJECTS_DIR_NAME,
                 project_name=project_name,
                 file_name="index.php",
+                ide=ide_name,
+            )
+        elif lua:
+            create_project(
+                projects_dir_name=LUA_PROJECTS_DIR_NAME,
+                project_name=project_name,
+                file_name="main.lua",
                 ide=ide_name,
             )
         elif rust:
