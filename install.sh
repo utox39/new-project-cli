@@ -24,8 +24,8 @@ if [ -f ./requirements.txt ]; then
 
     # copying config file in config folder
     if [ $CMD_EXIT_STATUS -eq 0 ]; then
-      if [ -f ./newproject_config.json ]; then
-          cp ./newproject_config.json ~/.config/newproject/newproject_config.json
+      if [ -f ./newproject_config.yaml ]; then
+          cp ./newproject_config.yaml ~/.config/newproject/newproject_config.yaml
       else
           echo "Could not copy newproject_config.json file"
       fi
