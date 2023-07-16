@@ -19,6 +19,7 @@
     {
       "python_content": "#!/usr/bin/env python3",
       "bash_content": "#!/bin/bash",
+      "go_content": "package main\n\nimport \"fmt\"\n\nfunc main() {}",
       "cpp_content": "#include <iostream>\n\nint main()\n{\n    return 0;\n}",
       "c_lang_content": "#include <stdio.h>\n\nint main()\n{\n   return 0;\n}"
     }

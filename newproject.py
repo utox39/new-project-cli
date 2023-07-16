@@ -18,8 +18,8 @@ from typing import Final
 console = Console()
 
 # Config file
-CONFIG_FILE: Final[str] = f"{Path.home()}/.config/newproject/newproject_config.json"
-
+# CONFIG_FILE: Final[str] = f"{Path.home()}/.config/newproject/newproject_config.json"
+CONFIG_FILE: Final[str] = "./newproject_config.json"
 # Load json config file
 try:
     with open(CONFIG_FILE) as config_file:
@@ -396,6 +396,7 @@ def handle(
                 projects_dir_name=GO_PROJECTS_DIR_NAME,
                 project_name=project_name,
                 file_name="main.go",
+                file_content=new_project_config["file_content"][0]["go_content"],
                 ide=ide_name,
             )
         elif bash:
