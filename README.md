@@ -154,22 +154,19 @@ $ newproject --code --python project_name
 
 #### Customize the Development folder
 
-In ~/.config/newproject/newproject_config.json:
+In ~/.config/newproject/newproject_config.yaml:
 
-```json
-{
-  "dev_dir": "path/to/your/development/folder"
-}
+```yaml
+development_dir_path: path/to/your/development/folder
 ```
 
 #### Customize a programming language projects folder
 
 In ~/.config/newproject/newproject_config.json:
 
-```json
-{
-  "py_projects_dir_name": "name/of/the/folder"
-}
+```yaml
+project_folder_names:
+  python_projects_dir_name: python_projects
 ```
 
 ## Roadmap
