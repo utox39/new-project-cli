@@ -48,7 +48,10 @@ OCAML_PROJECTS_DIR_NAME: Final[str] = new_project_config["ocaml_projects_dir_nam
 VLANG_PROJECTS_DIR_NAME: Final[str] = new_project_config["vlang_projects_dir_name"]
 WEB_PROJECTS_DIR_NAME: Final[str] = new_project_config["web_projects_dir_name"]
 
+# Outputs
 DONE: Final[str] = "✓ Done.\n"
+PROJECT_STRUCTURE_GEN: Final[str] = "[dodger_blue1]Creating the project structure...[/dodger_blue1]"
+HAPPY_CODING: Final[str] = "[gold1]⫸ Happy Coding![/gold1]"
 
 
 def dev_dir_check() -> bool:
@@ -146,7 +149,7 @@ def create_and_write_file(new_project_dir: str, file_name: str, content: str) ->
     :param content: (str) content to write to file
     """
     # Creating the file structure
-    console.print("[dodger_blue1]Creating the file structure...[/dodger_blue1]")
+    console.print(PROJECT_STRUCTURE_GEN)
     with open(f"{new_project_dir}/{file_name}", "w") as project_file:
         project_file.write(content)
         console.print(f"▶ [underline]{file_name}[/underline] created.")
@@ -226,7 +229,7 @@ def create_project(
         # Open in IDE
         open_in_ide(ide_command=ide, project_dir=new_project_dir)
 
-        console.print("[gold1]⫸ Happy Coding![/gold1]")
+        console.print(HAPPY_CODING)
 
     except FileExistsError:
         console.print(
@@ -253,7 +256,7 @@ def create_project_with_commands(
     new_project_dir = f"{projects_path}/{project_name}"
 
     # Creating the project folder and file structure for the project
-    console.print("[dodger_blue1]Creating the project structure...[/dodger_blue1]")
+    console.print(PROJECT_STRUCTURE_GEN)
 
     commands = []
 
@@ -277,7 +280,7 @@ def create_project_with_commands(
             # Open in IDE
             open_in_ide(ide_command=ide, project_dir=new_project_dir)
 
-            console.print("[gold1]⫸ Happy Coding![/gold1]")
+            console.print(HAPPY_CODING)
         except Exception as command_exception:
             print(f"Error: {command_exception}\nCould not create the project")
     else:
@@ -305,7 +308,7 @@ def create_web_project(
     new_project_dir = f"{projects_path}/{project_name}"
 
     try:
-        console.print("[dodger_blue1]Creating the project structure...[/dodger_blue1]")
+        console.print(PROJECT_STRUCTURE_GEN)
 
         os.mkdir(new_project_dir)
         os.mkdir(f"{new_project_dir}/styles")
@@ -329,7 +332,7 @@ def create_web_project(
         # Open in IDE
         open_in_ide(ide_command=ide, project_dir=new_project_dir)
 
-        console.print("[gold1]⫸ Happy Coding![/gold1]")
+        console.print(HAPPY_CODING)
 
     except FileExistsError:
         console.print(
