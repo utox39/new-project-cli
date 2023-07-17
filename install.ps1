@@ -8,5 +8,5 @@ mkdir '~\.config\newproject'
 Copy-Item '.\newproject_config.yaml' '~\.config\newproject'
 
 $existingPath = [Environment]::GetEnvironmentVariable("PATH", "User")
-$newPath = $existingPath + ";C:\Program Files\new_project_cli"
+$newPath = $existingPath + ";C:\Program Files\newproject"
 [Environment]::SetEnvironmentVariable("PATH", $newPath, "User")
