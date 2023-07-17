@@ -1,24 +1,43 @@
 #!/bin/bash
 
+# Colors
+RED='\033[0;31m'
+LIGHT_GREEN='\033[1;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+
 CMD_EXIT_STATUS=$?
 
 if [ -f /usr/local/bin/newproject ]; then
-  echo "newproject is already installed"
+  echo -e "${YELLOW}newproject is already installed${NC}"
   exit 0
 fi
 
 if [ -f ./requirements.txt ]; then
     # installing requirements.txt
-    if [ $CMD_EXIT_STATUS -eq 0 ] && command -v pip3; then
-      pip3 install -r requirements.txt
+    if [ $CMD_EXIT_STATUS -eq 0 ]; then
+      if command -v pip3; then
+        pip3 install -r requirements.txt
+      else
+        echo -e "${RED} pip3 is not installed${NC}"
+        exit 127
+      fi
     else
+      echo -e "${RED}Could not install newproject${NC}"
       exit 1
     fi
 
     # creating new_project_cli_tool config folder
     if [ $CMD_EXIT_STATUS -eq 0 ]; then
-      mkdir ~/.config/newproject
+      if [ -f ~/.config/ ]; then
+        mkdir ~/.config/newproject
+      else
+        echo -e "${RED}~/.config/ does not exist${NC}"
+        exit 2
+      fi
     else
+      echo -e "${RED}Could not install newproject${NC}"
       exit 1
     fi
 
@@ -27,8 +46,12 @@ if [ -f ./requirements.txt ]; then
       if [ -f ./newproject_config.yaml ]; then
           cp ./newproject_config.yaml ~/.config/newproject/newproject_config.yaml
       else
-          echo "Could not copy newproject_config.json file"
+          echo -e "${RED}Could not copy newproject_config.yaml file${NC}"
+          exit 2
       fi
+    else
+      echo -e "${RED}Could not install newproject${NC}"
+      exit 1
     fi
 
     # making new project.py executable and copying it into the bin folder
@@ -38,15 +61,20 @@ if [ -f ./requirements.txt ]; then
           chmod +x ./newproject
           sudo mv ./newproject /usr/local/bin/newproject
       else
-          echo "Could not install newproject"
+        echo -e "${RED}Could not find newproject.py${NC}"
+        exit 2
       fi
+    else
+      echo -e "${RED}Could not install newproject${NC}"
+      exit 1
     fi
 
     if [ $CMD_EXIT_STATUS -eq 0 ]; then
-      echo "Installation completed successfully"
+      echo -e "${LIGHT_GREEN}Installation completed successfully${NC}"
     fi
 
 else
-    echo "Could not find requirements.txt file"
+    echo -e "${RED}Could not find requirements.txt file${NC}"
+    echo -e "${RED}Could not install newproject${NC}"
     exit 1
 fi
