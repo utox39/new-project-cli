@@ -12,16 +12,18 @@ You can create new:
 
 - Bash projects
 - C projects
-- CPP projects
+- Cpp projects
 - Dart projects
 - Flutter projects
 - Go projects
 - Java projects
+- Lua projects
 - OCaml projects
 - PHP projects
 - Python projects
 - Ruby projects
 - Rust projects
+- Vlang projects
 - Web projects
 
 and open them in:
@@ -52,11 +54,13 @@ $HOME
        ├── flutter_projects 
        ├── go_projects
        ├── java_projects
+       ├── lua_projects
        ├── ocaml_projects
        ├── php_projects
        ├── python_projects
        ├── ruby_projects
        ├── rust_projects
+       ├── vlang_projects
        └── web_projects 
 ```
 
@@ -70,9 +74,12 @@ $ cargo new project_name
 
 So it use the default command to create a new cargo package.
 
-The same is for Ruby, Dart, Flutter and OCaml.
+The same is for Ruby, Dart, Flutter, OCaml and Vlang.
 
 ## Requirements
+
+- [Python](https://www.python.org/)
+- [pip3](https://packaging.python.org/en/latest/tutorials/installing-packages/)
 
 #### To create a Rust projects
 
@@ -157,7 +164,13 @@ $ newproject --code --python project_name
 In ~/.config/newproject/newproject_config.yaml:
 
 ```yaml
-development_dir_path: path/to/your/development/folder
+development_dir_path: path/to/your/development/folder/
+```
+
+E.g:
+
+```yaml
+development_dir_path: Documents/projects/
 ```
 
 #### Customize a programming language projects folder
