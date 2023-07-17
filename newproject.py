@@ -60,10 +60,6 @@ HAPPY_CODING: Final[str] = "[gold1]⫸ Happy Coding![/gold1]"
 CAN_NOT_CREATE_PROJECT: Final[str] = "[red3]𝙓 Can't create the project[/red3]"
 
 
-def main():
-    typer.run(handle)
-
-
 def dev_dir_check() -> bool:
     """
     Check if the development folder exists
@@ -514,6 +510,10 @@ def handle(
             )
         else:
             console.print("[bold red]No option provided[/bold red]")
+
+
+def main():
+    typer.run(handle)
 
 
 if __name__ == "__main__":
