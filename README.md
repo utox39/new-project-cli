@@ -79,7 +79,7 @@ The same is for Ruby, Dart, Flutter, OCaml and Vlang.
 ## Requirements
 
 - [Python](https://www.python.org/)
-- [pip3](https://packaging.python.org/en/latest/tutorials/installing-packages/)
+- [pip](https://packaging.python.org/en/latest/tutorials/installing-packages/)
 
 #### To create a Rust projects
 
