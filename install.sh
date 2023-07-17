@@ -20,7 +20,8 @@ if [ -f ./requirements.txt ]; then
       if command -v pip3; then
         pip3 install -r requirements.txt
       else
-        echo -e "${RED} pip3 is not installed${NC}"
+        echo -e "${RED}pip3 is not installed${NC}"
+        echo -e "${RED}Could not install newproject${NC}"
         exit 127
       fi
     else
@@ -30,10 +31,11 @@ if [ -f ./requirements.txt ]; then
 
     # creating new_project_cli_tool config folder
     if [ $CMD_EXIT_STATUS -eq 0 ]; then
-      if [ -f ~/.config/ ]; then
+      if [ -d ~/.config/ ]; then
         mkdir ~/.config/newproject
       else
         echo -e "${RED}~/.config/ does not exist${NC}"
+        echo -e "${RED}Could not install newproject${NC}"
         exit 2
       fi
     else
@@ -46,7 +48,8 @@ if [ -f ./requirements.txt ]; then
       if [ -f ./newproject_config.yaml ]; then
           cp ./newproject_config.yaml ~/.config/newproject/newproject_config.yaml
       else
-          echo -e "${RED}Could not copy newproject_config.yaml file${NC}"
+          echo -e "${RED}newproject_config.yaml does not exist${NC}"
+          echo -e "${RED}Could not install newproject${NC}"
           exit 2
       fi
     else
@@ -61,7 +64,8 @@ if [ -f ./requirements.txt ]; then
           chmod +x ./newproject
           sudo mv ./newproject /usr/local/bin/newproject
       else
-        echo -e "${RED}Could not find newproject.py${NC}"
+        echo -e "${RED}newproject.py does not exist${NC}"
+        echo -e "${RED}Could not install newproject${NC}"
         exit 2
       fi
     else
