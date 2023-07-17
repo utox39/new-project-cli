@@ -19,8 +19,7 @@ from typing import Final
 console = Console()
 
 # Config file
-# CONFIG_FILE: Final[str] = f"{Path.home()}/.config/newproject/newproject_config.yaml"
-CONFIG_FILE: Final[str] = "./newproject_config.yaml"
+CONFIG_FILE: Final[str] = f"{Path.home()}/.config/newproject/newproject_config.yaml"
 
 # Logging config
 logging.basicConfig(level=logging.DEBUG, format='%(levelname)s %(message)s')
