@@ -1,6 +1,6 @@
 pip install -r '.\requirements.txt'
 
-mkdir 'C:\Program Files\new_project'
+mkdir 'C:\Program Files\newproject'
 Copy-Item '.\dist\newproject.exe' 'C:\Program Files\newproject'
 
 # mkdir '~\.config'
