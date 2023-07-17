@@ -67,9 +67,11 @@ def dev_dir_check() -> bool:
     """
     try:
         if not os.path.isdir(DEV_DIR):
-            raise FileNotFoundError
+            raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), DEV_DIR)
     except FileNotFoundError as dev_dir_not_found_error:
         logging.error(dev_dir_not_found_error)
+        console.print(f"[red3]{DEV_DIR} does not exist[/red3]")
+        console.print("[dark_orange3]Change it the YAML config file[/dark_orange3]")
         sys.exit(errno.ENOENT)
     else:
         return True
@@ -83,9 +85,11 @@ def projects_path_check(projects_dir_to_check: str) -> None:
     projects_path = os.path.join(DEV_DIR, projects_dir_to_check)
     try:
         if not os.path.isdir(projects_path):
-            raise FileNotFoundError
+            raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), projects_path)
     except FileNotFoundError as projects_path_not_found_error:
         logging.error(projects_path_not_found_error)
+        console.print(f"[red3]{projects_dir_to_check} does not exist[/red3]")
+        console.print("[dark_orange3]Change it the YAML config file[/dark_orange3]")
         sys.exit(errno.ENOENT)
 
 
