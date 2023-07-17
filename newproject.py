@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import errno
+import logging
 import os
 import subprocess
 import sys
@@ -18,14 +19,19 @@ from typing import Final
 console = Console()
 
 # Config file
-CONFIG_FILE: Final[str] = f"{Path.home()}/.config/newproject/newproject_config.yaml"
+# CONFIG_FILE: Final[str] = f"{Path.home()}/.config/newproject/newproject_config.yaml"
+CONFIG_FILE: Final[str] = "./newproject_config.yaml"
+
+# Logging config
+logging.basicConfig(level=logging.DEBUG, format='%(levelname)s %(message)s')
+logger = logging.getLogger(__name__)
 
 # Load YAML config file
 try:
     with open(CONFIG_FILE) as config_file:
         new_project_config = yaml.safe_load(config_file)
-except FileNotFoundError:
-    print("Error: YAML config file not found")
+except FileNotFoundError as yaml_file_not_found_error:
+    logger.error(yaml_file_not_found_error)
     sys.exit(errno.ENOENT)
 
 # Default Development folder
@@ -66,8 +72,8 @@ def dev_dir_check() -> bool:
     try:
         if not os.path.isdir(DEV_DIR):
             raise FileNotFoundError
-    except FileNotFoundError:
-        print(f"Error: {DEV_DIR} does not exists")
+    except FileNotFoundError as dev_dir_not_found_error:
+        logging.error(dev_dir_not_found_error)
         sys.exit(errno.ENOENT)
     else:
         return True
@@ -82,8 +88,8 @@ def projects_path_check(projects_dir_to_check: str) -> None:
     try:
         if not os.path.isdir(projects_path):
             raise FileNotFoundError
-    except FileNotFoundError:
-        print(f"{projects_path} does not exists")
+    except FileNotFoundError as projects_path_not_found_error:
+        logging.error(projects_path_not_found_error)
         sys.exit(errno.ENOENT)
 
 
@@ -98,7 +104,7 @@ def open_in_ide(ide_command: str, project_dir: str) -> None:
             try:
                 subprocess.run([f"{ide_command}", f"{project_dir}"])
             except Exception as open_in_ide_error:
-                print(f"Error: {open_in_ide_error}\nCould not open project in IDE")
+                logging.error(open_in_ide_error)
         else:
             console.print(f"[red][underline]{ide_command}[/underline]: command not found...[/red]")
 
@@ -113,36 +119,47 @@ def git_init_command(project_dir: str, projects_dir_name: str) -> None:
         "[dodger_blue1]Initializing [underline]git[/underline] repository[/dodger_blue1]"
     )
     if which("git") is not None:
-        subprocess.run(["git", "init", f"{project_dir}"])
+        try:
+            subprocess.run(["git", "init", f"{project_dir}"])
 
-        with open(f"{project_dir}/.gitignore", "w") as git_ignore_f:
-            if projects_dir_name == PY_PROJECTS_DIR_NAME:
-                git_ignore_f.write(
-                    textwrap.dedent(
-                        """\
-                    .DS_Store
-                    .env
-                    .vscode/
-                    .idea/
-                    test/
-                    venv/"""
-                    )
-                )
-            else:
-                git_ignore_f.write(
-                    textwrap.dedent(
-                        """\
-                    .DS_Store
-                    .env
-                    .vscode/
-                    .idea/
-                    test/"""
-                    )
-                )
+            # Creating .gitignore file
+            try:
+                with open(f"{project_dir}/.gitignore", "w") as gitignore_f:
+                    if projects_dir_name == PY_PROJECTS_DIR_NAME:
+                        gitignore_f.write(
+                            textwrap.dedent(
+                                """\
+                            .DS_Store
+                            .env
+                            .vscode/
+                            .idea/
+                            test/
+                            venv/"""
+                            )
+                        )
+                    else:
+                        gitignore_f.write(
+                            textwrap.dedent(
+                                """\
+                            .DS_Store
+                            .env
+                            .vscode/
+                            .idea/
+                            test/"""
+                            )
+                        )
 
-            console.print("▶ [underline].gitignore[/underline] created.")
+                    console.print("▶ [underline].gitignore[/underline] created.")
 
-        print(DONE)
+                    print(DONE)
+
+            except Exception as gitignore_error:
+                logging.error(gitignore_error)
+                console.print("[red3]𝙓 Can't create .gitignore file[/red3]")
+
+        except Exception as git_error:
+            logging.error(git_error)
+            console.print("[red3]𝙓 git repository not initialized[/red3]")
 
 
 def create_and_write_file(new_project_dir: str, file_name: str, content: str) -> None:
@@ -154,10 +171,13 @@ def create_and_write_file(new_project_dir: str, file_name: str, content: str) ->
     """
     # Creating the file structure
     console.print(PROJECT_STRUCTURE_GEN)
-    with open(f"{new_project_dir}/{file_name}", "w") as project_file:
-        project_file.write(content)
-        console.print(f"▶ [underline]{file_name}[/underline] created.")
-    print(DONE)
+    try:
+        with open(f"{new_project_dir}/{file_name}", "w") as project_file:
+            project_file.write(content)
+            console.print(f"▶ [underline]{file_name}[/underline] created.")
+        print(DONE)
+    except Exception as create_and_write_file_error:
+        logging.error(create_and_write_file_error)
 
 
 def create_python_venv(new_project_path: str) -> None:
@@ -181,13 +201,17 @@ def create_python_venv(new_project_path: str) -> None:
                     subprocess.run(["python3", "-m", "venv", f"{new_project_path}/venv"])
         print(DONE)
     except Exception as venv_exception:
-        print(f"Error: {venv_exception}")
-        sys.exit(1)
+        logging.error(venv_exception)
+        console.print("[red3]𝙓 Can't create venv [/red3]")
 
 
 def create_readme(new_project_dir, project_name):
-    with open(f"{new_project_dir}/README.md", "w") as readme:
-        readme.write(f"# {project_name}")
+    try:
+        with open(f"{new_project_dir}/README.md", "w") as readme:
+            readme.write(f"# {project_name}")
+    except Exception as readme_error:
+        logging.error(readme_error)
+        console.print("[red3]𝙓 Can't create README.md file[/red3]")
 
 
 def create_project(
@@ -239,6 +263,7 @@ def create_project(
         console.print(
             f"{new_project_dir} [bold red3]already exists![/bold red3]"
         )
+        console.print("[red3]𝙓 Can't create the project[/red3]")
         sys.exit(errno.EEXIST)
 
 
@@ -286,7 +311,8 @@ def create_project_with_commands(
 
             console.print(HAPPY_CODING)
         except Exception as command_exception:
-            print(f"Error: {command_exception}\nCould not create the project")
+            logging.error(command_exception)
+            console.print("[red3]𝙓 Can't create the project[/red3]")
     else:
         console.print(f"[red][underline]{commands[0]}[/underline]: command not found...[/red]")
 
@@ -342,6 +368,7 @@ def create_web_project(
         console.print(
             f"{new_project_dir} [bold red3]already exists![/bold red3]"
         )
+        console.print("[red3]𝙓 Can't create the project[/red3]")
         sys.exit(errno.EEXIST)
 
 
