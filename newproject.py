@@ -57,7 +57,7 @@ WEB_PROJECTS_DIR_NAME: Final[str] = new_project_config["project_folder_names"]["
 DONE: Final[str] = "✓ Done.\n"
 PROJECT_STRUCTURE_GEN: Final[str] = "[dodger_blue1]Creating the project structure...[/dodger_blue1]"
 HAPPY_CODING: Final[str] = "[gold1]⫸ Happy Coding![/gold1]"
-CAN_NOT_CREATE_PROJECT: Final[str] = "[red3]𝙓 Could not create the project[/red3]"
+COULD_NOT_CREATE_PROJECT: Final[str] = "[red3]𝙓 Could not create the project[/red3]"
 
 
 def dev_dir_check() -> bool:
@@ -263,7 +263,7 @@ def create_project(
         console.print(
             f"{new_project_dir} [bold red3]already exists![/bold red3]"
         )
-        console.print(CAN_NOT_CREATE_PROJECT)
+        console.print(COULD_NOT_CREATE_PROJECT)
         sys.exit(errno.EEXIST)
 
 
@@ -312,7 +312,7 @@ def create_project_with_commands(
             console.print(HAPPY_CODING)
         except Exception as command_exception:
             logging.error(command_exception)
-            console.print(CAN_NOT_CREATE_PROJECT)
+            console.print(COULD_NOT_CREATE_PROJECT)
     else:
         console.print(f"[red][underline]{commands[0]}[/underline]: command not found...[/red]")
 
@@ -366,7 +366,7 @@ def create_web_project(
         console.print(
             f"{new_project_dir} [bold red3]already exists![/bold red3]"
         )
-        console.print(CAN_NOT_CREATE_PROJECT)
+        console.print(COULD_NOT_CREATE_PROJECT)
         sys.exit(errno.EEXIST)
 
 
