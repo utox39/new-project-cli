@@ -4,8 +4,8 @@ mkdir 'C:\Program Files\newproject'
 Copy-Item '.\dist\newproject.exe' 'C:\Program Files\newproject'
 
 # mkdir '~\.config'
-mkdir '~\.config\new_project_cli_tool'
-Copy-Item '.\newproject_config.yaml' '~\.config\newproject_cli_tool'
+mkdir '~\.config\newproject'
+Copy-Item '.\newproject_config.yaml' '~\.config\newproject'
 
 $existingPath = [Environment]::GetEnvironmentVariable("PATH", "User")
 $newPath = $existingPath + ";C:\Program Files\new_project_cli"
