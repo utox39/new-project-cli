@@ -158,7 +158,7 @@ def git_init_command(project_dir: str, projects_dir_name: str) -> None:
             console.print("[red3]𝙓 git repository not initialized[/red3]")
 
 
-def create_and_write_file(new_project_dir: str, file_name: str, content: str) -> None:
+def create_and_write_file(new_project_dir: str, file_name: str, content: str = "") -> None:
     """
     Creates and writes a file
     :param new_project_dir: (str) the directory of the new project
@@ -316,15 +316,13 @@ def create_project_with_commands(
 def create_web_project(
         projects_dir_name: str,
         project_name: str,
-        file_content: str = "",
         ide: str = "",
 ):
     """
     Create a basic new web project
-    :param projects_dir_name:
-    :param project_name:
-    :param file_content:
-    :param ide:
+    :param projects_dir_name: (str) the name of the specified programming language's directory
+    :param project_name: (str) the name of the new project
+    :param ide: (str) the name of the IDE where you want to open the new project
     """
     # check if the specified projects folder exists
     projects_path_check(projects_dir_to_check=projects_dir_name)
@@ -343,11 +341,11 @@ def create_web_project(
         # Creating the file structure
 
         # Creating Html file
-        create_and_write_file(new_project_dir=new_project_dir, file_name="index.html", content=file_content)
+        create_and_write_file(new_project_dir=new_project_dir, file_name="index.html")
         # Creating Css file
-        create_and_write_file(new_project_dir=f"{new_project_dir}/styles", file_name="style.css", content=file_content)
+        create_and_write_file(new_project_dir=f"{new_project_dir}/styles", file_name="style.css")
         # Creating Javascript file
-        create_and_write_file(new_project_dir=f"{new_project_dir}/scripts", file_name="index.js", content=file_content)
+        create_and_write_file(new_project_dir=f"{new_project_dir}/scripts", file_name="index.js")
 
         # Creating the README for the new project
         create_readme(new_project_dir=new_project_dir, project_name=project_name)
