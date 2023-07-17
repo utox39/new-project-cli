@@ -57,7 +57,7 @@ WEB_PROJECTS_DIR_NAME: Final[str] = new_project_config["project_folder_names"]["
 DONE: Final[str] = "✓ Done.\n"
 PROJECT_STRUCTURE_GEN: Final[str] = "[dodger_blue1]Creating the project structure...[/dodger_blue1]"
 HAPPY_CODING: Final[str] = "[gold1]⫸ Happy Coding![/gold1]"
-CAN_NOT_CREATE_PROJECT: Final[str] = "[red3]𝙓 Can't create the project[/red3]"
+CAN_NOT_CREATE_PROJECT: Final[str] = "[red3]𝙓 Could not create the project[/red3]"
 
 
 def dev_dir_check() -> bool:
