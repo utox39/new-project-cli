@@ -25,7 +25,7 @@ CONFIG_FILE: Final[str] = f"{Path.home()}/.config/newproject/newproject_config.y
 logging.basicConfig(level=logging.DEBUG, format='%(levelname)s %(message)s')
 logger = logging.getLogger(__name__)
 
-# Load YAML config file
+# Loads YAML config file
 try:
     with open(CONFIG_FILE) as config_file:
         new_project_config = yaml.safe_load(config_file)
