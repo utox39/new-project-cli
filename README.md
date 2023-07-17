@@ -109,7 +109,7 @@ $ ./install.sh
 
 #### Windows:
 
-Run as administrator
+RUN AS ADMINISTRATOR
 
 ```console
 $ cd path\to\this\repo
