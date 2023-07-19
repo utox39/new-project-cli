@@ -24,7 +24,7 @@ You can create new:
 - Ruby projects
 - Rust projects
 - Vlang projects
-- Web projects
+- Web projects (html, css, javascript)
 
 and open them in:
 
@@ -48,10 +48,10 @@ $HOME
 └──Developer
    └── projects
        ├── bash_projects
-       ├── c_projects 
+       ├── c_projects
        ├── cpp_projects
        ├── dart_projects
-       ├── flutter_projects 
+       ├── flutter_projects
        ├── go_projects
        ├── java_projects
        ├── lua_projects
@@ -61,7 +61,7 @@ $HOME
        ├── ruby_projects
        ├── rust_projects
        ├── vlang_projects
-       └── web_projects 
+       └── web_projects
 ```
 
 ### Projects created via commands
@@ -146,7 +146,7 @@ project_name
 ├── scripts
 │   └── index.js
 └── styles
-    └── style.css 
+    └── style.css
 ```
 
 #### Create a new project and open it in Visual Studio Code
@@ -180,6 +180,69 @@ In ~/.config/newproject/newproject_config.json:
 ```yaml
 project_folder_names:
   python_projects_dir_name: python_projects
+```
+
+#### Customize a programming language file content
+
+You can customize the content of the files only of the following programming languages:
+
+- Bash
+- C
+- Cpp
+- Go
+- Java
+- Lua
+- PHP
+- Python
+- Web projects (html, css, javascript)
+
+```yaml
+cpp:
+  file_content: |
+    #include <iostream>
+
+    int main()
+    {
+        std::cout<<"hello world"<<'\n';
+        return 0;
+    }
+```
+
+#### Customize the .gitignore for a specific programming language
+
+You can customize the content of the .gitignore only of the following programming languages:
+
+- Bash
+- C
+- Cpp
+- Go
+- Java
+- Lua
+- PHP
+- Python
+- Web projects (html, css, javascript)
+
+```yaml
+python:
+  gitignore_content: |
+    DS_Store
+    .env
+    .vscode/
+    .idea/
+    test/
+    venv/
+```
+
+#### Customize the default .gitignore
+
+```yaml
+default_gitignore_content: |
+  .DS_Store
+  .env
+  .vscode/
+  .idea/
+  test/
+  foo/
 ```
 
 ## Roadmap

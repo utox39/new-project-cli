@@ -5,7 +5,6 @@ import logging
 import os
 import subprocess
 import sys
-import textwrap
 import typer
 import yaml
 
@@ -19,7 +18,8 @@ from typing import Final
 console = Console()
 
 # Config file
-CONFIG_FILE: Final[str] = f"{Path.home()}/.config/newproject/newproject_config.yaml"
+# CONFIG_FILE: Final[str] = f"{Path.home()}/.config/newproject/newproject_config.yaml"
+CONFIG_FILE: Final[str] = "./newproject_config.yaml"
 
 # Logging config
 logging.basicConfig(level=logging.DEBUG, format='%(levelname)s %(message)s')
@@ -37,21 +37,21 @@ except FileNotFoundError as yaml_file_not_found_error:
 DEV_DIR: Final[str] = f"{Path.home()}/{new_project_config['development_dir_path']}"
 
 # Project folder names
-PY_PROJECTS_DIR_NAME: Final[str] = new_project_config["project_folder_names"]["python_projects_dir_name"]
-JAVA_PROJECTS_DIR_NAME: Final[str] = new_project_config["project_folder_names"]["java_projects_dir_name"]
-GO_PROJECTS_DIR_NAME: Final[str] = new_project_config["project_folder_names"]["go_projects_dir_name"]
-BASH_PROJECTS_DIR_NAME: Final[str] = new_project_config["project_folder_names"]["bash_projects_dir_name"]
-RUST_PROJECTS_DIR_NAME: Final[str] = new_project_config["project_folder_names"]["rust_projects_dir_name"]
-CPP_PROJECTS_DIR_NAME: Final[str] = new_project_config["project_folder_names"]["cpp_projects_dir_name"]
-CLANG_PROJECTS_DIR_NAME: Final[str] = new_project_config["project_folder_names"]["clang_projects_dir_name"]
-PHP_PROJECTS_DIR_NAME: Final[str] = new_project_config["project_folder_names"]["php_projects_dir_name"]
-LUA_PROJECTS_DIR_NAME: Final[str] = new_project_config["project_folder_names"]["lua_projects_dir_name"]
-RUBY_PROJECTS_DIR_NAME: Final[str] = new_project_config["project_folder_names"]["ruby_projects_dir_name"]
-DART_PROJECTS_DIR_NAME: Final[str] = new_project_config["project_folder_names"]["dart_projects_dir_name"]
-FLUTTER_PROJECTS_DIR_NAME: Final[str] = new_project_config["project_folder_names"]["flutter_projects_dir_name"]
-OCAML_PROJECTS_DIR_NAME: Final[str] = new_project_config["project_folder_names"]["ocaml_projects_dir_name"]
-VLANG_PROJECTS_DIR_NAME: Final[str] = new_project_config["project_folder_names"]["vlang_projects_dir_name"]
-WEB_PROJECTS_DIR_NAME: Final[str] = new_project_config["project_folder_names"]["web_projects_dir_name"]
+BASH_PROJECTS_DIR_NAME: Final[str] = new_project_config["bash"]["projects_dir_name"]
+CLANG_PROJECTS_DIR_NAME: Final[str] = new_project_config["c_lang"]["projects_dir_name"]
+CPP_PROJECTS_DIR_NAME: Final[str] = new_project_config["cpp"]["projects_dir_name"]
+DART_PROJECTS_DIR_NAME: Final[str] = new_project_config["dart"]["projects_dir_name"]
+FLUTTER_PROJECTS_DIR_NAME: Final[str] = new_project_config["flutter"]["projects_dir_name"]
+GO_PROJECTS_DIR_NAME: Final[str] = new_project_config["go"]["projects_dir_name"]
+JAVA_PROJECTS_DIR_NAME: Final[str] = new_project_config["java"]["projects_dir_name"]
+LUA_PROJECTS_DIR_NAME: Final[str] = new_project_config["lua"]["projects_dir_name"]
+OCAML_PROJECTS_DIR_NAME: Final[str] = new_project_config["ocaml"]["projects_dir_name"]
+PHP_PROJECTS_DIR_NAME: Final[str] = new_project_config["php"]["projects_dir_name"]
+PYTHON_PROJECTS_DIR_NAME: Final[str] = new_project_config["python"]["projects_dir_name"]
+RUBY_PROJECTS_DIR_NAME: Final[str] = new_project_config["ruby"]["projects_dir_name"]
+RUST_PROJECTS_DIR_NAME: Final[str] = new_project_config["rust"]["projects_dir_name"]
+VLANG_PROJECTS_DIR_NAME: Final[str] = new_project_config["vlang"]["projects_dir_name"]
+WEB_PROJECTS_DIR_NAME: Final[str] = new_project_config["web"]["projects_dir_name"]
 
 # Outputs
 DONE: Final[str] = "✓ Done.\n"
@@ -109,11 +109,11 @@ def open_in_ide(ide_command: str, project_dir: str) -> None:
             console.print(f"[red][underline]{ide_command}[/underline]: command not found...[/red]")
 
 
-def git_init_command(project_dir: str, projects_dir_name: str) -> None:
+def git_init_command(project_dir: str, content: str) -> None:
     """
     Initialize a local git repository
     :param project_dir: (str) project directory
-    :param projects_dir_name: (str) projects directory name
+    :param content: (str) content of the .gitignore file
     """
     console.print(
         "[dodger_blue1]Initializing [underline]git[/underline] repository[/dodger_blue1]"
@@ -125,29 +125,10 @@ def git_init_command(project_dir: str, projects_dir_name: str) -> None:
             # Creating .gitignore file
             try:
                 with open(f"{project_dir}/.gitignore", "w") as gitignore_f:
-                    if projects_dir_name == PY_PROJECTS_DIR_NAME:
-                        gitignore_f.write(
-                            textwrap.dedent(
-                                """\
-                            .DS_Store
-                            .env
-                            .vscode/
-                            .idea/
-                            test/
-                            venv/"""
-                            )
-                        )
+                    if content != "":
+                        gitignore_f.write(content)
                     else:
-                        gitignore_f.write(
-                            textwrap.dedent(
-                                """\
-                            .DS_Store
-                            .env
-                            .vscode/
-                            .idea/
-                            test/"""
-                            )
-                        )
+                        gitignore_f.write(new_project_config["default_gitignore_content"])
 
                     console.print("▶ [underline].gitignore[/underline] created.")
 
@@ -162,7 +143,7 @@ def git_init_command(project_dir: str, projects_dir_name: str) -> None:
             console.print("[red3]𝙓 git repository not initialized[/red3]")
 
 
-def create_and_write_file(new_project_dir: str, file_name: str, content: str = "") -> None:
+def create_and_write_file(new_project_dir: str, file_name: str, content: str) -> None:
     """
     Creates and writes a file
     :param new_project_dir: (str) the directory of the new project
@@ -217,8 +198,9 @@ def create_readme(new_project_dir, project_name):
 def create_project(
         projects_dir_name: str,
         project_name: str,
-        file_name: str = "",
-        file_content: str = "",
+        file_name: str,
+        file_content: str,
+        gitignore_content: str,
         ide: str = "",
 ):
     """
@@ -241,7 +223,7 @@ def create_project(
 
         os.mkdir(new_project_dir)
 
-        if projects_dir_name == PY_PROJECTS_DIR_NAME:
+        if projects_dir_name == PYTHON_PROJECTS_DIR_NAME:
             # Generating a python venv for the project
             create_python_venv(new_project_path=new_project_dir)
 
@@ -252,7 +234,7 @@ def create_project(
         create_readme(new_project_dir=new_project_dir, project_name=project_name)
 
         # git init
-        git_init_command(project_dir=new_project_dir, projects_dir_name=projects_dir_name)
+        git_init_command(project_dir=new_project_dir, content=gitignore_content)
 
         # Open in IDE
         open_in_ide(ide_command=ide, project_dir=new_project_dir)
@@ -320,6 +302,10 @@ def create_project_with_commands(
 def create_web_project(
         projects_dir_name: str,
         project_name: str,
+        html_file_content: str,
+        css_file_content: str,
+        javascript_file_content: str,
+        gitignore_content: str,
         ide: str = "",
 ):
     """
@@ -345,17 +331,19 @@ def create_web_project(
         # Creating the file structure
 
         # Creating Html file
-        create_and_write_file(new_project_dir=new_project_dir, file_name="index.html")
+        create_and_write_file(new_project_dir=new_project_dir, file_name="index.html", content=html_file_content)
         # Creating Css file
-        create_and_write_file(new_project_dir=f"{new_project_dir}/styles", file_name="style.css")
+        create_and_write_file(new_project_dir=f"{new_project_dir}/styles", file_name="style.css",
+                              content=css_file_content)
         # Creating Javascript file
-        create_and_write_file(new_project_dir=f"{new_project_dir}/scripts", file_name="index.js")
+        create_and_write_file(new_project_dir=f"{new_project_dir}/scripts", file_name="index.js",
+                              content=javascript_file_content)
 
         # Creating the README for the new project
         create_readme(new_project_dir=new_project_dir, project_name=project_name)
 
         # git init
-        git_init_command(project_dir=new_project_dir, projects_dir_name=projects_dir_name)
+        git_init_command(project_dir=new_project_dir, content=gitignore_content)
 
         # Open in IDE
         open_in_ide(ide_command=ide, project_dir=new_project_dir)
@@ -407,10 +395,11 @@ def handle(
     if dev_dir_check():
         if python:
             create_project(
-                projects_dir_name=PY_PROJECTS_DIR_NAME,
+                projects_dir_name=PYTHON_PROJECTS_DIR_NAME,
                 project_name=project_name,
                 file_name="main.py",
-                file_content=new_project_config["file_content"]["python_file_content"],
+                file_content=new_project_config["python"]["file_content"],
+                gitignore_content=new_project_config["python"]["gitignore_content"],
                 ide=ide_name,
             )
         elif java:
@@ -418,6 +407,8 @@ def handle(
                 projects_dir_name=JAVA_PROJECTS_DIR_NAME,
                 project_name=project_name,
                 file_name="Main.java",
+                file_content=new_project_config["java"]["file_content"],
+                gitignore_content=new_project_config["java"]["gitignore_content"],
                 ide=ide_name,
             )
         elif go:
@@ -425,7 +416,8 @@ def handle(
                 projects_dir_name=GO_PROJECTS_DIR_NAME,
                 project_name=project_name,
                 file_name="main.go",
-                file_content=new_project_config["file_content"]["go_file_content"],
+                file_content=new_project_config["go"]["file_content"],
+                gitignore_content=new_project_config["go"]["gitignore_content"],
                 ide=ide_name,
             )
         elif bash:
@@ -433,7 +425,8 @@ def handle(
                 projects_dir_name=BASH_PROJECTS_DIR_NAME,
                 project_name=project_name,
                 file_name=f"{project_name}.sh",
-                file_content=new_project_config["file_content"]["bash_file_content"],
+                file_content=new_project_config["bash"]["file_content"],
+                gitignore_content=new_project_config["bash"]["gitignore_content"],
                 ide=ide_name,
             )
         elif cpp:
@@ -441,7 +434,8 @@ def handle(
                 projects_dir_name=CPP_PROJECTS_DIR_NAME,
                 project_name=project_name,
                 file_name="main.cpp",
-                file_content=new_project_config["file_content"]["cpp_file_content"],
+                file_content=new_project_config["cpp"]["file_content"],
+                gitignore_content=new_project_config["cpp"]["gitignore_content"],
                 ide=ide_name,
             )
 
@@ -450,7 +444,8 @@ def handle(
                 projects_dir_name=CLANG_PROJECTS_DIR_NAME,
                 project_name=project_name,
                 file_name="main.c",
-                file_content=new_project_config["file_content"]["c_lang_file_content"],
+                file_content=new_project_config["c_lang"]["file_content"],
+                gitignore_content=new_project_config["c_lang"]["gitignore_content"],
                 ide=ide_name,
             )
         elif php:
@@ -458,6 +453,8 @@ def handle(
                 projects_dir_name=PHP_PROJECTS_DIR_NAME,
                 project_name=project_name,
                 file_name="index.php",
+                file_content=new_project_config["php"]["file_content"],
+                gitignore_content=new_project_config["php"]["gitignore_content"],
                 ide=ide_name,
             )
         elif lua:
@@ -465,6 +462,8 @@ def handle(
                 projects_dir_name=LUA_PROJECTS_DIR_NAME,
                 project_name=project_name,
                 file_name="main.lua",
+                file_content=new_project_config["lua"]["file_content"],
+                gitignore_content=new_project_config["lua"]["gitignore_content"],
                 ide=ide_name,
             )
         elif rust:
@@ -497,17 +496,20 @@ def handle(
                 project_name=project_name,
                 ide=ide_name
             )
-
-        elif web:
-            create_web_project(
-                projects_dir_name=WEB_PROJECTS_DIR_NAME,
-                project_name=project_name,
-                ide=ide_name
-            )
         elif vlang:
             create_project_with_commands(
                 projects_dir_name=VLANG_PROJECTS_DIR_NAME,
                 project_name=project_name,
+                ide=ide_name
+            )
+        elif web:
+            create_web_project(
+                projects_dir_name=WEB_PROJECTS_DIR_NAME,
+                project_name=project_name,
+                html_file_content=new_project_config["web"]["html_file_content"],
+                css_file_content=new_project_config["web"]["css_file_content"],
+                javascript_file_content=new_project_config["web"]["javascript_file_content"],
+                gitignore_content=new_project_config["web"]["gitignore_content"],
                 ide=ide_name
             )
         else:

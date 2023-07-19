@@ -1,46 +1,112 @@
 # Development directory path
 development_dir_path: Developer/projects/
 
-# Folder name of projects written in a specific programming language
-project_folder_names:
-  python_projects_dir_name: python_projects
-  java_projects_dir_name: java_projects
-  go_projects_dir_name: go_projects
-  bash_projects_dir_name: bash_projects
-  rust_projects_dir_name: rust_projects
-  cpp_projects_dir_name: cpp_projects
-  clang_projects_dir_name: c_projects
-  php_projects_dir_name: php_projects
-  lua_projects_dir_name: lua_projects
-  ruby_projects_dir_name: ruby_projects
-  dart_projects_dir_name: dart_projects
-  flutter_projects_dir_name: flutter_projects
-  ocaml_projects_dir_name: ocaml_projects
-  vlang_projects_dir_name: vlang_projects
-  web_projects_dir_name: web_projects
+# Default content of the .gitignore file
+default_gitignore_content: |
+  .DS_Store
+  .env
+  .vscode/
+  .idea/
+  test/
 
-# Custom content for the files
-file_content:
-  python_file_content: "#!/usr/bin/env python3"
-  bash_file_content: "#!/bin/bash"
-  go_file_content: |
+# Bash
+bash:
+  projects_dir_name: bash_projects
+  file_content: "#!/bin/bash"
+  gitignore_content: ""
+
+# C
+c_lang:
+  projects_dir_name: c_projects
+  file_content: |
+    #include <stdio.h>
+
+    int main()
+    {
+        return 0;
+    }
+  gitignore_content: ""
+
+# CPP
+cpp:
+  projects_dir_name: cpp_projects
+  file_content: |
+    #include <iostream>
+
+    int main()
+    {
+        return 0;
+    }
+  gitignore_content: ""
+
+# Dart
+dart:
+  projects_dir_name: dart_projects
+
+# Flutter
+flutter:
+  projects_dir_name: flutter_projects
+
+# Go
+go:
+  projects_dir_name: go_projects
+  file_content: |
     package main
     import "fmt"
 
     func main() {}
+  gitignore_content: ""
 
-  cpp_file_content: |
-    #include <iostream>
-    
-    int main()
-    {
-        return 0;
-    }
+# Java
+java:
+  projects_dir_name: java_projects
+  file_content: ""
+  gitignore_content: ""
 
-  c_lang_file_content: |
-    #include <stdio.h>
-    
-    int main()
-    {
-        return 0;
-    }
+# Lua
+lua:
+  projects_dir_name: lua_projects
+  file_content: ""
+  gitignore_content: ""
+
+# OCaml
+ocaml:
+  projects_dir_name: ocaml_projects
+
+# PHP
+php:
+  projects_dir_name: php_projects
+  file_content: ""
+  gitignore_content: ""
+
+# Python
+python:
+  projects_dir_name: python_projects
+  file_content: "#!/usr/bin/env python3"
+  gitignore_content: |
+    DS_Store
+    .env
+    .vscode/
+    .idea/
+    test/
+    venv/
+
+# Ruby
+ruby:
+  projects_dir_name: ruby_projects
+
+# Rust
+rust:
+  projects_dir_name: rust_projects
+
+# Vlang
+vlang:
+  projects_dir_name: vlang_projects
+
+# Web projects
+web:
+  projects_dir_name: wab_projects
+  html_file_content: ""
+  css_file_content: ""
+  javascript_file_content: ""
+  gitignore_content: ""
