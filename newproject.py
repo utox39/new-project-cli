@@ -251,7 +251,7 @@ def create_project(
     new_project_dir = f"{projects_path}/{project_name}"
 
     try:
-        console.print("[dodger_blue1]Creating the project structure...[/dodger_blue1]")
+        console.print(PROJECT_STRUCTURE_GEN)
 
         os.mkdir(new_project_dir)
 
