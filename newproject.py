@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import errno
+import json
+import jsonschema
 import logging
 import os
 import subprocess
@@ -58,6 +60,31 @@ DONE: Final[str] = "✓ Done.\n"
 PROJECT_STRUCTURE_GEN: Final[str] = "[dodger_blue1]Creating the project structure...[/dodger_blue1]"
 HAPPY_CODING: Final[str] = "[gold1]⫸ Happy Coding![/gold1]"
 COULD_NOT_CREATE_PROJECT: Final[str] = "[red3]𝙓 Could not create the project[/red3]"
+
+
+def config_file_validator():
+    with open("json_schema.json") as json_schema_f:
+        json_schema = json.load(json_schema_f)
+
+    try:
+        jsonschema.validate(instance=new_project_config, schema=json_schema)
+        return True
+    except jsonschema.ValidationError as validation_error:
+        if validation_error.relative_path:
+            print(f"{validation_error.relative_path[0]}:")
+
+            message_len = len(validation_error.relative_path) - 1
+            if validation_error.validator == "required":
+                print(f"  {validation_error.message[1:-24]} (missing)\n")
+            else:
+                print(f"  {validation_error.relative_path[message_len]}:(type error)\n")
+
+        print(f"YAML Config File Error: {validation_error.message}")
+        # print(json.dumps(validation_error.instance, indent=4))
+        if validation_error.context:
+            print(validation_error.context)
+        if validation_error.cause:
+            print(validation_error.cause)
 
 
 def dev_dir_check() -> bool:
@@ -392,7 +419,7 @@ def handle(
     elif idea:
         ide_name = "idea"
 
-    if dev_dir_check():
+    if config_file_validator() and dev_dir_check():
         if python:
             create_project(
                 projects_dir_name=PYTHON_PROJECTS_DIR_NAME,
