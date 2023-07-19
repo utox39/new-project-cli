@@ -140,7 +140,7 @@ def git_init_command(project_dir: str, content: str) -> None:
     """
     Initialize a local git repository
     :param project_dir: (str) project directory
-    :param content: (str) content of the .gitignore file
+    :param content: (str) the content of the .gitignore file
     """
     console.print(
         "[dodger_blue1]Initializing [underline]git[/underline] repository[/dodger_blue1]"
@@ -236,6 +236,7 @@ def create_project(
     :param project_name: (str) the name of the new project
     :param file_name: (str) the name of the file
     :param file_content: (str) content to write to file
+    :param gitignore_content: (str) the content of the .gitignore file
     :param ide: (str) the name of the IDE where you want to open the new project
     """
     # check if the specified projects folder exists
@@ -339,6 +340,10 @@ def create_web_project(
     Create a basic new web project
     :param projects_dir_name: (str) the name of the specified programming language's directory
     :param project_name: (str) the name of the new project
+    :param html_file_content: (str) the content of the html file
+    :param css_file_content: (str) the content of the css file
+    :param javascript_file_content: (str) the content of the javascript file
+    :param gitignore_content: (str) the content of the .gitignore file
     :param ide: (str) the name of the IDE where you want to open the new project
     """
     # check if the specified projects folder exists
