@@ -20,8 +20,8 @@ from typing import Final
 console = Console()
 
 # Config file
-# CONFIG_FILE: Final[str] = f"{Path.home()}/.config/newproject/newproject_config.yaml"
-CONFIG_FILE: Final[str] = "./newproject_config.yaml"
+CONFIG_FILE: Final[str] = f"{Path.home()}/.config/newproject/newproject_config.yaml"
+JSON_SCHEMA: Final[str] = f"{Path.home()}/.config/newproject/schemas/json_schema.json"
 
 # Logging config
 logging.basicConfig(level=logging.DEBUG, format='%(levelname)s %(message)s')
@@ -63,8 +63,12 @@ COULD_NOT_CREATE_PROJECT: Final[str] = "[red3]𝙓 Could not create the project[
 
 
 def config_file_validator():
-    with open("json_schema.json") as json_schema_f:
-        json_schema = json.load(json_schema_f)
+    try:
+        with open(JSON_SCHEMA) as json_schema_f:
+            json_schema = json.load(json_schema_f)
+    except FileNotFoundError as json_schema_not_found_error:
+        logger.error(json_schema_not_found_error)
+        sys.exit(errno.ENOENT)
 
     try:
         jsonschema.validate(instance=new_project_config, schema=json_schema)

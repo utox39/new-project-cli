@@ -32,15 +32,17 @@ if [ -f ./requirements.txt ]; then
     # creating new_project_cli_tool config folder
     if [ $CMD_EXIT_STATUS -eq 0 ]; then
       mkdir -p ~/.config/newproject
+      mkdir -p ~/.config/newproject/schemas
     else
       echo -e "${RED}Could not install newproject${NC}"
       exit 1
     fi
 
-    # copying config file in config folder
+    # copying config file and json schema in config folder
     if [ $CMD_EXIT_STATUS -eq 0 ]; then
       if [ -f ./newproject_config.yaml ]; then
           cp ./newproject_config.yaml ~/.config/newproject/newproject_config.yaml
+          cp ./json_schema.json ~/.config/newproject/schemas/json_schema.json
       else
           echo -e "${RED}newproject_config.yaml does not exist${NC}"
           echo -e "${RED}Could not install newproject${NC}"
