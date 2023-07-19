@@ -31,13 +31,7 @@ if [ -f ./requirements.txt ]; then
 
     # creating new_project_cli_tool config folder
     if [ $CMD_EXIT_STATUS -eq 0 ]; then
-      if [ -d ~/.config/ ]; then
-        mkdir ~/.config/newproject
-      else
-        echo -e "${RED}~/.config/ does not exist${NC}"
-        echo -e "${RED}Could not install newproject${NC}"
-        exit 2
-      fi
+      mkdir -p ~/.config/newproject
     else
       echo -e "${RED}Could not install newproject${NC}"
       exit 1
