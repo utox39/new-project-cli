@@ -105,7 +105,7 @@ vlang:
 
 # Web projects
 web:
-  projects_dir_name: wab_projects
+  projects_dir_name: web_projects
   html_file_content: ""
   css_file_content: ""
   javascript_file_content: ""
