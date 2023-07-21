@@ -114,14 +114,7 @@ $ cd path/to/this/repo
 $ ./install.sh
 ```
 
-#### Windows:
-
-RUN AS ADMINISTRATOR
-
-```console
-$ cd path\to\this\repo
-$ .\install.ps1
-```
+#### Windows (WIP)
 
 ## Usage
 
