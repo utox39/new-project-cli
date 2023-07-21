@@ -307,10 +307,6 @@ def create_project_with_commands(
         commands = ["cargo", "new", new_project_dir]
     elif projects_dir_name == RUBY_PROJECTS_DIR_NAME:
         commands = ["bundler", "gem", new_project_dir]
-    elif projects_dir_name == DART_PROJECTS_DIR_NAME:
-        commands = ["dart", "create", new_project_dir]
-    elif projects_dir_name == FLUTTER_PROJECTS_DIR_NAME:
-        commands = ["flutter", "create", new_project_dir]
     elif projects_dir_name == OCAML_PROJECTS_DIR_NAME:
         commands = ["dune", "init", "project", new_project_dir]
     elif projects_dir_name == VLANG_PROJECTS_DIR_NAME:
@@ -406,8 +402,6 @@ def handle(
         lua: Annotated[bool, typer.Option(help="create a lua project")] = False,
         rust: Annotated[bool, typer.Option(help="create a rust project")] = False,
         ruby: Annotated[bool, typer.Option(help="create a ruby project")] = False,
-        dart: Annotated[bool, typer.Option(help="create a dart project")] = False,
-        flutter: Annotated[bool, typer.Option(help="create a flutter project")] = False,
         ocaml: Annotated[bool, typer.Option(help="create an ocaml project")] = False,
         vlang: Annotated[bool, typer.Option(help="create a vlang project")] = False,
         web: Annotated[bool, typer.Option(help="create a basic web project")] = False,
@@ -429,125 +423,106 @@ def handle(
         ide_name = "idea"
 
     if config_file_validator() and dev_dir_check():
-        if python:
-            create_project(
-                projects_dir_name=PYTHON_PROJECTS_DIR_NAME,
-                project_name=project_name,
-                file_name="main.py",
-                file_content=new_project_config["python"]["file_content"],
-                gitignore_content=new_project_config["python"]["gitignore_content"],
-                ide=ide_name,
-            )
-        elif java:
-            create_project(
-                projects_dir_name=JAVA_PROJECTS_DIR_NAME,
-                project_name=project_name,
-                file_name="Main.java",
-                file_content=new_project_config["java"]["file_content"],
-                gitignore_content=new_project_config["java"]["gitignore_content"],
-                ide=ide_name,
-            )
-        elif go:
-            create_project(
-                projects_dir_name=GO_PROJECTS_DIR_NAME,
-                project_name=project_name,
-                file_name="main.go",
-                file_content=new_project_config["go"]["file_content"],
-                gitignore_content=new_project_config["go"]["gitignore_content"],
-                ide=ide_name,
-            )
-        elif bash:
-            create_project(
-                projects_dir_name=BASH_PROJECTS_DIR_NAME,
-                project_name=project_name,
-                file_name=f"{project_name}.sh",
-                file_content=new_project_config["bash"]["file_content"],
-                gitignore_content=new_project_config["bash"]["gitignore_content"],
-                ide=ide_name,
-            )
-        elif cpp:
-            create_project(
-                projects_dir_name=CPP_PROJECTS_DIR_NAME,
-                project_name=project_name,
-                file_name="main.cpp",
-                file_content=new_project_config["cpp"]["file_content"],
-                gitignore_content=new_project_config["cpp"]["gitignore_content"],
-                ide=ide_name,
-            )
+        project_mapping = {
+            python: (create_project,
+                     PYTHON_PROJECTS_DIR_NAME,
+                     project_name,
+                     "main.py",
+                     new_project_config["python"]["file_content"],
+                     new_project_config["python"]["gitignore_content"],
+                     ide_name
+                     ),
+            java: (create_project,
+                   JAVA_PROJECTS_DIR_NAME,
+                   project_name,
+                   "Main.java",
+                   new_project_config["java"]["file_content"],
+                   new_project_config["java"]["gitignore_content"],
+                   ide_name
+                   ),
+            go: (create_project,
+                 GO_PROJECTS_DIR_NAME,
+                 project_name,
+                 "main.go",
+                 new_project_config["go"]["file_content"],
+                 new_project_config["go"]["gitignore_content"],
+                 ide_name
+                 ),
+            bash: (create_project,
+                   BASH_PROJECTS_DIR_NAME,
+                   project_name,
+                   f"{project_name}.sh",
+                   new_project_config["bash"]["file_content"],
+                   new_project_config["bash"]["gitignore_content"],
+                   ide_name
+                   ),
+            cpp: (create_project,
+                  CPP_PROJECTS_DIR_NAME,
+                  project_name,
+                  "main.cpp",
+                  new_project_config["cpp"]["file_content"],
+                  new_project_config["cpp"]["gitignore_content"],
+                  ide_name
+                  ),
+            clang: (create_project,
+                    CLANG_PROJECTS_DIR_NAME,
+                    project_name,
+                    "main.c",
+                    new_project_config["c_lang"]["file_content"],
+                    new_project_config["c_lang"]["gitignore_content"],
+                    ide_name
+                    ),
+            php: (create_project,
+                  PHP_PROJECTS_DIR_NAME,
+                  project_name,
+                  "index.php",
+                  new_project_config["php"]["file_content"],
+                  new_project_config["php"]["gitignore_content"],
+                  ide_name
+                  ),
+            lua: (create_project,
+                  LUA_PROJECTS_DIR_NAME,
+                  project_name,
+                  "main.lua",
+                  new_project_config["lua"]["file_content"],
+                  new_project_config["lua"]["gitignore_content"],
+                  ide_name
+                  ),
+            rust: (create_project_with_commands,
+                   RUST_PROJECTS_DIR_NAME,
+                   project_name,
+                   ide_name
+                   ),
+            ruby: (create_project_with_commands,
+                   RUBY_PROJECTS_DIR_NAME,
+                   project_name,
+                   ide_name
+                   ),
+            ocaml: (create_project_with_commands,
+                    OCAML_PROJECTS_DIR_NAME,
+                    project_name,
+                    ide_name
+                    ),
+            vlang: (create_project_with_commands,
+                    VLANG_PROJECTS_DIR_NAME,
+                    project_name,
+                    ide_name),
+            web: (create_web_project,
+                  WEB_PROJECTS_DIR_NAME,
+                  project_name,
+                  new_project_config["web"]["html_file_content"],
+                  new_project_config["web"]["css_file_content"],
+                  new_project_config["web"]["javascript_file_content"],
+                  new_project_config["web"]["gitignore_content"],
+                  ide_name
+                  )
+        }
 
-        elif clang:
-            create_project(
-                projects_dir_name=CLANG_PROJECTS_DIR_NAME,
-                project_name=project_name,
-                file_name="main.c",
-                file_content=new_project_config["c_lang"]["file_content"],
-                gitignore_content=new_project_config["c_lang"]["gitignore_content"],
-                ide=ide_name,
-            )
-        elif php:
-            create_project(
-                projects_dir_name=PHP_PROJECTS_DIR_NAME,
-                project_name=project_name,
-                file_name="index.php",
-                file_content=new_project_config["php"]["file_content"],
-                gitignore_content=new_project_config["php"]["gitignore_content"],
-                ide=ide_name,
-            )
-        elif lua:
-            create_project(
-                projects_dir_name=LUA_PROJECTS_DIR_NAME,
-                project_name=project_name,
-                file_name="main.lua",
-                file_content=new_project_config["lua"]["file_content"],
-                gitignore_content=new_project_config["lua"]["gitignore_content"],
-                ide=ide_name,
-            )
-        elif rust:
-            create_project_with_commands(
-                projects_dir_name=RUST_PROJECTS_DIR_NAME,
-                project_name=project_name,
-                ide=ide_name
-            )
-        elif ruby:
-            create_project_with_commands(
-                projects_dir_name=RUBY_PROJECTS_DIR_NAME,
-                project_name=project_name,
-                ide=ide_name
-            )
-        elif dart:
-            create_project_with_commands(
-                projects_dir_name=DART_PROJECTS_DIR_NAME,
-                project_name=project_name,
-                ide=ide_name
-            )
-        elif flutter:
-            create_project_with_commands(
-                projects_dir_name=FLUTTER_PROJECTS_DIR_NAME,
-                project_name=project_name,
-                ide=ide_name
-            )
-        elif ocaml:
-            create_project_with_commands(
-                projects_dir_name=OCAML_PROJECTS_DIR_NAME,
-                project_name=project_name,
-                ide=ide_name
-            )
-        elif vlang:
-            create_project_with_commands(
-                projects_dir_name=VLANG_PROJECTS_DIR_NAME,
-                project_name=project_name,
-                ide=ide_name
-            )
-        elif web:
-            create_web_project(
-                projects_dir_name=WEB_PROJECTS_DIR_NAME,
-                project_name=project_name,
-                html_file_content=new_project_config["web"]["html_file_content"],
-                css_file_content=new_project_config["web"]["css_file_content"],
-                javascript_file_content=new_project_config["web"]["javascript_file_content"],
-                gitignore_content=new_project_config["web"]["gitignore_content"],
-                ide=ide_name
-            )
+        for flag, func_and_proj_info in project_mapping.items():
+            if flag:
+                create_func, *args = func_and_proj_info
+                create_func(*args)
+                break
         else:
             console.print("[bold red]No option provided[/bold red]")
 
