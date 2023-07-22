@@ -132,10 +132,10 @@ def open_in_ide(ide_command: str, project_dir: str) -> None:
     :param ide_command: (str) the console command to open the IDE
     :param project_dir: (str) the project directory to open in the IDE
     """
-    if ide_command == "code" or ide_command == "pycharm" or ide_command == "idea":
+    if ide_command in ["code", "pycharm", "idea"]:
         if which(f"{ide_command}") is not None:
             try:
-                subprocess.run([f"{ide_command}", f"{project_dir}"])
+                subprocess.run([f"{ide_command}", project_dir])
             except Exception as open_in_ide_error:
                 logging.error(open_in_ide_error)
         else:
@@ -153,7 +153,7 @@ def git_init_command(project_dir: str, content: str) -> None:
     )
     if which("git") is not None:
         try:
-            subprocess.run(["git", "init", f"{project_dir}"])
+            subprocess.run(["git", "init", project_dir])
 
             # Creating .gitignore file
             try:
