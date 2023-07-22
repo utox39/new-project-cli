@@ -2,19 +2,19 @@
 
 import errno
 import json
-import jsonschema
 import logging
 import os
 import subprocess
 import sys
+from pathlib import Path
+from shutil import which
+from typing import Final
+
+import jsonschema
 import typer
 import yaml
-
-from pathlib import Path
 from rich.console import Console
-from shutil import which
 from typing_extensions import Annotated
-from typing import Final
 
 # rich config
 console = Console()
