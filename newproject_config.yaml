@@ -39,14 +39,6 @@ cpp:
     }
   gitignore_content: ""
 
-# Dart
-dart:
-  projects_dir_name: dart_projects
-
-# Flutter
-flutter:
-  projects_dir_name: flutter_projects
-
 # Go
 go:
   projects_dir_name: go_projects

@@ -13,8 +13,6 @@ You can create new:
 - Bash projects
 - C projects
 - Cpp projects
-- Dart projects
-- Flutter projects
 - Go projects
 - Java projects
 - Lua projects
@@ -50,8 +48,6 @@ $HOME
        ├── bash_projects
        ├── c_projects
        ├── cpp_projects
-       ├── dart_projects
-       ├── flutter_projects
        ├── go_projects
        ├── java_projects
        ├── lua_projects
@@ -89,14 +85,6 @@ The same is for Ruby, Dart, Flutter, OCaml and Vlang.
 
 - [Ruby](https://www.ruby-lang.org/en/documentation/installation/)
 - [bundler](https://rubygems.org/gems/bundler)
-
-#### To create a Dart projects
-
-- [Dart](https://dart.dev/get-dart)
-
-#### To create a Flutter projects
-
-- [Flutter](https://docs.flutter.dev/get-started/install)
 
 #### To create a OCaml projects
 

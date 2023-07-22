@@ -65,28 +65,6 @@
         "gitignore_content"
       ]
     },
-    "dart": {
-      "type": "object",
-      "properties": {
-        "projects_dir_name": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "projects_dir_name"
-      ]
-    },
-    "flutter": {
-      "type": "object",
-      "properties": {
-        "projects_dir_name": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "projects_dir_name"
-      ]
-    },
     "go": {
       "type": "object",
       "properties": {
@@ -130,10 +108,18 @@
       "properties": {
         "projects_dir_name": {
           "type": "string"
+        },
+        "file_content": {
+          "type": "string"
+        },
+        "gitignore_content": {
+          "type": "string"
         }
       },
       "required": [
-        "projects_dir_name"
+        "projects_dir_name",
+        "file_content",
+        "gitignore_content"
       ]
     },
     "ocaml": {
@@ -252,8 +238,6 @@
     "bash",
     "c_lang",
     "cpp",
-    "dart",
-    "flutter",
     "go",
     "java",
     "lua",
