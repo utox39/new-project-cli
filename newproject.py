@@ -43,8 +43,6 @@ PROJECTS_DIR_NAMES: Final[dict] = {
     "bash": new_project_config["bash"]["projects_dir_name"],
     "c_lang": new_project_config["c_lang"]["projects_dir_name"],
     "cpp": new_project_config["cpp"]["projects_dir_name"],
-    "dart": new_project_config["dart"]["projects_dir_name"],
-    "flutter": new_project_config["flutter"]["projects_dir_name"],
     "go": new_project_config["go"]["projects_dir_name"],
     "java": new_project_config["java"]["projects_dir_name"],
     "lua": new_project_config["lua"]["projects_dir_name"],
