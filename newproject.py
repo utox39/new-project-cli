@@ -60,6 +60,7 @@ DONE: Final[str] = "✓ Done.\n"
 PROJECT_STRUCTURE_GEN: Final[str] = "[dodger_blue1]Creating the project structure...[/dodger_blue1]"
 HAPPY_CODING: Final[str] = "[gold1]⫸ Happy Coding![/gold1]"
 COULD_NOT_CREATE_PROJECT: Final[str] = "[red3]𝙓 Could not create the project[/red3]"
+CREATING_NEW_PROJECT: Final[str] = "[dodger_blue1]Creating your new project...[/dodger_blue1]\n"
 
 
 def config_file_validator():
@@ -252,7 +253,7 @@ def create_project(
     new_project_dir = f"{projects_path}/{project_name}"
 
     try:
-        console.print(PROJECT_STRUCTURE_GEN)
+        console.print(CREATING_NEW_PROJECT)
 
         os.mkdir(new_project_dir)
 
@@ -300,7 +301,7 @@ def create_project_with_commands(
     new_project_dir = f"{projects_path}/{project_name}"
 
     # Creating the project folder and file structure for the project
-    console.print(PROJECT_STRUCTURE_GEN)
+    console.print(CREATING_NEW_PROJECT)
 
     commands = []
 
@@ -355,7 +356,7 @@ def create_web_project(
     new_project_dir = f"{projects_path}/{project_name}"
 
     try:
-        console.print(PROJECT_STRUCTURE_GEN)
+        console.print(CREATING_NEW_PROJECT)
 
         os.mkdir(new_project_dir)
         os.mkdir(f"{new_project_dir}/styles")
