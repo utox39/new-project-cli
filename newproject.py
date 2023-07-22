@@ -203,11 +203,12 @@ def create_python_venv(new_project_path: str) -> None:
         "[dodger_blue1]Generating the [underline]venv[/underline]...[/dodger_blue1]"
     )
     try:
+        # MacOS and Linux
         if sys.platform.startswith("darwin") or sys.platform.startswith("linux"):
             with console.status("[dodger_blue1]Generating...[/dodger_blue1]", spinner="aesthetic"):
                 subprocess.run(["python3", "-m", "venv", f"{new_project_path}/venv"])
-            # Windows
-        if sys.platform.startswith("win32"):
+        # Windows
+        elif sys.platform.startswith("win32"):
             with console.status("[dodger_blue1]Generating...[/dodger_blue1]", spinner="aesthetic"):
                 if which("virtualenv") is not None:
                     subprocess.run(["virtualenv", f"{new_project_path}/venv"])
