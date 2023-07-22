@@ -39,21 +39,23 @@ except FileNotFoundError as yaml_file_not_found_error:
 DEV_DIR: Final[str] = f"{Path.home()}/{new_project_config['development_dir_path']}"
 
 # Project folder names
-BASH_PROJECTS_DIR_NAME: Final[str] = new_project_config["bash"]["projects_dir_name"]
-CLANG_PROJECTS_DIR_NAME: Final[str] = new_project_config["c_lang"]["projects_dir_name"]
-CPP_PROJECTS_DIR_NAME: Final[str] = new_project_config["cpp"]["projects_dir_name"]
-DART_PROJECTS_DIR_NAME: Final[str] = new_project_config["dart"]["projects_dir_name"]
-FLUTTER_PROJECTS_DIR_NAME: Final[str] = new_project_config["flutter"]["projects_dir_name"]
-GO_PROJECTS_DIR_NAME: Final[str] = new_project_config["go"]["projects_dir_name"]
-JAVA_PROJECTS_DIR_NAME: Final[str] = new_project_config["java"]["projects_dir_name"]
-LUA_PROJECTS_DIR_NAME: Final[str] = new_project_config["lua"]["projects_dir_name"]
-OCAML_PROJECTS_DIR_NAME: Final[str] = new_project_config["ocaml"]["projects_dir_name"]
-PHP_PROJECTS_DIR_NAME: Final[str] = new_project_config["php"]["projects_dir_name"]
-PYTHON_PROJECTS_DIR_NAME: Final[str] = new_project_config["python"]["projects_dir_name"]
-RUBY_PROJECTS_DIR_NAME: Final[str] = new_project_config["ruby"]["projects_dir_name"]
-RUST_PROJECTS_DIR_NAME: Final[str] = new_project_config["rust"]["projects_dir_name"]
-VLANG_PROJECTS_DIR_NAME: Final[str] = new_project_config["vlang"]["projects_dir_name"]
-WEB_PROJECTS_DIR_NAME: Final[str] = new_project_config["web"]["projects_dir_name"]
+PROJECTS_DIR_NAMES: Final[dict] = {
+    "bash": new_project_config["bash"]["projects_dir_name"],
+    "c_lang": new_project_config["c_lang"]["projects_dir_name"],
+    "cpp": new_project_config["cpp"]["projects_dir_name"],
+    "dart": new_project_config["dart"]["projects_dir_name"],
+    "flutter": new_project_config["flutter"]["projects_dir_name"],
+    "go": new_project_config["go"]["projects_dir_name"],
+    "java": new_project_config["java"]["projects_dir_name"],
+    "lua": new_project_config["lua"]["projects_dir_name"],
+    "ocaml": new_project_config["ocaml"]["projects_dir_name"],
+    "php": new_project_config["php"]["projects_dir_name"],
+    "python": new_project_config["python"]["projects_dir_name"],
+    "ruby": new_project_config["ruby"]["projects_dir_name"],
+    "rust": new_project_config["rust"]["projects_dir_name"],
+    "vlang": new_project_config["vlang"]["projects_dir_name"],
+    "web": new_project_config["web"]["projects_dir_name"],
+}
 
 # Outputs
 DONE: Final[str] = "✓ Done.\n"
@@ -255,7 +257,7 @@ def create_project(
 
         os.mkdir(new_project_dir)
 
-        if projects_dir_name == PYTHON_PROJECTS_DIR_NAME:
+        if projects_dir_name == PROJECTS_DIR_NAMES["python"]:
             # Generating a python venv for the project
             create_python_venv(new_project_path=new_project_dir)
 
@@ -303,13 +305,13 @@ def create_project_with_commands(
 
     commands = []
 
-    if projects_dir_name == RUST_PROJECTS_DIR_NAME:
+    if projects_dir_name == PROJECTS_DIR_NAMES["rust"]:
         commands = ["cargo", "new", new_project_dir]
-    elif projects_dir_name == RUBY_PROJECTS_DIR_NAME:
+    elif projects_dir_name == PROJECTS_DIR_NAMES["ruby"]:
         commands = ["bundler", "gem", new_project_dir]
-    elif projects_dir_name == OCAML_PROJECTS_DIR_NAME:
+    elif projects_dir_name == PROJECTS_DIR_NAMES["ocaml"]:
         commands = ["dune", "init", "project", new_project_dir]
-    elif projects_dir_name == VLANG_PROJECTS_DIR_NAME:
+    elif projects_dir_name == PROJECTS_DIR_NAMES["vlang"]:
         commands = ["v", "new", new_project_dir]
 
     if which(commands[0]) is not None:
@@ -425,7 +427,7 @@ def handle(
     if config_file_validator() and dev_dir_check():
         project_mapping = {
             python: (create_project,
-                     PYTHON_PROJECTS_DIR_NAME,
+                     PROJECTS_DIR_NAMES["python"],
                      project_name,
                      "main.py",
                      new_project_config["python"]["file_content"],
@@ -433,7 +435,7 @@ def handle(
                      ide_name
                      ),
             java: (create_project,
-                   JAVA_PROJECTS_DIR_NAME,
+                   PROJECTS_DIR_NAMES["java"],
                    project_name,
                    "Main.java",
                    new_project_config["java"]["file_content"],
@@ -441,7 +443,7 @@ def handle(
                    ide_name
                    ),
             go: (create_project,
-                 GO_PROJECTS_DIR_NAME,
+                 PROJECTS_DIR_NAMES["go"],
                  project_name,
                  "main.go",
                  new_project_config["go"]["file_content"],
@@ -449,7 +451,7 @@ def handle(
                  ide_name
                  ),
             bash: (create_project,
-                   BASH_PROJECTS_DIR_NAME,
+                   PROJECTS_DIR_NAMES["bash"],
                    project_name,
                    f"{project_name}.sh",
                    new_project_config["bash"]["file_content"],
@@ -457,7 +459,7 @@ def handle(
                    ide_name
                    ),
             cpp: (create_project,
-                  CPP_PROJECTS_DIR_NAME,
+                  PROJECTS_DIR_NAMES["cpp"],
                   project_name,
                   "main.cpp",
                   new_project_config["cpp"]["file_content"],
@@ -465,7 +467,7 @@ def handle(
                   ide_name
                   ),
             clang: (create_project,
-                    CLANG_PROJECTS_DIR_NAME,
+                    PROJECTS_DIR_NAMES["c_lang"],
                     project_name,
                     "main.c",
                     new_project_config["c_lang"]["file_content"],
@@ -473,7 +475,7 @@ def handle(
                     ide_name
                     ),
             php: (create_project,
-                  PHP_PROJECTS_DIR_NAME,
+                  PROJECTS_DIR_NAMES["php"],
                   project_name,
                   "index.php",
                   new_project_config["php"]["file_content"],
@@ -481,7 +483,7 @@ def handle(
                   ide_name
                   ),
             lua: (create_project,
-                  LUA_PROJECTS_DIR_NAME,
+                  PROJECTS_DIR_NAMES["lua"],
                   project_name,
                   "main.lua",
                   new_project_config["lua"]["file_content"],
@@ -489,26 +491,26 @@ def handle(
                   ide_name
                   ),
             rust: (create_project_with_commands,
-                   RUST_PROJECTS_DIR_NAME,
+                   PROJECTS_DIR_NAMES["rust"],
                    project_name,
                    ide_name
                    ),
             ruby: (create_project_with_commands,
-                   RUBY_PROJECTS_DIR_NAME,
+                   PROJECTS_DIR_NAMES["ruby"],
                    project_name,
                    ide_name
                    ),
             ocaml: (create_project_with_commands,
-                    OCAML_PROJECTS_DIR_NAME,
+                    PROJECTS_DIR_NAMES["ocaml"],
                     project_name,
                     ide_name
                     ),
             vlang: (create_project_with_commands,
-                    VLANG_PROJECTS_DIR_NAME,
+                    PROJECTS_DIR_NAMES["vlang"],
                     project_name,
                     ide_name),
             web: (create_web_project,
-                  WEB_PROJECTS_DIR_NAME,
+                  PROJECTS_DIR_NAMES["web"],
                   project_name,
                   new_project_config["web"]["html_file_content"],
                   new_project_config["web"]["css_file_content"],
