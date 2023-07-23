@@ -31,54 +31,11 @@ COULD_NOT_CREATE_PROJECT: Final[str] = "[red3]𝙓 Could not create the project[
 CREATING_NEW_PROJECT: Final[str] = "[dodger_blue1]Creating your new project...[/dodger_blue1]\n"
 
 
-class NewProject:
-
-    def __init__(self):
-        # Config file and JSON Schema
-        self.CONFIG_FILE: Final[str] = f"{Path.home()}/.config/newproject/newproject_config.yaml"
-        self.JSON_SCHEMA: Final[str] = f"{Path.home()}/.config/newproject/schemas/json_schema.json"
-
-        # Loads YAML config file
+class Check:
+    @staticmethod
+    def config_file_validator(config_file, json_schema) -> bool:
         try:
-            with open(self.CONFIG_FILE) as config_file:
-                self.new_project_config = yaml.safe_load(config_file)
-        except FileNotFoundError as yaml_file_not_found_error:
-            logger.error(yaml_file_not_found_error)
-            sys.exit(errno.ENOENT)
-
-        # Default Development folder
-        self.DEV_DIR: Final[str] = f"{Path.home()}/{self.new_project_config['development_dir_path']}"
-
-        if self.config_file_validator() and self.dev_dir_check():
-            # Project folder names
-            self.PROJECTS_DIR_NAMES: Final[dict] = {
-                "bash": self.new_project_config["bash"]["projects_dir_name"],
-                "c_lang": self.new_project_config["c_lang"]["projects_dir_name"],
-                "cpp": self.new_project_config["cpp"]["projects_dir_name"],
-                "go": self.new_project_config["go"]["projects_dir_name"],
-                "java": self.new_project_config["java"]["projects_dir_name"],
-                "lua": self.new_project_config["lua"]["projects_dir_name"],
-                "ocaml": self.new_project_config["ocaml"]["projects_dir_name"],
-                "php": self.new_project_config["php"]["projects_dir_name"],
-                "python": self.new_project_config["python"]["projects_dir_name"],
-                "ruby": self.new_project_config["ruby"]["projects_dir_name"],
-                "rust": self.new_project_config["rust"]["projects_dir_name"],
-                "vlang": self.new_project_config["vlang"]["projects_dir_name"],
-                "web": self.new_project_config["web"]["projects_dir_name"],
-            }
-        else:
-            sys.exit(2)
-
-    def config_file_validator(self) -> bool:
-        try:
-            with open(self.JSON_SCHEMA) as json_schema_f:
-                json_schema = json.load(json_schema_f)
-        except FileNotFoundError as json_schema_not_found_error:
-            logger.error(json_schema_not_found_error)
-            sys.exit(errno.ENOENT)
-
-        try:
-            jsonschema.validate(instance=self.new_project_config, schema=json_schema)
+            jsonschema.validate(instance=config_file, schema=json_schema)
             return True
         except jsonschema.ValidationError as validation_error:
             if validation_error.relative_path:
@@ -98,36 +55,87 @@ class NewProject:
                 print(validation_error.cause)
             return False
 
-    def dev_dir_check(self) -> bool:
+    @staticmethod
+    def dev_dir_check(dev_dir) -> bool:
         """
         Check if the development folder exists
         :return bool: True if the development folder exists
         """
         try:
-            if not os.path.isdir(self.DEV_DIR):
-                raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), self.DEV_DIR)
+            if not os.path.isdir(dev_dir):
+                raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), dev_dir)
         except FileNotFoundError as dev_dir_not_found_error:
             logging.error(dev_dir_not_found_error)
-            console.print(f"[red3]{self.DEV_DIR} does not exist[/red3]")
+            console.print(f"[red3]{dev_dir} does not exist[/red3]")
             console.print("[dark_orange3]Change it the YAML config file[/dark_orange3]")
             sys.exit(errno.ENOENT)
         else:
             return True
 
-    def projects_path_check(self, projects_dir_to_check: str) -> None:
+    @staticmethod
+    def projects_path_check(projects_dir_to_check: str) -> None:
         """
         Check if the specified programming language project folder exists
         :param projects_dir_to_check: (str) name of the programming language projects folder
         """
-        projects_path = os.path.join(self.DEV_DIR, projects_dir_to_check)
         try:
-            if not os.path.isdir(projects_path):
-                raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), projects_path)
+            if not os.path.isdir(projects_dir_to_check):
+                raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), projects_dir_to_check)
         except FileNotFoundError as projects_path_not_found_error:
             logging.error(projects_path_not_found_error)
             console.print(f"[red3]{projects_dir_to_check} does not exist[/red3]")
             console.print("[dark_orange3]Change it the YAML config file[/dark_orange3]")
             sys.exit(errno.ENOENT)
+
+
+class NewProject:
+
+    def __init__(self):
+        # Config file and JSON Schema
+        self.YAML_CONFIG_FILE: Final[str] = f"{Path.home()}/.config/newproject/newproject_config.yaml"
+        self.JSON_SCHEMA_FILE: Final[str] = f"{Path.home()}/.config/newproject/schemas/json_schema.json"
+
+        # Loads YAML config file
+        try:
+            with open(self.YAML_CONFIG_FILE) as config_file:
+                self.newproject_config = yaml.safe_load(config_file)
+        except FileNotFoundError as yaml_file_not_found_error:
+            logger.error(yaml_file_not_found_error)
+            sys.exit(errno.ENOENT)
+
+        # Loads JSON Schema file
+        try:
+            with open(self.JSON_SCHEMA_FILE) as json_schema_f:
+                self.json_schema = json.load(json_schema_f)
+        except FileNotFoundError as json_schema_not_found_error:
+            logger.error(json_schema_not_found_error)
+            sys.exit(errno.ENOENT)
+
+        # Default Development folder
+        self.DEV_DIR: Final[str] = f"{Path.home()}/{self.newproject_config['development_dir_path']}"
+
+        self.check = Check()
+
+        if self.check.config_file_validator(config_file=self.newproject_config, json_schema=self.json_schema) and \
+                self.check.dev_dir_check(dev_dir=self.DEV_DIR):
+            # Project folder names
+            self.PROJECTS_DIR_NAMES: Final[dict] = {
+                "bash": self.newproject_config["bash"]["projects_dir_name"],
+                "c_lang": self.newproject_config["c_lang"]["projects_dir_name"],
+                "cpp": self.newproject_config["cpp"]["projects_dir_name"],
+                "go": self.newproject_config["go"]["projects_dir_name"],
+                "java": self.newproject_config["java"]["projects_dir_name"],
+                "lua": self.newproject_config["lua"]["projects_dir_name"],
+                "ocaml": self.newproject_config["ocaml"]["projects_dir_name"],
+                "php": self.newproject_config["php"]["projects_dir_name"],
+                "python": self.newproject_config["python"]["projects_dir_name"],
+                "ruby": self.newproject_config["ruby"]["projects_dir_name"],
+                "rust": self.newproject_config["rust"]["projects_dir_name"],
+                "vlang": self.newproject_config["vlang"]["projects_dir_name"],
+                "web": self.newproject_config["web"]["projects_dir_name"],
+            }
+        else:
+            sys.exit(2)
 
     @staticmethod
     def open_in_ide(ide_command: str, project_dir: str) -> None:
@@ -164,7 +172,7 @@ class NewProject:
                         if content != "":
                             gitignore_f.write(content)
                         else:
-                            gitignore_f.write(self.new_project_config["default_gitignore_content"])
+                            gitignore_f.write(self.newproject_config["default_gitignore_content"])
 
                         console.print("▶ [underline].gitignore[/underline] created.")
 
@@ -250,9 +258,9 @@ class NewProject:
         :param ide: (str) the name of the IDE where you want to open the new project
         """
         # check if the specified projects folder exists
-        self.projects_path_check(projects_dir_to_check=projects_dir_name)
-
         projects_path = os.path.join(self.DEV_DIR, projects_dir_name)
+
+        self.check.projects_path_check(projects_dir_to_check=projects_path)
         # Creating the project folder
         new_project_dir = f"{projects_path}/{project_name}"
 
@@ -298,40 +306,49 @@ class NewProject:
         :param project_name: (str) the name of the new project
         :param ide: (str) the name of the IDE where you want to open the new project
         """
-        self.projects_path_check(projects_dir_to_check=projects_dir_name)
-
         projects_path = os.path.join(self.DEV_DIR, projects_dir_name)
+
+        self.check.projects_path_check(projects_dir_to_check=projects_path)
         # Creating the project folder
         new_project_dir = f"{projects_path}/{project_name}"
 
-        # Creating the project folder and file structure for the project
-        console.print(CREATING_NEW_PROJECT)
+        try:
+            if os.path.isdir(new_project_dir):
+                raise FileExistsError(errno.ENOENT, os.strerror(errno.ENOENT), new_project_dir)
+            # Creating the project folder and file structure for the project
+            console.print(CREATING_NEW_PROJECT)
 
-        commands = []
+            commands = []
 
-        if projects_dir_name == self.PROJECTS_DIR_NAMES["rust"]:
-            commands = ["cargo", "new", new_project_dir]
-        elif projects_dir_name == self.PROJECTS_DIR_NAMES["ruby"]:
-            commands = ["bundler", "gem", new_project_dir]
-        elif projects_dir_name == self.PROJECTS_DIR_NAMES["ocaml"]:
-            commands = ["dune", "init", "project", new_project_dir]
-        elif projects_dir_name == self.PROJECTS_DIR_NAMES["vlang"]:
-            commands = ["v", "new", new_project_dir]
+            if projects_dir_name == self.PROJECTS_DIR_NAMES["rust"]:
+                commands = ["cargo", "new", new_project_dir]
+            elif projects_dir_name == self.PROJECTS_DIR_NAMES["ruby"]:
+                commands = ["bundler", "gem", new_project_dir]
+            elif projects_dir_name == self.PROJECTS_DIR_NAMES["ocaml"]:
+                commands = ["dune", "init", "project", new_project_dir]
+            elif projects_dir_name == self.PROJECTS_DIR_NAMES["vlang"]:
+                commands = ["v", "new", new_project_dir]
 
-        if which(commands[0]) is not None:
-            try:
-                subprocess.run(commands)
-                print(DONE)
+            if which(commands[0]) is not None:
+                try:
+                    subprocess.run(commands)
+                    print(DONE)
 
-                # Open in IDE
-                self.open_in_ide(ide_command=ide, project_dir=new_project_dir)
+                    # Open in IDE
+                    self.open_in_ide(ide_command=ide, project_dir=new_project_dir)
 
-                console.print(HAPPY_CODING)
-            except Exception as command_exception:
-                logging.error(command_exception)
-                console.print(COULD_NOT_CREATE_PROJECT)
-        else:
-            console.print(f"[red][underline]{commands[0]}[/underline]: command not found...[/red]")
+                    console.print(HAPPY_CODING)
+                except Exception as command_exception:
+                    logging.error(command_exception)
+                    console.print(COULD_NOT_CREATE_PROJECT)
+            else:
+                console.print(f"[red][underline]{commands[0]}[/underline]: command not found...[/red]")
+        except FileExistsError:
+            console.print(
+                f"{new_project_dir} [bold red3]already exists![/bold red3]"
+            )
+            console.print(COULD_NOT_CREATE_PROJECT)
+            sys.exit(errno.EEXIST)
 
     def create_web_project(
             self,
@@ -354,9 +371,9 @@ class NewProject:
         :param ide: (str) the name of the IDE where you want to open the new project
         """
         # check if the specified projects folder exists
-        self.projects_path_check(projects_dir_to_check=projects_dir_name)
-
         projects_path = os.path.join(self.DEV_DIR, projects_dir_name)
+
+        self.check.projects_path_check(projects_dir_to_check=projects_path)
         # Creating the project folder
         new_project_dir = f"{projects_path}/{project_name}"
 
@@ -435,64 +452,64 @@ class NewProject:
                      self.PROJECTS_DIR_NAMES["python"],
                      project_name,
                      "main.py",
-                     self.new_project_config["python"]["file_content"],
-                     self.new_project_config["python"]["gitignore_content"],
+                     self.newproject_config["python"]["file_content"],
+                     self.newproject_config["python"]["gitignore_content"],
                      ide_name
                      ),
             java: (self.create_project,
                    self.PROJECTS_DIR_NAMES["java"],
                    project_name,
                    "Main.java",
-                   self.new_project_config["java"]["file_content"],
-                   self.new_project_config["java"]["gitignore_content"],
+                   self.newproject_config["java"]["file_content"],
+                   self.newproject_config["java"]["gitignore_content"],
                    ide_name
                    ),
             go: (self.create_project,
                  self.PROJECTS_DIR_NAMES["go"],
                  project_name,
                  "main.go",
-                 self.new_project_config["go"]["file_content"],
-                 self.new_project_config["go"]["gitignore_content"],
+                 self.newproject_config["go"]["file_content"],
+                 self.newproject_config["go"]["gitignore_content"],
                  ide_name
                  ),
             bash: (self.create_project,
                    self.PROJECTS_DIR_NAMES["bash"],
                    project_name,
                    f"{project_name}.sh",
-                   self.new_project_config["bash"]["file_content"],
-                   self.new_project_config["bash"]["gitignore_content"],
+                   self.newproject_config["bash"]["file_content"],
+                   self.newproject_config["bash"]["gitignore_content"],
                    ide_name
                    ),
             cpp: (self.create_project,
                   self.PROJECTS_DIR_NAMES["cpp"],
                   project_name,
                   "main.cpp",
-                  self.new_project_config["cpp"]["file_content"],
-                  self.new_project_config["cpp"]["gitignore_content"],
+                  self.newproject_config["cpp"]["file_content"],
+                  self.newproject_config["cpp"]["gitignore_content"],
                   ide_name
                   ),
             clang: (self.create_project,
                     self.PROJECTS_DIR_NAMES["c_lang"],
                     project_name,
                     "main.c",
-                    self.new_project_config["c_lang"]["file_content"],
-                    self.new_project_config["c_lang"]["gitignore_content"],
+                    self.newproject_config["c_lang"]["file_content"],
+                    self.newproject_config["c_lang"]["gitignore_content"],
                     ide_name
                     ),
             php: (self.create_project,
                   self.PROJECTS_DIR_NAMES["php"],
                   project_name,
                   "index.php",
-                  self.new_project_config["php"]["file_content"],
-                  self.new_project_config["php"]["gitignore_content"],
+                  self.newproject_config["php"]["file_content"],
+                  self.newproject_config["php"]["gitignore_content"],
                   ide_name
                   ),
             lua: (self.create_project,
                   self.PROJECTS_DIR_NAMES["lua"],
                   project_name,
                   "main.lua",
-                  self.new_project_config["lua"]["file_content"],
-                  self.new_project_config["lua"]["gitignore_content"],
+                  self.newproject_config["lua"]["file_content"],
+                  self.newproject_config["lua"]["gitignore_content"],
                   ide_name
                   ),
             rust: (self.create_project_with_commands,
@@ -517,10 +534,10 @@ class NewProject:
             web: (self.create_web_project,
                   self.PROJECTS_DIR_NAMES["web"],
                   project_name,
-                  self.new_project_config["web"]["html_file_content"],
-                  self.new_project_config["web"]["css_file_content"],
-                  self.new_project_config["web"]["javascript_file_content"],
-                  self.new_project_config["web"]["gitignore_content"],
+                  self.newproject_config["web"]["html_file_content"],
+                  self.newproject_config["web"]["css_file_content"],
+                  self.newproject_config["web"]["javascript_file_content"],
+                  self.newproject_config["web"]["gitignore_content"],
                   ide_name
                   )
         }
