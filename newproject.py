@@ -49,22 +49,25 @@ class NewProject:
         # Default Development folder
         self.DEV_DIR: Final[str] = f"{Path.home()}/{self.new_project_config['development_dir_path']}"
 
-        # Project folder names
-        self.PROJECTS_DIR_NAMES: Final[dict] = {
-            "bash": self.new_project_config["bash"]["projects_dir_name"],
-            "c_lang": self.new_project_config["c_lang"]["projects_dir_name"],
-            "cpp": self.new_project_config["cpp"]["projects_dir_name"],
-            "go": self.new_project_config["go"]["projects_dir_name"],
-            "java": self.new_project_config["java"]["projects_dir_name"],
-            "lua": self.new_project_config["lua"]["projects_dir_name"],
-            "ocaml": self.new_project_config["ocaml"]["projects_dir_name"],
-            "php": self.new_project_config["php"]["projects_dir_name"],
-            "python": self.new_project_config["python"]["projects_dir_name"],
-            "ruby": self.new_project_config["ruby"]["projects_dir_name"],
-            "rust": self.new_project_config["rust"]["projects_dir_name"],
-            "vlang": self.new_project_config["vlang"]["projects_dir_name"],
-            "web": self.new_project_config["web"]["projects_dir_name"],
-        }
+        if self.config_file_validator() and self.dev_dir_check():
+            # Project folder names
+            self.PROJECTS_DIR_NAMES: Final[dict] = {
+                "bash": self.new_project_config["bash"]["projects_dir_name"],
+                "c_lang": self.new_project_config["c_lang"]["projects_dir_name"],
+                "cpp": self.new_project_config["cpp"]["projects_dir_name"],
+                "go": self.new_project_config["go"]["projects_dir_name"],
+                "java": self.new_project_config["java"]["projects_dir_name"],
+                "lua": self.new_project_config["lua"]["projects_dir_name"],
+                "ocaml": self.new_project_config["ocaml"]["projects_dir_name"],
+                "php": self.new_project_config["php"]["projects_dir_name"],
+                "python": self.new_project_config["python"]["projects_dir_name"],
+                "ruby": self.new_project_config["ruby"]["projects_dir_name"],
+                "rust": self.new_project_config["rust"]["projects_dir_name"],
+                "vlang": self.new_project_config["vlang"]["projects_dir_name"],
+                "web": self.new_project_config["web"]["projects_dir_name"],
+            }
+        else:
+            sys.exit(2)
 
     def config_file_validator(self) -> bool:
         try:
@@ -427,109 +430,108 @@ class NewProject:
         elif idea:
             ide_name = "idea"
 
-        if self.config_file_validator() and self.dev_dir_check():
-            project_mapping = {
-                python: (self.create_project,
-                         self.PROJECTS_DIR_NAMES["python"],
-                         project_name,
-                         "main.py",
-                         self.new_project_config["python"]["file_content"],
-                         self.new_project_config["python"]["gitignore_content"],
-                         ide_name
-                         ),
-                java: (self.create_project,
-                       self.PROJECTS_DIR_NAMES["java"],
-                       project_name,
-                       "Main.java",
-                       self.new_project_config["java"]["file_content"],
-                       self.new_project_config["java"]["gitignore_content"],
-                       ide_name
-                       ),
-                go: (self.create_project,
-                     self.PROJECTS_DIR_NAMES["go"],
+        project_mapping = {
+            python: (self.create_project,
+                     self.PROJECTS_DIR_NAMES["python"],
                      project_name,
-                     "main.go",
-                     self.new_project_config["go"]["file_content"],
-                     self.new_project_config["go"]["gitignore_content"],
+                     "main.py",
+                     self.new_project_config["python"]["file_content"],
+                     self.new_project_config["python"]["gitignore_content"],
                      ide_name
                      ),
-                bash: (self.create_project,
-                       self.PROJECTS_DIR_NAMES["bash"],
-                       project_name,
-                       f"{project_name}.sh",
-                       self.new_project_config["bash"]["file_content"],
-                       self.new_project_config["bash"]["gitignore_content"],
-                       ide_name
-                       ),
-                cpp: (self.create_project,
-                      self.PROJECTS_DIR_NAMES["cpp"],
-                      project_name,
-                      "main.cpp",
-                      self.new_project_config["cpp"]["file_content"],
-                      self.new_project_config["cpp"]["gitignore_content"],
-                      ide_name
-                      ),
-                clang: (self.create_project,
-                        self.PROJECTS_DIR_NAMES["c_lang"],
-                        project_name,
-                        "main.c",
-                        self.new_project_config["c_lang"]["file_content"],
-                        self.new_project_config["c_lang"]["gitignore_content"],
-                        ide_name
-                        ),
-                php: (self.create_project,
-                      self.PROJECTS_DIR_NAMES["php"],
-                      project_name,
-                      "index.php",
-                      self.new_project_config["php"]["file_content"],
-                      self.new_project_config["php"]["gitignore_content"],
-                      ide_name
-                      ),
-                lua: (self.create_project,
-                      self.PROJECTS_DIR_NAMES["lua"],
-                      project_name,
-                      "main.lua",
-                      self.new_project_config["lua"]["file_content"],
-                      self.new_project_config["lua"]["gitignore_content"],
-                      ide_name
-                      ),
-                rust: (self.create_project_with_commands,
-                       self.PROJECTS_DIR_NAMES["rust"],
-                       project_name,
-                       ide_name
-                       ),
-                ruby: (self.create_project_with_commands,
-                       self.PROJECTS_DIR_NAMES["ruby"],
-                       project_name,
-                       ide_name
-                       ),
-                ocaml: (self.create_project_with_commands,
-                        self.PROJECTS_DIR_NAMES["ocaml"],
-                        project_name,
-                        ide_name
-                        ),
-                vlang: (self.create_project_with_commands,
-                        self.PROJECTS_DIR_NAMES["vlang"],
-                        project_name,
-                        ide_name),
-                web: (self.create_web_project,
-                      self.PROJECTS_DIR_NAMES["web"],
-                      project_name,
-                      self.new_project_config["web"]["html_file_content"],
-                      self.new_project_config["web"]["css_file_content"],
-                      self.new_project_config["web"]["javascript_file_content"],
-                      self.new_project_config["web"]["gitignore_content"],
-                      ide_name
-                      )
-            }
+            java: (self.create_project,
+                   self.PROJECTS_DIR_NAMES["java"],
+                   project_name,
+                   "Main.java",
+                   self.new_project_config["java"]["file_content"],
+                   self.new_project_config["java"]["gitignore_content"],
+                   ide_name
+                   ),
+            go: (self.create_project,
+                 self.PROJECTS_DIR_NAMES["go"],
+                 project_name,
+                 "main.go",
+                 self.new_project_config["go"]["file_content"],
+                 self.new_project_config["go"]["gitignore_content"],
+                 ide_name
+                 ),
+            bash: (self.create_project,
+                   self.PROJECTS_DIR_NAMES["bash"],
+                   project_name,
+                   f"{project_name}.sh",
+                   self.new_project_config["bash"]["file_content"],
+                   self.new_project_config["bash"]["gitignore_content"],
+                   ide_name
+                   ),
+            cpp: (self.create_project,
+                  self.PROJECTS_DIR_NAMES["cpp"],
+                  project_name,
+                  "main.cpp",
+                  self.new_project_config["cpp"]["file_content"],
+                  self.new_project_config["cpp"]["gitignore_content"],
+                  ide_name
+                  ),
+            clang: (self.create_project,
+                    self.PROJECTS_DIR_NAMES["c_lang"],
+                    project_name,
+                    "main.c",
+                    self.new_project_config["c_lang"]["file_content"],
+                    self.new_project_config["c_lang"]["gitignore_content"],
+                    ide_name
+                    ),
+            php: (self.create_project,
+                  self.PROJECTS_DIR_NAMES["php"],
+                  project_name,
+                  "index.php",
+                  self.new_project_config["php"]["file_content"],
+                  self.new_project_config["php"]["gitignore_content"],
+                  ide_name
+                  ),
+            lua: (self.create_project,
+                  self.PROJECTS_DIR_NAMES["lua"],
+                  project_name,
+                  "main.lua",
+                  self.new_project_config["lua"]["file_content"],
+                  self.new_project_config["lua"]["gitignore_content"],
+                  ide_name
+                  ),
+            rust: (self.create_project_with_commands,
+                   self.PROJECTS_DIR_NAMES["rust"],
+                   project_name,
+                   ide_name
+                   ),
+            ruby: (self.create_project_with_commands,
+                   self.PROJECTS_DIR_NAMES["ruby"],
+                   project_name,
+                   ide_name
+                   ),
+            ocaml: (self.create_project_with_commands,
+                    self.PROJECTS_DIR_NAMES["ocaml"],
+                    project_name,
+                    ide_name
+                    ),
+            vlang: (self.create_project_with_commands,
+                    self.PROJECTS_DIR_NAMES["vlang"],
+                    project_name,
+                    ide_name),
+            web: (self.create_web_project,
+                  self.PROJECTS_DIR_NAMES["web"],
+                  project_name,
+                  self.new_project_config["web"]["html_file_content"],
+                  self.new_project_config["web"]["css_file_content"],
+                  self.new_project_config["web"]["javascript_file_content"],
+                  self.new_project_config["web"]["gitignore_content"],
+                  ide_name
+                  )
+        }
 
-            for flag, func_and_proj_info in project_mapping.items():
-                if flag:
-                    create_func, *args = func_and_proj_info
-                    create_func(*args)
-                    break
-            else:
-                console.print("[bold red]No option provided[/bold red]")
+        for flag, func_and_proj_info in project_mapping.items():
+            if flag:
+                create_func, *args = func_and_proj_info
+                create_func(*args)
+                break
+        else:
+            console.print("[bold red]No option provided[/bold red]")
 
 
 def main():
