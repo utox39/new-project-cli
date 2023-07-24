@@ -5,8 +5,8 @@
 - [Description](#description)
 - [Requirements](#requirements)
 - [Installation](#installation)
-- [usage](#usage)
-    - [customization](#customization)
+- [Usage](#usage)
+    - [Customization](#customization)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 
