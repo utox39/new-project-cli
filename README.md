@@ -34,11 +34,11 @@ You can create new:
 
 and open them in:
 
-- Visual Studio Code
-- PyCharm
-- IntelliJ IDEA
+- [Visual Studio Code](https://code.visualstudio.com/)
+- [PyCharm](https://www.jetbrains.com/pycharm/)
+- [IntelliJ IDEA](https://www.jetbrains.com/idea/)
 
-### Why this programming languages? (Yes, I know Flutter is a Framework)
+### Why these programming languages?
 
 I mainly based myself on the percentages reported by
 [Stackoverflow's 2023 Developer Survey](https://survey.stackoverflow.co/2023/)
