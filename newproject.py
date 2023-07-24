@@ -451,7 +451,7 @@ class NewProject:
             python: (self.create_project,
                      self.PROJECTS_DIR_NAMES["python"],
                      project_name,
-                     "main.py",
+                     f"{project_name}.py",
                      self.newproject_config["python"]["file_content"],
                      self.newproject_config["python"]["gitignore_content"],
                      ide_name
