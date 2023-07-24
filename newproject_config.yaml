@@ -82,6 +82,7 @@ python:
     .idea/
     test/
     venv/
+    __pycache__/
 
 # Ruby
 ruby:
