@@ -2,6 +2,14 @@
 
 [![asciicast](https://asciinema.org/a/RduB1EVKNj1zp9Gw0kCbptpFZ.svg)](https://asciinema.org/a/RduB1EVKNj1zp9Gw0kCbptpFZ)
 
+- [Description](#description)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [usage](#usage)
+    - [customization](#customization)
+- [Roadmap](#roadmap)
+- [Contributing](#contributing)
+
 ## Description
 
 Create a new project from the terminal.
