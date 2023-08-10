@@ -20,7 +20,7 @@ if [ -f ./requirements.txt ]; then
       if command -v pip3; then
         pip3 install -r requirements.txt
       else
-        echo -e "${RED}pip is not installed${NC}"
+        echo -e "${RED}pip3 is not installed${NC}"
         echo -e "${RED}Could not install newproject${NC}"
         exit 127
       fi

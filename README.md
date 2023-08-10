@@ -103,11 +103,18 @@ The same is for Ruby, Dart, Flutter, OCaml and Vlang.
 
 Easy as you can see here:
 
-#### macOS / Linux:
+#### macOS:
 
 ```console
-$ cd path/to/this/repo
+$ cd path/to/new-project-cli
 $ ./install.sh
+```
+
+#### Linux
+
+```console
+$ cd path/to/new-project-cli
+$ sudo ./install.sh
 ```
 
 #### Windows (WIP)
