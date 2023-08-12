@@ -61,11 +61,7 @@ class Check:
         Check if the development folder exists
         :return bool: True if the development folder exists
         """
-        try:
-            if not os.path.isdir(dev_dir):
-                raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), dev_dir)
-        except FileNotFoundError as dev_dir_not_found_error:
-            logging.error(dev_dir_not_found_error)
+        if not os.path.isdir(dev_dir):
             console.print(f"[red3]{dev_dir} does not exist[/red3]")
             console.print("[dark_orange3]Change it the YAML config file[/dark_orange3]")
             sys.exit(errno.ENOENT)
@@ -78,11 +74,7 @@ class Check:
         Check if the specified programming language project folder exists
         :param projects_dir_to_check: (str) name of the programming language projects folder
         """
-        try:
-            if not os.path.isdir(projects_dir_to_check):
-                raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), projects_dir_to_check)
-        except FileNotFoundError as projects_path_not_found_error:
-            logging.error(projects_path_not_found_error)
+        if not os.path.isdir(projects_dir_to_check):
             console.print(f"[red3]{projects_dir_to_check} does not exist[/red3]")
             console.print("[dark_orange3]Change it the YAML config file[/dark_orange3]")
             sys.exit(errno.ENOENT)
