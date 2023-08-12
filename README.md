@@ -103,7 +103,7 @@ The same is for Ruby, Dart, Flutter, OCaml and Vlang.
 
 Easy as you can see here:
 
-#### macOS:
+#### MacOS:
 
 ```console
 $ cd path/to/new-project-cli
