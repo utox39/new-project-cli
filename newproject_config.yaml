@@ -76,7 +76,7 @@ python:
   projects_dir_name: python_projects
   file_content: "#!/usr/bin/env python3"
   gitignore_content: |
-    DS_Store
+    .DS_Store
     .env
     .vscode/
     .idea/
