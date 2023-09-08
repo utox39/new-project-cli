@@ -103,21 +103,9 @@ The same is for Ruby, Dart, Flutter, OCaml and Vlang.
 
 Easy as you can see here:
 
-#### MacOS:
-
 ```console
-$ cd path/to/new-project-cli
-$ ./install.sh
+$ pip install newproject-cli
 ```
-
-#### Linux
-
-```console
-$ cd path/to/new-project-cli
-$ sudo ./install.sh
-```
-
-#### Windows (WIP)
 
 ## Usage
 
