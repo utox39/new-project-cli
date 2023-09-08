@@ -2,6 +2,11 @@
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.hatch.build]
+include = [
+    "/config"
+]
+
 [project]
 name = "newproject-cli"
 version = "0.0.1"
@@ -16,6 +21,9 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+
+[project.scripts]
+newproject = "src.newproject.newproject:main"
 
 [project.urls]
 "Homepage" = "https://github.com/utox39/new-project-cli"

@@ -4,6 +4,7 @@ import errno
 import json
 import logging
 import os
+import site
 import subprocess
 import sys
 from pathlib import Path
@@ -84,8 +85,10 @@ class NewProject:
 
     def __init__(self):
         # Config file and JSON Schema
-        self.YAML_CONFIG_FILE: Final[str] = f"{Path.home()}/.config/newproject/newproject_config.yaml"
-        self.JSON_SCHEMA_FILE: Final[str] = f"{Path.home()}/.config/newproject/schemas/json_schema.json"
+        # self.YAML_CONFIG_FILE: Final[str] = f"{Path.home()}/.config/newproject/newproject_config.yaml"
+        # self.JSON_SCHEMA_FILE: Final[str] = f"{Path.home()}/.config/newproject/schemas/json_schema.json"
+        self.YAML_CONFIG_FILE: Final[str] = f"{get_config_path()}/newproject_config.yaml"
+        self.JSON_SCHEMA_FILE: Final[str] = f"{get_config_path()}/schemas/json_schema.json"
 
         # Loads YAML config file
         try:
@@ -541,6 +544,15 @@ class NewProject:
                 break
         else:
             console.print("[bold red]No option provided[/bold red]")
+
+
+def get_config_path():
+    # Gets the user site-packages path
+    site_packages = site.getusersitepackages()
+
+    newproject_cli_config_files_path = os.path.join(site_packages, "newproject-cli/config")
+
+    return newproject_cli_config_files_path
 
 
 def main():
