@@ -48,8 +48,7 @@ class Check:
                 else:
                     print(f"  {validation_error.relative_path[message_len]}:(type error)\n")
 
-            print(f"YAML Config File Error: {validation_error.message}")
-            # print(json.dumps(validation_error.instance, indent=4))
+            print(f"newproject: yaml config file error: {validation_error.message}")
             if validation_error.context:
                 print(validation_error.context)
             if validation_error.cause:
@@ -63,7 +62,7 @@ class Check:
         :return bool: True if the development folder exists
         """
         if not os.path.isdir(dev_dir):
-            console.print(f"[red3]{dev_dir} does not exist[/red3]")
+            console.print(f"newproject: error: [red3]{dev_dir} does not exist[/red3]")
             console.print("[dark_orange3]Change it the YAML config file[/dark_orange3]")
             sys.exit(errno.ENOENT)
         else:
@@ -76,7 +75,7 @@ class Check:
         :param projects_dir_to_check: (str) name of the programming language projects folder
         """
         if not os.path.isdir(projects_dir_to_check):
-            console.print(f"[red3]{projects_dir_to_check} does not exist[/red3]")
+            console.print(f"newproject: error: [red3]{projects_dir_to_check} does not exist[/red3]")
             console.print("[dark_orange3]Change it the YAML config file[/dark_orange3]")
             sys.exit(errno.ENOENT)
 
@@ -87,7 +86,7 @@ class Check:
         :param project_name: (str) the name of the project
         """
         if " " in project_name:
-            console.print("[red3]The new project can't contain spaces in the name[/red3]")
+            print("newproject: error: invalid project name. The project name can't contain spaces'")
             sys.exit(2)
 
 
@@ -95,10 +94,10 @@ class NewProject:
 
     def __init__(self):
         # Config file and JSON Schema
-        self.YAML_CONFIG_FILE: Final[str] = f"{Path.home()}/.config/newproject/newproject_config.yaml"
-        self.JSON_SCHEMA_FILE: Final[str] = f"{Path.home()}/.config/newproject/schemas/json_schema.json"
-        # self.YAML_CONFIG_FILE: Final[str] = f"{get_config_path()}/newproject_config.yaml"
-        # self.JSON_SCHEMA_FILE: Final[str] = f"{get_config_path()}/schema/json_schema.json"
+        # self.YAML_CONFIG_FILE: Final[str] = f"{Path.home()}/.config/newproject/newproject_config.yaml"
+        # self.JSON_SCHEMA_FILE: Final[str] = f"{Path.home()}/.config/newproject/schemas/json_schema.json"
+        self.YAML_CONFIG_FILE: Final[str] = f"{get_config_path()}/newproject_config.yaml"
+        self.JSON_SCHEMA_FILE: Final[str] = f"{get_config_path()}/schema/json_schema.json"
 
         # Loads YAML config file
         try:
@@ -156,7 +155,7 @@ class NewProject:
                 except Exception as open_in_ide_error:
                     logging.error(open_in_ide_error)
             else:
-                console.print(f"[red][underline]{ide_command}[/underline]: command not found...[/red]")
+                console.print(f"[underline]{ide_command}[/underline]: command not found")
 
     def git_init_command(self, project_dir: str, content: str) -> None:
         """
