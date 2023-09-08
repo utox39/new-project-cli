@@ -87,6 +87,7 @@ class Check:
         :param project_name: (str) the name of the project
         """
         if " " in project_name:
+            console.print("[red3]The new project can't contain spaces in the name[/red3]")
             sys.exit(2)
 
 
@@ -94,10 +95,10 @@ class NewProject:
 
     def __init__(self):
         # Config file and JSON Schema
-        # self.YAML_CONFIG_FILE: Final[str] = f"{Path.home()}/.config/newproject/newproject_config.yaml"
-        # self.JSON_SCHEMA_FILE: Final[str] = f"{Path.home()}/.config/newproject/schemas/json_schema.json"
-        self.YAML_CONFIG_FILE: Final[str] = f"{get_config_path()}/newproject_config.yaml"
-        self.JSON_SCHEMA_FILE: Final[str] = f"{get_config_path()}/schema/json_schema.json"
+        self.YAML_CONFIG_FILE: Final[str] = f"{Path.home()}/.config/newproject/newproject_config.yaml"
+        self.JSON_SCHEMA_FILE: Final[str] = f"{Path.home()}/.config/newproject/schemas/json_schema.json"
+        # self.YAML_CONFIG_FILE: Final[str] = f"{get_config_path()}/newproject_config.yaml"
+        # self.JSON_SCHEMA_FILE: Final[str] = f"{get_config_path()}/schema/json_schema.json"
 
         # Loads YAML config file
         try:
