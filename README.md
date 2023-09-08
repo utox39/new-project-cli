@@ -143,6 +143,28 @@ $ newproject --code --python project_name
 
 ### Customization
 
+#### YAML config file in ~/.config/newproject
+
+The default configuration file is located in the site_packages folder, but you can also use a configuration file that
+you
+can create in the ~/.config/newproject folder. Let's see how you can do it:
+
+- Create the configuration folder and the YAML config file
+
+```console
+$ cd ~/.config
+$ mkdir newproject
+$ touch newproject_config.yaml
+```
+
+- Open the YAML file in your editor of choice
+
+- Copy the contents
+  of [this](https://github.com/utox39/new-project-cli/blob/main/newproject/config/newproject_config.yaml) file into the
+  YAML file
+
+- Done
+
 #### Customize the Development folder
 
 In ~/.config/newproject/newproject_config.yaml:
