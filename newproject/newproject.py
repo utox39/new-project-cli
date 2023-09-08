@@ -550,7 +550,7 @@ def get_config_path():
     # Gets the user site-packages path
     site_packages = site.getusersitepackages()
 
-    newproject_cli_config_files_path = os.path.join(site_packages, "newproject-cli/config")
+    newproject_cli_config_files_path = os.path.join(site_packages, "newproject/config")
 
     return newproject_cli_config_files_path
 
