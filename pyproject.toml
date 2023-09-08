@@ -5,6 +5,7 @@ description = "Command-line tool to create new projects"
 authors = ["utox39 <francescomoccaldi39@gmail.com>"]
 license = "MIT"
 readme = "README.md"
+packages = [{ include = "newproject" }]
 homepage = "https://github.com/utox39/new-project-cli"
 repository = "https://github.com/utox39/new-project-cli"
 classifiers = [
@@ -12,7 +13,10 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent"
 ]
-include = ["config"]
+
+
+[tool.poetry.scripts]
+newproject = "newproject.newproject:main"
 
 
 [tool.poetry.urls]
@@ -20,8 +24,12 @@ include = ["config"]
 
 
 [tool.poetry.dependencies]
-python = "^3.11"
-
+python = ">=3.10"
+pyyaml = ">=6.0"
+jsonschema = ">=4.18.4"
+rich = ">=13.4.2"
+typer = ">=0.9.0"
+typing_extensions = ">=4.7.0"
 
 [build-system]
 requires = ["poetry-core"]
