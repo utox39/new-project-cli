@@ -96,7 +96,8 @@ class NewProject:
         # Config file and JSON Schema
         # self.YAML_CONFIG_FILE: Final[str] = f"{Path.home()}/.config/newproject/newproject_config.yaml"
         # self.JSON_SCHEMA_FILE: Final[str] = f"{Path.home()}/.config/newproject/schemas/json_schema.json"
-        self.YAML_CONFIG_FILE: Final[str] = f"{get_config_path()}/newproject_config.yaml"
+        # self.YAML_CONFIG_FILE: Final[str] = f"{get_config_path()}/newproject_config.yaml"
+        self.YAML_CONFIG_FILE: Final[str] = select_config_file()
         self.JSON_SCHEMA_FILE: Final[str] = f"{get_config_path()}/schema/json_schema.json"
 
         # Loads YAML config file
@@ -298,7 +299,6 @@ class NewProject:
             console.print(COULD_NOT_CREATE_PROJECT)
             sys.exit(errno.EEXIST)
 
-    # TODO: Aggiungere supporto a Poetry
     def create_project_with_commands(
             self,
             projects_dir_name: str,
@@ -569,6 +569,21 @@ def get_config_path():
 
     return newproject_cli_config_files_path
 
+
+def select_config_file() -> str:
+    """
+    Checks the presence of the configuration file in .config and if it exists it returns its path,
+    otherwise it returns the path of the one located in site_packages.
+    :return: (str) the config file path
+    """
+    dot_config_yaml_file = f"{Path.home()}/.config/newproject/newproject_config.yaml"
+    site_packages_config_file = f"{get_config_path()}/newproject_config.yaml"
+
+    if os.path.exists(dot_config_yaml_file):
+        return dot_config_yaml_file
+    else:
+        return site_packages_config_file
+ 
 
 def main():
     typer.run(NewProject().handle)
