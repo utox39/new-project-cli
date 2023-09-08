@@ -80,6 +80,15 @@ class Check:
             console.print("[dark_orange3]Change it the YAML config file[/dark_orange3]")
             sys.exit(errno.ENOENT)
 
+    @staticmethod
+    def project_name_check(project_name: str):
+        """
+        Checks if the project name contains a space
+        :param project_name: (str) the name of the project
+        """
+        if " " in project_name:
+            sys.exit(2)
+
 
 class NewProject:
 
@@ -410,7 +419,6 @@ class NewProject:
             console.print(COULD_NOT_CREATE_PROJECT)
             sys.exit(errno.EEXIST)
 
-    # TODO: Aggiungere controllo per il nome del progetto (non ci devono essere spazi nel nome)
     def handle(
             self,
             project_name: Annotated[str, typer.Argument(help="The name of the new project")],
@@ -436,6 +444,11 @@ class NewProject:
 
         Coded with <3 by utox39
         """
+
+        # Checks if the project_name contains a space
+        check = Check()
+        check.project_name_check(project_name)
+
         ide_name = ""
         if code:
             ide_name = "code"
