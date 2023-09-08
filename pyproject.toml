@@ -3,8 +3,21 @@ name = "newproject-cli"
 version = "0.1.0"
 description = "Command-line tool to create new projects"
 authors = ["utox39 <francescomoccaldi39@gmail.com>"]
-license = "MIT License"
+license = "MIT"
 readme = "README.md"
+homepage = "https://github.com/utox39/new-project-cli"
+repository = "https://github.com/utox39/new-project-cli"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent"
+]
+include = ["config"]
+
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/utox39/new-project-cli/issues"
+
 
 [tool.poetry.dependencies]
 python = "^3.11"
