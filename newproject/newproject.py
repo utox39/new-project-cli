@@ -88,7 +88,7 @@ class NewProject:
         # self.YAML_CONFIG_FILE: Final[str] = f"{Path.home()}/.config/newproject/newproject_config.yaml"
         # self.JSON_SCHEMA_FILE: Final[str] = f"{Path.home()}/.config/newproject/schemas/json_schema.json"
         self.YAML_CONFIG_FILE: Final[str] = f"{get_config_path()}/newproject_config.yaml"
-        self.JSON_SCHEMA_FILE: Final[str] = f"{get_config_path()}/schemas/json_schema.json"
+        self.JSON_SCHEMA_FILE: Final[str] = f"{get_config_path()}/schema/json_schema.json"
 
         # Loads YAML config file
         try:
