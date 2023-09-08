@@ -289,6 +289,7 @@ class NewProject:
             console.print(COULD_NOT_CREATE_PROJECT)
             sys.exit(errno.EEXIST)
 
+    # TODO: Aggiungere supporto a Poetry
     def create_project_with_commands(
             self,
             projects_dir_name: str,
@@ -409,25 +410,26 @@ class NewProject:
             console.print(COULD_NOT_CREATE_PROJECT)
             sys.exit(errno.EEXIST)
 
+    # TODO: Aggiungere controllo per il nome del progetto (non ci devono essere spazi nel nome)
     def handle(
             self,
             project_name: Annotated[str, typer.Argument(help="The name of the new project")],
-            python: Annotated[bool, typer.Option(help="create a python project")] = False,
-            java: Annotated[bool, typer.Option(help="create a java project")] = False,
-            go: Annotated[bool, typer.Option(help="create a go project")] = False,
             bash: Annotated[bool, typer.Option(help="create a bash project")] = False,
-            cpp: Annotated[bool, typer.Option(help="create a cpp project")] = False,
             clang: Annotated[bool, typer.Option(help="create a c project")] = False,
-            php: Annotated[bool, typer.Option(help="create a php project")] = False,
+            cpp: Annotated[bool, typer.Option(help="create a cpp project")] = False,
+            go: Annotated[bool, typer.Option(help="create a go project")] = False,
+            java: Annotated[bool, typer.Option(help="create a java project")] = False,
             lua: Annotated[bool, typer.Option(help="create a lua project")] = False,
-            rust: Annotated[bool, typer.Option(help="create a rust project")] = False,
-            ruby: Annotated[bool, typer.Option(help="create a ruby project")] = False,
             ocaml: Annotated[bool, typer.Option(help="create an ocaml project")] = False,
+            php: Annotated[bool, typer.Option(help="create a php project")] = False,
+            python: Annotated[bool, typer.Option(help="create a python project")] = False,
+            ruby: Annotated[bool, typer.Option(help="create a ruby project")] = False,
+            rust: Annotated[bool, typer.Option(help="create a rust project")] = False,
             vlang: Annotated[bool, typer.Option(help="create a vlang project")] = False,
             web: Annotated[bool, typer.Option(help="create a basic web project")] = False,
             code: Annotated[bool, typer.Option(help="open the project in VS Code")] = False,
-            pycharm: Annotated[bool, typer.Option(help="open the project in PyCharm")] = False,
-            idea: Annotated[bool, typer.Option(help="open the project in Intellij IDEA")] = False
+            idea: Annotated[bool, typer.Option(help="open the project in Intellij IDEA")] = False,
+            pycharm: Annotated[bool, typer.Option(help="open the project in PyCharm")] = False
     ):
         """
         Create a new project via terminal
