@@ -107,6 +107,14 @@ Easy as you can see here:
 $ pip install newproject-cli
 ```
 
+Please note: After installing newproject with pip if you have not added ~/.local/bin (MacOS/Linux) to $PATH you will be
+asked to do so with a warning that should look like this:
+
+```console
+WARNING: The script newproject is installed in '/home/ubuntu/.local/bin' which is not on PATH.
+Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+```
+
 ## Usage
 
 #### Create a new python project
