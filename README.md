@@ -78,7 +78,7 @@ $ cargo new project_name
 
 So it use the default command to create a new cargo package.
 
-The same is for Ruby, Dart, Flutter, OCaml and Vlang.
+The same is for Ruby, OCaml and Vlang.
 
 ## Requirements
 
