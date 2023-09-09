@@ -64,7 +64,7 @@ class Check:
         if not os.path.isdir(dev_dir):
             console.print(f"newproject: error: [red3]{dev_dir} does not exist[/red3]")
             console.print("[dark_orange3]Change it the YAML config file[/dark_orange3]")
-            sys.exit(errno.ENOENT)
+            return False
         else:
             return True
 
@@ -583,7 +583,7 @@ def select_config_file() -> str:
         return dot_config_yaml_file
     else:
         return site_packages_config_file
- 
+
 
 def main():
     typer.run(NewProject().handle)
