@@ -1,23 +1,46 @@
+import os
+import tempfile
 import unittest
 
-from unittest.mock import patch
-
-from src.newproject.newproject import Check, NewProject
+from newproject.newproject import Check
 
 
-class TestCheck:
-    def test_config_file_validator_valid(self):
-        ...
+class TestCheck(unittest.TestCase):
+    def test_config_file_validator(self):
+        # Create a sample config file and JSON schema for testing
+        config_file = {
+            "key1": "value1",
+            "key2": "value2"
+        }
+        json_schema = {
+            "type": "object",
+            "properties": {
+                "key1": {"type": "string"},
+                "key2": {"type": "string"}
+            }
+        }
 
-    def test_config_file_validator_invalid(self):
-        ...
+        # Test a valid configuration
+        self.assertTrue(Check.config_file_validator(config_file, json_schema))
 
-    def test_dev_dir_check_exists(self):
-        ...
+        # Test an invalid configuration
+        config_file["key2"] = 123  # Add an invalid property
+        self.assertFalse(Check.config_file_validator(config_file, json_schema))
 
-    def test_dev_dir_check_not_exists(self):
-        ...
+        print("----------")
+
+    def test_dev_dir_check(self):
+        # Create a temporary directory for testing
+        with tempfile.TemporaryDirectory() as temp_dir:
+            # Test an existing directory
+            self.assertTrue(Check.dev_dir_check(temp_dir))
+
+            # Test a non-existing directory
+            non_existing_dir = os.path.join(temp_dir, "non_existing")
+            self.assertFalse(Check.dev_dir_check(non_existing_dir))
+
+            print("----------")
 
 
-class TestNewProject:
-    ...
+if __name__ == '__main__':
+    unittest.main()
