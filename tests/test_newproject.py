@@ -1,3 +1,4 @@
+import errno
 import os
 import tempfile
 import unittest
@@ -40,6 +41,18 @@ class TestCheck(unittest.TestCase):
             self.assertFalse(Check.dev_dir_check(non_existing_dir))
 
             print("----------")
+
+    def test_path_check(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            non_existing_dir = os.path.join(temp_dir, "non_existing")
+            with self.assertRaises(SystemExit) as se:
+                Check.projects_path_check(non_existing_dir)
+            self.assertEquals(se.exception.code, errno.ENOENT)
+
+    def test_name_check(self):
+        with self.assertRaises(SystemExit) as se:
+            Check.projects_path_check("invalid name")
+        self.assertEquals(se.exception.code, 2)
 
 
 if __name__ == '__main__':

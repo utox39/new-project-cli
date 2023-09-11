@@ -94,9 +94,6 @@ class NewProject:
 
     def __init__(self):
         # Config file and JSON Schema
-        # self.YAML_CONFIG_FILE: Final[str] = f"{Path.home()}/.config/newproject/newproject_config.yaml"
-        # self.JSON_SCHEMA_FILE: Final[str] = f"{Path.home()}/.config/newproject/schemas/json_schema.json"
-        # self.YAML_CONFIG_FILE: Final[str] = f"{get_config_path()}/newproject_config.yaml"
         self.YAML_CONFIG_FILE: Final[str] = select_config_file()
         self.JSON_SCHEMA_FILE: Final[str] = f"{get_config_path()}/schema/json_schema.json"
 
@@ -149,14 +146,13 @@ class NewProject:
         :param ide_command: (str) the console command to open the IDE
         :param project_dir: (str) the project directory to open in the IDE
         """
-        if ide_command in ["code", "pycharm", "idea"]:
-            if which(f"{ide_command}") is not None:
-                try:
-                    subprocess.run([f"{ide_command}", project_dir])
-                except Exception as open_in_ide_error:
-                    logging.error(open_in_ide_error)
-            else:
-                console.print(f"[underline]{ide_command}[/underline]: command not found")
+        if which(f"{ide_command}") is not None:
+            try:
+                subprocess.run([f"{ide_command}", project_dir])
+            except Exception as open_in_ide_error:
+                logging.error(open_in_ide_error)
+        else:
+            print(f"newproject: {ide_command}: ide command not found")
 
     def git_init_command(self, project_dir: str, content: str) -> None:
         """
