@@ -559,9 +559,9 @@ class NewProject:
 
 def get_config_path():
     # Gets the user site-packages path
-    site_packages = site.getusersitepackages()
+    site_packages = site.getsitepackages()
 
-    newproject_cli_config_files_path = os.path.join(site_packages, "newproject/config")
+    newproject_cli_config_files_path = os.path.join(site_packages[0], "newproject/config")
 
     return newproject_cli_config_files_path
 
