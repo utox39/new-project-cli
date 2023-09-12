@@ -101,6 +101,8 @@ The same is for Ruby, OCaml and Vlang.
 
 ## Installation
 
+This tool currently only works for [*NIX](https://en.wikipedia.org/wiki/Unix-like) operating systems
+
 Easy as you can see here:
 
 ```console
@@ -266,6 +268,7 @@ default_gitignore_content: |
 - Add more IDE
 - Improve user output and experience
 - Publish this project to package managers
+- Add Windows support
 
 ## Contributing
 
