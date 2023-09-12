@@ -1,4 +1,4 @@
-name: newproject-cli
+name: newproject-cli-tests
 
 on: [ push ]
 
