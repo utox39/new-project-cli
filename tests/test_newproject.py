@@ -5,7 +5,7 @@ import subprocess
 import tempfile
 import unittest
 from shutil import which
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, Mock
 
 from rich.console import Console
 
@@ -57,10 +57,14 @@ class TestCheck(unittest.TestCase):
                 Check.projects_path_check(non_existing_dir)
             self.assertEqual(cm.exception.code, errno.ENOENT)
 
+            print("----------")
+
     def test_name_check(self):
         with self.assertRaises(SystemExit) as cm:
             Check.projects_path_check("invalid name")
         self.assertEqual(cm.exception.code, 2)
+
+        print("----------")
 
 
 class TestNewProject(unittest.TestCase):
@@ -71,7 +75,10 @@ class TestNewProject(unittest.TestCase):
 
         NewProject.open_in_ide('code', '/path/to/project')
 
+        # Assert that code path/to/project was called
         mock_run.assert_called_once_with(['code', '/path/to/project'])
+
+        print("----------")
 
     @patch('shutil.which')
     @patch('builtins.print')
@@ -82,43 +89,41 @@ class TestNewProject(unittest.TestCase):
 
         mock_print.assert_called_once_with('newproject: invalid_ide: ide command not found')
 
-    # @patch('subprocess.run')
-    # @patch('shutil.which')
-    # @patch('logging.error')
-    # def test_open_in_ide_exception_handling(self, mock_error_log, mock_which, mock_run):
-    #     mock_which.return_value = which("code")
-    #
-    #     mock_error_log.side_effect = Exception("Test Exception")
-    #
-    #     try:
-    #         NewProject.open_in_ide('code', '/path/to/project')
-    #
-    #         mock_run.assert_called_once_with(['code', '/path/to/project'])
-    #     except Exception as e:
-    #         self.assertEqual(str(e), "Test Exception")
-    #
-    #     mock_error_log.assert_called_once_with(MagicMock())
+        print("----------")
 
     @patch('subprocess.run')
     @patch('shutil.which')
     def test_git_init_command_success(self, mock_which, mock_run):
         mock_which.return_value = which("git")
 
-        new_project = NewProject()
-
         with tempfile.TemporaryDirectory() as temp_dir:
             project_dir = os.path.join(temp_dir, 'test_project')
             content = 'sample_content'
 
-            new_project.git_init_command(project_dir, content)
+            NewProject().git_init_command(project_dir, content)
 
+            # Assert that git init was called
             mock_run.assert_called_once_with(["git", "init", project_dir])
 
-            # gitignore_path = os.path.join(project_dir, '.gitignore')
-            # self.assertTrue(os.path.exists(gitignore_path))
-            # with open(gitignore_path, 'r') as gitignore_file:
-            #     gitignore_content = gitignore_file.read()
-            #     self.assertEqual(gitignore_content, content)
+            print("----------")
+
+    @patch('subprocess.run')
+    # @patch('builtins.print')  # Mock the print function
+    def test_git_init_failure(self, mock_run):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            project_dir = os.path.join(temp_dir, 'test_project')
+            content = 'sample_content'
+
+            NewProject().git_init_command(project_dir, content)
+
+            # # Assert that git init was called
+            mock_run.assert_called_once_with(["git", "init", project_dir])
+
+            # Assert that .gitignore was not created
+            gitignore_path = os.path.join(project_dir, '.gitignore')
+            self.assertFalse(os.path.exists(gitignore_path))
+
+            print("----------")
 
 
 if __name__ == '__main__':
