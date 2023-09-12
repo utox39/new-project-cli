@@ -147,10 +147,11 @@ class NewProject:
         :param project_dir: (str) the project directory to open in the IDE
         """
         if which(f"{ide_command}") is not None:
-            try:
-                subprocess.run([f"{ide_command}", project_dir])
-            except Exception as open_in_ide_error:
-                logging.error(open_in_ide_error)
+            if ide_command in ["code", "pycharm", "idea"]:
+                try:
+                    subprocess.run([f"{ide_command}", project_dir])
+                except Exception as open_in_ide_error:
+                    logging.error(open_in_ide_error)
         else:
             print(f"newproject: {ide_command}: ide command not found")
 
