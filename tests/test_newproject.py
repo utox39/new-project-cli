@@ -13,8 +13,6 @@ from newproject.newproject import Check, NewProject
 check = Check()
 new_project = NewProject()
 
-print(site.getusersitepackages())
-
 
 class TestCheck(unittest.TestCase):
     def test_config_file_validator(self):
