@@ -1,6 +1,7 @@
 import errno
 import logging
 import os
+import site
 import subprocess
 import tempfile
 import unittest
@@ -11,6 +12,8 @@ from newproject.newproject import Check, NewProject
 
 check = Check()
 new_project = NewProject()
+
+print(site.getusersitepackages())
 
 
 class TestCheck(unittest.TestCase):
