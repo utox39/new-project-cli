@@ -7,11 +7,10 @@ import unittest
 from shutil import which
 from unittest.mock import patch, MagicMock, Mock
 
-from rich.console import Console
-
 from newproject.newproject import Check, NewProject
 
-console = Console()
+check = Check()
+new_project = NewProject()
 
 
 class TestCheck(unittest.TestCase):
@@ -30,66 +29,66 @@ class TestCheck(unittest.TestCase):
         }
 
         # Test a valid configuration
-        self.assertTrue(Check.config_file_validator(config_file, json_schema))
+        self.assertTrue(check.config_file_validator(config_file, json_schema))
 
         # Test an invalid configuration
         config_file["key2"] = 123  # Add an invalid property
-        self.assertFalse(Check.config_file_validator(config_file, json_schema))
+        self.assertFalse(check.config_file_validator(config_file, json_schema))
 
-        print("----------")
+        print("OK\n----------")
 
     def test_dev_dir_check(self):
         # Create a temporary directory for testing
         with tempfile.TemporaryDirectory() as temp_dir:
             # Test an existing directory
-            self.assertTrue(Check.dev_dir_check(temp_dir))
+            self.assertTrue(check.dev_dir_check(temp_dir))
 
             # Test a non-existing directory
             non_existing_dir = os.path.join(temp_dir, "non_existing")
-            self.assertFalse(Check.dev_dir_check(non_existing_dir))
+            self.assertFalse(check.dev_dir_check(non_existing_dir))
 
-            print("----------")
+            print("OK\n----------")
 
     def test_path_check(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             non_existing_dir = os.path.join(temp_dir, "non_existing")
             with self.assertRaises(SystemExit) as cm:
-                Check.projects_path_check(non_existing_dir)
+                check.projects_path_check(non_existing_dir)
             self.assertEqual(cm.exception.code, errno.ENOENT)
 
-            print("----------")
+            print("OK\n----------")
 
     def test_name_check(self):
         with self.assertRaises(SystemExit) as cm:
-            Check.projects_path_check("invalid name")
+            check.projects_path_check("invalid name")
         self.assertEqual(cm.exception.code, 2)
 
-        print("----------")
+        print("OK\n----------")
 
 
 class TestNewProject(unittest.TestCase):
+    @patch('shutil.which', return_value='path/to/code')
     @patch('subprocess.run')
-    @patch('shutil.which')
-    def test_open_in_ide_success(self, mock_which, mock_run):
-        mock_which.return_value = which("code")
+    def test_open_in_ide_success(self, mock_run, mock_which):
+        # mock_which.return_value = which("code")
 
-        NewProject.open_in_ide('code', '/path/to/project')
+        new_project.open_in_ide('code', '/path/to/project')
 
         # Assert that code path/to/project was called
         mock_run.assert_called_once_with(['code', '/path/to/project'])
 
-        print("----------")
+        print("OK\n----------")
 
     @patch('shutil.which')
     @patch('builtins.print')
     def test_open_in_ide_command_not_found(self, mock_print, mock_which):
         mock_which.return_value = None
 
-        NewProject.open_in_ide('invalid_ide', '/path/to/project')
+        new_project.open_in_ide('invalid_ide', '/path/to/project')
 
         mock_print.assert_called_once_with('newproject: invalid_ide: ide command not found')
 
-        print("----------")
+        print("OK\n----------")
 
     @patch('subprocess.run')
     @patch('shutil.which')
@@ -100,12 +99,12 @@ class TestNewProject(unittest.TestCase):
             project_dir = os.path.join(temp_dir, 'test_project')
             content = 'sample_content'
 
-            NewProject().git_init_command(project_dir, content)
+            new_project.git_init_command(project_dir, content)
 
             # Assert that git init was called
             mock_run.assert_called_once_with(["git", "init", project_dir])
 
-            print("----------")
+            print("OK\n----------")
 
     @patch('subprocess.run')
     # @patch('builtins.print')  # Mock the print function
@@ -114,7 +113,7 @@ class TestNewProject(unittest.TestCase):
             project_dir = os.path.join(temp_dir, 'test_project')
             content = 'sample_content'
 
-            NewProject().git_init_command(project_dir, content)
+            new_project.git_init_command(project_dir, content)
 
             # # Assert that git init was called
             mock_run.assert_called_once_with(["git", "init", project_dir])
@@ -123,7 +122,7 @@ class TestNewProject(unittest.TestCase):
             gitignore_path = os.path.join(project_dir, '.gitignore')
             self.assertFalse(os.path.exists(gitignore_path))
 
-            print("----------")
+            print("OK\n----------")
 
 
 if __name__ == '__main__':
