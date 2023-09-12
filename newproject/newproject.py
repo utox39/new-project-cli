@@ -118,8 +118,7 @@ class NewProject:
 
         self.check = Check()
 
-        if self.check.config_file_validator(config_file=self.newproject_config, json_schema=self.json_schema) and \
-                self.check.dev_dir_check(dev_dir=self.DEV_DIR):
+        if self.check.config_file_validator(config_file=self.newproject_config, json_schema=self.json_schema):
             # Project folder names
             self.PROJECTS_DIR_NAMES: Final[dict] = {
                 "bash": self.newproject_config["bash"]["projects_dir_name"],
@@ -259,42 +258,45 @@ class NewProject:
         :param gitignore_content: (str) the content of the .gitignore file
         :param ide: (str) the name of the IDE where you want to open the new project
         """
-        # check if the specified projects folder exists
-        projects_path = os.path.join(self.DEV_DIR, projects_dir_name)
+        if self.check.dev_dir_check(dev_dir=self.DEV_DIR):
+            # check if the specified projects folder exists
+            projects_path = os.path.join(self.DEV_DIR, projects_dir_name)
 
-        self.check.projects_path_check(projects_dir_to_check=projects_path)
-        # Creating the project folder
-        new_project_dir = f"{projects_path}/{project_name}"
+            self.check.projects_path_check(projects_dir_to_check=projects_path)
+            # Creating the project folder
+            new_project_dir = f"{projects_path}/{project_name}"
 
-        try:
-            console.print(CREATING_NEW_PROJECT)
+            try:
+                console.print(CREATING_NEW_PROJECT)
 
-            os.mkdir(new_project_dir)
+                os.mkdir(new_project_dir)
 
-            if projects_dir_name == self.PROJECTS_DIR_NAMES["python"]:
-                # Generating a python venv for the project
-                self.create_python_venv(new_project_path=new_project_dir)
+                if projects_dir_name == self.PROJECTS_DIR_NAMES["python"]:
+                    # Generating a python venv for the project
+                    self.create_python_venv(new_project_path=new_project_dir)
 
-            # Creating the file structure
-            self.create_and_write_file(new_project_dir=new_project_dir, file_name=file_name, content=file_content)
+                # Creating the file structure
+                self.create_and_write_file(new_project_dir=new_project_dir, file_name=file_name, content=file_content)
 
-            # Creating the README for the new project
-            self.create_readme(new_project_dir=new_project_dir, project_name=project_name)
+                # Creating the README for the new project
+                self.create_readme(new_project_dir=new_project_dir, project_name=project_name)
 
-            # git init
-            self.git_init_command(project_dir=new_project_dir, content=gitignore_content)
+                # git init
+                self.git_init_command(project_dir=new_project_dir, content=gitignore_content)
 
-            # Open in IDE
-            self.open_in_ide(ide_command=ide, project_dir=new_project_dir)
+                # Open in IDE
+                self.open_in_ide(ide_command=ide, project_dir=new_project_dir)
 
-            console.print(HAPPY_CODING)
+                console.print(HAPPY_CODING)
 
-        except FileExistsError:
-            console.print(
-                f"{new_project_dir} [bold red3]already exists![/bold red3]"
-            )
-            console.print(COULD_NOT_CREATE_PROJECT)
-            sys.exit(errno.EEXIST)
+            except FileExistsError:
+                console.print(
+                    f"{new_project_dir} [bold red3]already exists![/bold red3]"
+                )
+                console.print(COULD_NOT_CREATE_PROJECT)
+                sys.exit(errno.EEXIST)
+        else:
+            sys.exit(2)
 
     def create_project_with_commands(
             self,
@@ -308,49 +310,53 @@ class NewProject:
         :param project_name: (str) the name of the new project
         :param ide: (str) the name of the IDE where you want to open the new project
         """
-        projects_path = os.path.join(self.DEV_DIR, projects_dir_name)
+        if self.check.dev_dir_check(dev_dir=self.DEV_DIR):
 
-        self.check.projects_path_check(projects_dir_to_check=projects_path)
-        # Creating the project folder
-        new_project_dir = f"{projects_path}/{project_name}"
+            projects_path = os.path.join(self.DEV_DIR, projects_dir_name)
 
-        try:
-            if os.path.isdir(new_project_dir):
-                raise FileExistsError(errno.ENOENT, os.strerror(errno.ENOENT), new_project_dir)
-            # Creating the project folder and file structure for the project
-            console.print(CREATING_NEW_PROJECT)
+            self.check.projects_path_check(projects_dir_to_check=projects_path)
+            # Creating the project folder
+            new_project_dir = f"{projects_path}/{project_name}"
 
-            commands = []
+            try:
+                if os.path.isdir(new_project_dir):
+                    raise FileExistsError(errno.ENOENT, os.strerror(errno.ENOENT), new_project_dir)
+                # Creating the project folder and file structure for the project
+                console.print(CREATING_NEW_PROJECT)
 
-            if projects_dir_name == self.PROJECTS_DIR_NAMES["rust"]:
-                commands = ["cargo", "new", new_project_dir]
-            elif projects_dir_name == self.PROJECTS_DIR_NAMES["ruby"]:
-                commands = ["bundler", "gem", new_project_dir]
-            elif projects_dir_name == self.PROJECTS_DIR_NAMES["ocaml"]:
-                commands = ["dune", "init", "project", new_project_dir]
-            elif projects_dir_name == self.PROJECTS_DIR_NAMES["vlang"]:
-                commands = ["v", "new", new_project_dir]
+                commands = []
 
-            if which(commands[0]) is not None:
-                try:
-                    subprocess.run(commands)
-                    print(DONE)
+                if projects_dir_name == self.PROJECTS_DIR_NAMES["rust"]:
+                    commands = ["cargo", "new", new_project_dir]
+                elif projects_dir_name == self.PROJECTS_DIR_NAMES["ruby"]:
+                    commands = ["bundler", "gem", new_project_dir]
+                elif projects_dir_name == self.PROJECTS_DIR_NAMES["ocaml"]:
+                    commands = ["dune", "init", "project", new_project_dir]
+                elif projects_dir_name == self.PROJECTS_DIR_NAMES["vlang"]:
+                    commands = ["v", "new", new_project_dir]
 
-                    # Open in IDE
-                    self.open_in_ide(ide_command=ide, project_dir=new_project_dir)
+                if which(commands[0]) is not None:
+                    try:
+                        subprocess.run(commands)
+                        print(DONE)
 
-                    console.print(HAPPY_CODING)
-                except Exception as command_exception:
-                    logging.error(command_exception)
-                    console.print(COULD_NOT_CREATE_PROJECT)
-            else:
-                console.print(f"[red][underline]{commands[0]}[/underline]: command not found...[/red]")
-        except FileExistsError:
-            console.print(
-                f"{new_project_dir} [bold red3]already exists![/bold red3]"
-            )
-            console.print(COULD_NOT_CREATE_PROJECT)
-            sys.exit(errno.EEXIST)
+                        # Open in IDE
+                        self.open_in_ide(ide_command=ide, project_dir=new_project_dir)
+
+                        console.print(HAPPY_CODING)
+                    except Exception as command_exception:
+                        logging.error(command_exception)
+                        console.print(COULD_NOT_CREATE_PROJECT)
+                else:
+                    console.print(f"[red][underline]{commands[0]}[/underline]: command not found...[/red]")
+            except FileExistsError:
+                console.print(
+                    f"{new_project_dir} [bold red3]already exists![/bold red3]"
+                )
+                console.print(COULD_NOT_CREATE_PROJECT)
+                sys.exit(errno.EEXIST)
+        else:
+            sys.exit(2)
 
     def create_web_project(
             self,
@@ -372,49 +378,52 @@ class NewProject:
         :param gitignore_content: (str) the content of the .gitignore file
         :param ide: (str) the name of the IDE where you want to open the new project
         """
-        # check if the specified projects folder exists
-        projects_path = os.path.join(self.DEV_DIR, projects_dir_name)
+        if self.check.dev_dir_check(dev_dir=self.DEV_DIR):
+            # check if the specified projects folder exists
+            projects_path = os.path.join(self.DEV_DIR, projects_dir_name)
 
-        self.check.projects_path_check(projects_dir_to_check=projects_path)
-        # Creating the project folder
-        new_project_dir = f"{projects_path}/{project_name}"
+            self.check.projects_path_check(projects_dir_to_check=projects_path)
+            # Creating the project folder
+            new_project_dir = f"{projects_path}/{project_name}"
 
-        try:
-            console.print(CREATING_NEW_PROJECT)
+            try:
+                console.print(CREATING_NEW_PROJECT)
 
-            os.mkdir(new_project_dir)
-            os.mkdir(f"{new_project_dir}/styles")
-            os.mkdir(f"{new_project_dir}/scripts")
+                os.mkdir(new_project_dir)
+                os.mkdir(f"{new_project_dir}/styles")
+                os.mkdir(f"{new_project_dir}/scripts")
 
-            # Creating the file structure
+                # Creating the file structure
 
-            # Creating Html file
-            self.create_and_write_file(new_project_dir=new_project_dir, file_name="index.html",
-                                       content=html_file_content)
-            # Creating Css file
-            self.create_and_write_file(new_project_dir=f"{new_project_dir}/styles", file_name="style.css",
-                                       content=css_file_content)
-            # Creating Javascript file
-            self.create_and_write_file(new_project_dir=f"{new_project_dir}/scripts", file_name="index.js",
-                                       content=javascript_file_content)
+                # Creating Html file
+                self.create_and_write_file(new_project_dir=new_project_dir, file_name="index.html",
+                                           content=html_file_content)
+                # Creating Css file
+                self.create_and_write_file(new_project_dir=f"{new_project_dir}/styles", file_name="style.css",
+                                           content=css_file_content)
+                # Creating Javascript file
+                self.create_and_write_file(new_project_dir=f"{new_project_dir}/scripts", file_name="index.js",
+                                           content=javascript_file_content)
 
-            # Creating the README for the new project
-            self.create_readme(new_project_dir=new_project_dir, project_name=project_name)
+                # Creating the README for the new project
+                self.create_readme(new_project_dir=new_project_dir, project_name=project_name)
 
-            # git init
-            self.git_init_command(project_dir=new_project_dir, content=gitignore_content)
+                # git init
+                self.git_init_command(project_dir=new_project_dir, content=gitignore_content)
 
-            # Open in IDE
-            self.open_in_ide(ide_command=ide, project_dir=new_project_dir)
+                # Open in IDE
+                self.open_in_ide(ide_command=ide, project_dir=new_project_dir)
 
-            console.print(HAPPY_CODING)
+                console.print(HAPPY_CODING)
 
-        except FileExistsError:
-            console.print(
-                f"{new_project_dir} [bold red3]already exists![/bold red3]"
-            )
-            console.print(COULD_NOT_CREATE_PROJECT)
-            sys.exit(errno.EEXIST)
+            except FileExistsError:
+                console.print(
+                    f"{new_project_dir} [bold red3]already exists![/bold red3]"
+                )
+                console.print(COULD_NOT_CREATE_PROJECT)
+                sys.exit(errno.EEXIST)
+        else:
+            sys.exit(2)
 
     def handle(
             self,
