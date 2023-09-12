@@ -559,10 +559,14 @@ class NewProject:
 
 
 def get_config_path():
-    # Gets the user site-packages path
-    site_packages = site.getsitepackages()
+    # Gets the site-packages path
+    site_packages = ""
+    if sys.platform.startswith("darwin"):
+        site_packages = site.getsitepackages()[0]
+    elif sys.platform.startswith("linux"):
+        site_packages = site.getusersitepackages()
 
-    newproject_cli_config_files_path = os.path.join(site_packages[0], "newproject/config")
+    newproject_cli_config_files_path = os.path.join(site_packages, "newproject/config")
 
     return newproject_cli_config_files_path
 
