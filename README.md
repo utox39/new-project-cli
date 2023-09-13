@@ -1,5 +1,9 @@
 # new-project-cli
 
+---
+[![codecov](https://codecov.io/gh/utox39/new-project-cli/graph/badge.svg?token=LLIV4AFVY6)](https://codecov.io/gh/utox39/new-project-cli)
+---
+
 [![asciicast](https://asciinema.org/a/RduB1EVKNj1zp9Gw0kCbptpFZ.svg)](https://asciinema.org/a/RduB1EVKNj1zp9Gw0kCbptpFZ)
 
 - [Description](#description)
