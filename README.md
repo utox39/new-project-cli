@@ -1,9 +1,12 @@
 # new-project-cli
 
 [![codecov](https://codecov.io/gh/utox39/new-project-cli/graph/badge.svg?token=LLIV4AFVY6)](https://codecov.io/gh/utox39/new-project-cli)
-![PyPI - Version](https://img.shields.io/pypi/v/newproject-cli)
-![PyPI - Downloads](https://img.shields.io/pypi/dw/newproject-cli)
-![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/utox39/new-project-cli/newproject-cli-tests.yaml)
+[<img alt="PyPI - Version" src="https://img.shields.io/pypi/v/newproject-cli">
+](https://pypi.org/project/newproject-cli/)
+[<img alt="PyPI - Downloads" src="https://img.shields.io/pypi/dw/newproject-cli">
+](https://pypistats.org/packages/newproject-cli)
+[<img alt="GitHub Workflow Status (with event)" src="https://img.shields.io/github/actions/workflow/status/utox39/new-project-cli/newproject-cli-tests.yaml">
+](https://github.com/utox39/new-project-cli/actions/workflows/newproject-cli-tests.yaml)
 ---
 
 [![asciicast](https://asciinema.org/a/RduB1EVKNj1zp9Gw0kCbptpFZ.svg)](https://asciinema.org/a/RduB1EVKNj1zp9Gw0kCbptpFZ)
