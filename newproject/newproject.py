@@ -216,9 +216,9 @@ class NewProject:
         )
         try:
             # MacOS and Linux
-            if sys.platform.startswith("darwin") or sys.platform.startswith("linux"):
-                with console.status("[dodger_blue1]Generating...[/dodger_blue1]", spinner="aesthetic"):
-                    subprocess.run(["python3", "-m", "venv", f"{new_project_path}/venv"])
+            # if sys.platform.startswith("darwin") or sys.platform.startswith("linux"):
+            with console.status("[dodger_blue1]Generating...[/dodger_blue1]", spinner="aesthetic"):
+                subprocess.run(["python3", "-m", "venv", f"{new_project_path}/venv"])
             # # Windows
             # elif sys.platform.startswith("win32"):
             #     with console.status("[dodger_blue1]Generating...[/dodger_blue1]", spinner="aesthetic"):
