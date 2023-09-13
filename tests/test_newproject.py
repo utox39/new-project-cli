@@ -171,7 +171,7 @@ class TestNewProject(unittest.TestCase):
         print(OK)
 
     @patch('subprocess.run')
-    def test_create_venv_success(self, mock_run):
+    def test_create_python_venv_success(self, mock_run):
         print("- test_create_venv_success")
         with tempfile.TemporaryDirectory() as temp_dir:
             project_dir = os.path.join(temp_dir, 'test_project')
@@ -183,7 +183,7 @@ class TestNewProject(unittest.TestCase):
 
     @patch('subprocess.run', side_effect=Exception("Test Exception"))
     @patch('logging.error')
-    def test_create_venv_failure(self, mock_logging_error, mock_run, ):
+    def test_create_python_venv_failure(self, mock_logging_error, mock_run, ):
         print("- test_create_venv_failure")
         with tempfile.TemporaryDirectory() as temp_dir:
             project_dir = os.path.join(temp_dir, 'test_project')
