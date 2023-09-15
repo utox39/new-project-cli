@@ -216,16 +216,16 @@ class NewProject:
         )
         try:
             # MacOS and Linux
-            # if sys.platform.startswith("darwin") or sys.platform.startswith("linux"):
-            with console.status("[dodger_blue1]Generating...[/dodger_blue1]", spinner="aesthetic"):
-                subprocess.run(["python3", "-m", "venv", f"{new_project_path}/venv"])
-            # # Windows
-            # elif sys.platform.startswith("win32"):
-            #     with console.status("[dodger_blue1]Generating...[/dodger_blue1]", spinner="aesthetic"):
-            #         if which("virtualenv") is not None:
-            #             subprocess.run(["virtualenv", f"{new_project_path}/venv"])
-            #         else:
-            #             subprocess.run(["python3", "-m", "venv", f"{new_project_path}/venv"])
+            if sys.platform.startswith("darwin") or sys.platform.startswith("linux"):
+                with console.status("[dodger_blue1]Generating...[/dodger_blue1]", spinner="aesthetic"):
+                    subprocess.run(["python3", "-m", "venv", f"{new_project_path}/venv"])
+            # Windows
+            elif sys.platform.startswith("win32"):
+                with console.status("[dodger_blue1]Generating...[/dodger_blue1]", spinner="aesthetic"):
+                    if which("virtualenv") is not None:
+                        subprocess.run(["virtualenv", f"{new_project_path}/venv"])
+                    else:
+                        subprocess.run(["python3", "-m", "venv", f"{new_project_path}/venv"])
             print(DONE)
         except Exception as venv_exception:
             logging.error(venv_exception)
@@ -577,6 +577,8 @@ def get_config_path():
             site_packages = site.getusersitepackages()
         elif os.path.exists(site.getsitepackages()[0]):
             site_packages = site.getsitepackages()[0]
+    elif sys.platform.startswith("win32"):
+        site_packages = site.getsitepackages()[1]
 
     newproject_cli_config_files_path = os.path.join(site_packages, "newproject/config")
 
