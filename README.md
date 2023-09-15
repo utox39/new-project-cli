@@ -154,7 +154,7 @@ project_name
 
 #### Create a new project and open it in Visual Studio Code
 
-ATTENTION: In order to open the new project in your favorite IDE you need to have the shell command
+WARNING: In order to open the new project in your favorite IDE you need to have the shell command
 
 ```console
 $ newproject --code --python project_name
@@ -162,11 +162,36 @@ $ newproject --code --python project_name
 
 ### Customization
 
-#### YAML config file in ~/.config/newproject
+The default yaml config file is located in site_packages
+
+#### How can I find the default config file?
+
+```console
+$ pip3 show newproject-cli
+Name: newproject-cli
+Version: 0.x.x
+Summary: A command-line tool to create new projects
+Home-page: https://github.com/utox39/new-project-cli
+Author: utox39
+Author-email: francescomoccaldi39@gmail.com
+License: MIT
+Location: path/to/site-packages <-- LOOK HERE
+Requires: jsonschema, pyyaml, rich, typer, typing_extensions
+Required-by:
+
+$ cd path/to/site-packages/newproject/config
+```
+
+#### YAML config file in ~/.config/newproject (MacOS/Linux only)
 
 The default configuration file is located in the site_packages folder, but you can also use a configuration file that
 you
-can create in the ~/.config/newproject folder. Let's see how you can do it:
+can create in the ~/.config/newproject folder.
+
+ATTENTION: Using this config file does not involve updating to the latest features involving the default
+config file (located in the site_packages), therefore it requires manual intervention
+
+Let's see how you can do it:
 
 - Create the configuration folder and the YAML config file
 
@@ -186,7 +211,7 @@ $ touch newproject_config.yaml
 
 #### Customize the Development folder
 
-In ~/.config/newproject/newproject_config.yaml:
+In newproject_config.yaml:
 
 ```yaml
 development_dir_path: path/to/your/development/folder/
@@ -200,7 +225,7 @@ development_dir_path: Documents/projects/
 
 #### Customize a programming language projects folder
 
-In ~/.config/newproject/newproject_config.json:
+In newproject_config.yaml:
 
 ```yaml
 project_folder_names:
@@ -208,6 +233,8 @@ project_folder_names:
 ```
 
 #### Customize a programming language file content
+
+In newproject_config.yaml:
 
 You can customize the content of the files only of the following programming languages:
 
@@ -234,6 +261,8 @@ cpp:
 ```
 
 #### Customize the .gitignore for a specific programming language
+
+In newproject_config.yaml:
 
 You can customize the content of the .gitignore only of the following programming languages:
 
