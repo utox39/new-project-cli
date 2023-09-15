@@ -575,8 +575,6 @@ def get_config_path():
     elif sys.platform.startswith("linux"):
         if os.path.exists(site.getusersitepackages()):
             site_packages = site.getusersitepackages()
-        elif os.path.exists(site.getsitepackages()[0]):
-            site_packages = site.getsitepackages()[0]
     elif sys.platform.startswith("win32"):
         site_packages = site.getsitepackages()[1]
 
