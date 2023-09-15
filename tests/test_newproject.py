@@ -61,7 +61,7 @@ class TestCheck(unittest.TestCase):
 
             print(OK)
 
-    def test_name_check(self):
+    def test_project_name_check(self):
         print("- test_name_check\n")
 
         # Test an invalid project name
@@ -110,6 +110,17 @@ class TestNewProject(unittest.TestCase):
 
             NewProject().git_init_command(temp_dir, content)
 
+            # Get the file size of .gitignore
+            check_gitignore = os.path.getsize(os.path.join(temp_dir, ".gitignore"))
+
+            if check_gitignore == 0:
+                is_empty = True
+            else:
+                is_empty = False
+
+            # Assert that the .gitignore is not empty
+            self.assertFalse(is_empty)
+
             # Assert that git init was called
             mock_run.assert_called_once_with(["git", "init", temp_dir])
 
@@ -126,12 +137,20 @@ class TestNewProject(unittest.TestCase):
             try:
                 NewProject().git_init_command(project_dir, content)
             except Exception as e:
-                # Assert that logging.error printed the error
+                # Assert that logging.error printed the subprocess error
                 mock_logging_error.assert_called_once_with(str(e))
 
             # Assert that .gitignore was not created
             gitignore_path = os.path.join(project_dir, '.gitignore')
             self.assertFalse(os.path.exists(gitignore_path))
+
+        # with tempfile.TemporaryDirectory() as temp_dir:
+        #     with patch('builtins.open', side_effect=Exception("Test Exception")) as mock_open:
+        #         try:
+        #             NewProject().git_init_command(project_dir, content)
+        #         except Exception as e:
+        #             # Assert that logging.error printed the open() error
+        #             mock_logging_error.assert_called_once_with(str(e))
 
         print(OK)
 
