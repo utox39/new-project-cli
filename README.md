@@ -118,7 +118,7 @@ Easy as you can see here:
 $ pip install newproject-cli
 ```
 
-Please note: After installing newproject with pip if you have not added ~/.local/bin (MacOS/Linux) to $PATH you will be
+Please note: After installing newproject with pip if you have not added ~/.local/bin (macOS/Linux) to $PATH you will be
 asked to do so with a warning that should look like this:
 
 ```console
@@ -182,7 +182,7 @@ Required-by:
 $ cd path/to/site-packages/newproject/config
 ```
 
-#### YAML config file in ~/.config/newproject (MacOS/Linux only)
+#### YAML config file in ~/.config/newproject (macOS/Linux only)
 
 The default configuration file is located in the site_packages folder, but you can also use a configuration file that
 you
@@ -306,7 +306,6 @@ default_gitignore_content: |
 - Add more IDE
 - Improve user output and experience
 - Publish this project to package managers
-- Add Windows support
 
 ## Contributing
 
