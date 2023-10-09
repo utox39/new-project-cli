@@ -15,7 +15,6 @@ import jsonschema
 import typer
 import yaml
 from rich.console import Console
-from typing import Optional
 from typing_extensions import Annotated
 
 # newproject-cli version
