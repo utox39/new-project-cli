@@ -15,7 +15,11 @@ import jsonschema
 import typer
 import yaml
 from rich.console import Console
+from typing import Optional
 from typing_extensions import Annotated
+
+# newproject-cli version
+__version__ = "0.4.0"
 
 # rich config
 console = Console()
@@ -145,14 +149,15 @@ class NewProject:
         :param ide_command: (str) the console command to open the IDE
         :param project_dir: (str) the project directory to open in the IDE
         """
-        if which(f"{ide_command}") is not None:
+        if ide_command and which(f"{ide_command}") is not None:
             if ide_command in ["code", "pycharm", "idea"]:
                 try:
                     subprocess.run([f"{ide_command}", project_dir])
                 except Exception as open_in_ide_error:
                     logging.error(open_in_ide_error)
         else:
-            print(f"newproject: {ide_command}: ide command not found")
+            if ide_command:
+                print(f"newproject: {ide_command}: ide command not found")
 
     def git_init_command(self, project_dir: str, content: str) -> None:
         """
@@ -427,23 +432,24 @@ class NewProject:
 
     def handle(
             self,
-            project_name: Annotated[str, typer.Argument(help="The name of the new project")],
-            bash: Annotated[bool, typer.Option(help="create a bash project")] = False,
-            clang: Annotated[bool, typer.Option(help="create a c project")] = False,
-            cpp: Annotated[bool, typer.Option(help="create a cpp project")] = False,
-            go: Annotated[bool, typer.Option(help="create a go project")] = False,
-            java: Annotated[bool, typer.Option(help="create a java project")] = False,
-            lua: Annotated[bool, typer.Option(help="create a lua project")] = False,
-            ocaml: Annotated[bool, typer.Option(help="create an ocaml project")] = False,
-            php: Annotated[bool, typer.Option(help="create a php project")] = False,
-            python: Annotated[bool, typer.Option(help="create a python project")] = False,
-            ruby: Annotated[bool, typer.Option(help="create a ruby project")] = False,
-            rust: Annotated[bool, typer.Option(help="create a rust project")] = False,
-            vlang: Annotated[bool, typer.Option(help="create a vlang project")] = False,
-            web: Annotated[bool, typer.Option(help="create a basic web project")] = False,
+            # project_name: Annotated[str, typer.Argument(help="The name of the new project")],
+            bash: Annotated[str, typer.Option(help="create a bash project")] = "",
+            clang: Annotated[str, typer.Option(help="create a c project")] = "",
+            cpp: Annotated[str, typer.Option(help="create a cpp project")] = "",
+            go: Annotated[str, typer.Option(help="create a go project")] = "",
+            java: Annotated[str, typer.Option(help="create a java project")] = "",
+            lua: Annotated[str, typer.Option(help="create a lua project")] = "",
+            ocaml: Annotated[str, typer.Option(help="create an ocaml project")] = "",
+            php: Annotated[str, typer.Option(help="create a php project")] = "",
+            python: Annotated[str, typer.Option(help="create a python project")] = "",
+            ruby: Annotated[str, typer.Option(help="create a ruby project")] = "",
+            rust: Annotated[str, typer.Option(help="create a rust project")] = "",
+            vlang: Annotated[str, typer.Option(help="create a vlang project")] = "",
+            web: Annotated[str, typer.Option(help="create a basic web project")] = "",
             code: Annotated[bool, typer.Option(help="open the project in VS Code")] = False,
             idea: Annotated[bool, typer.Option(help="open the project in Intellij IDEA")] = False,
-            pycharm: Annotated[bool, typer.Option(help="open the project in PyCharm")] = False
+            pycharm: Annotated[bool, typer.Option(help="open the project in PyCharm")] = False,
+            version: Annotated[bool, typer.Option(help="show the newproject-cli version")] = False
     ):
         """
         Create a new project via terminal
@@ -451,9 +457,8 @@ class NewProject:
         Coded with <3 by utox39
         """
 
-        # Checks if the project_name contains a space
-        check = Check()
-        check.project_name_check(project_name)
+        if version:
+            version_callback(value=True)
 
         ide_name = ""
         if code:
@@ -466,15 +471,15 @@ class NewProject:
         project_mapping = {
             python: (self.create_project,
                      self.PROJECTS_DIR_NAMES["python"],
-                     project_name,
-                     f"{project_name}.py",
+                     python,
+                     f"{python}.py",
                      self.newproject_config["python"]["file_content"],
                      self.newproject_config["python"]["gitignore_content"],
                      ide_name
                      ),
             java: (self.create_project,
                    self.PROJECTS_DIR_NAMES["java"],
-                   project_name,
+                   java,
                    "Main.java",
                    self.newproject_config["java"]["file_content"],
                    self.newproject_config["java"]["gitignore_content"],
@@ -482,7 +487,7 @@ class NewProject:
                    ),
             go: (self.create_project,
                  self.PROJECTS_DIR_NAMES["go"],
-                 project_name,
+                 go,
                  "main.go",
                  self.newproject_config["go"]["file_content"],
                  self.newproject_config["go"]["gitignore_content"],
@@ -490,15 +495,15 @@ class NewProject:
                  ),
             bash: (self.create_project,
                    self.PROJECTS_DIR_NAMES["bash"],
-                   project_name,
-                   f"{project_name}.sh",
+                   bash,
+                   f"{bash}.sh",
                    self.newproject_config["bash"]["file_content"],
                    self.newproject_config["bash"]["gitignore_content"],
                    ide_name
                    ),
             cpp: (self.create_project,
                   self.PROJECTS_DIR_NAMES["cpp"],
-                  project_name,
+                  cpp,
                   "main.cpp",
                   self.newproject_config["cpp"]["file_content"],
                   self.newproject_config["cpp"]["gitignore_content"],
@@ -506,7 +511,7 @@ class NewProject:
                   ),
             clang: (self.create_project,
                     self.PROJECTS_DIR_NAMES["c_lang"],
-                    project_name,
+                    clang,
                     "main.c",
                     self.newproject_config["c_lang"]["file_content"],
                     self.newproject_config["c_lang"]["gitignore_content"],
@@ -514,7 +519,7 @@ class NewProject:
                     ),
             php: (self.create_project,
                   self.PROJECTS_DIR_NAMES["php"],
-                  project_name,
+                  php,
                   "index.php",
                   self.newproject_config["php"]["file_content"],
                   self.newproject_config["php"]["gitignore_content"],
@@ -522,7 +527,7 @@ class NewProject:
                   ),
             lua: (self.create_project,
                   self.PROJECTS_DIR_NAMES["lua"],
-                  project_name,
+                  lua,
                   "main.lua",
                   self.newproject_config["lua"]["file_content"],
                   self.newproject_config["lua"]["gitignore_content"],
@@ -530,26 +535,26 @@ class NewProject:
                   ),
             rust: (self.create_project_with_commands,
                    self.PROJECTS_DIR_NAMES["rust"],
-                   project_name,
+                   rust,
                    ide_name
                    ),
             ruby: (self.create_project_with_commands,
                    self.PROJECTS_DIR_NAMES["ruby"],
-                   project_name,
+                   ruby,
                    ide_name
                    ),
             ocaml: (self.create_project_with_commands,
                     self.PROJECTS_DIR_NAMES["ocaml"],
-                    project_name,
+                    ocaml,
                     ide_name
                     ),
             vlang: (self.create_project_with_commands,
                     self.PROJECTS_DIR_NAMES["vlang"],
-                    project_name,
+                    vlang,
                     ide_name),
             web: (self.create_web_project,
                   self.PROJECTS_DIR_NAMES["web"],
-                  project_name,
+                  web,
                   self.newproject_config["web"]["html_file_content"],
                   self.newproject_config["web"]["css_file_content"],
                   self.newproject_config["web"]["javascript_file_content"],
@@ -561,10 +566,20 @@ class NewProject:
         for flag, func_and_proj_info in project_mapping.items():
             if flag:
                 create_func, *args = func_and_proj_info
+                # Checks if the project_name contains a space
+                check = Check()
+                check.project_name_check(flag)
+
                 create_func(*args)
                 break
         else:
             console.print("[bold red]No option provided[/bold red]")
+
+
+def version_callback(value: bool):
+    if value:
+        print(f"newproject-cli version: {__version__}")
+        raise typer.Exit()
 
 
 def get_config_path():
