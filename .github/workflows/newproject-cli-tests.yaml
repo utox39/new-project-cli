@@ -33,8 +33,8 @@ jobs:
           pytest --cov .
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@
-        with:
-          name: ${{ matrix.os }} Python ${{ matrix.python-version }}
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        with:
+          name: ${{ matrix.os }} Python ${{ matrix.python-version }}
 
