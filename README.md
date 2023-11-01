@@ -110,8 +110,6 @@ The same is for Ruby, OCaml and Vlang.
 
 ## Installation
 
-This tool currently only works for [*NIX](https://en.wikipedia.org/wiki/Unix-like) operating systems
-
 Easy as you can see here:
 
 ```console
