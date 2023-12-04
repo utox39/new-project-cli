@@ -24,7 +24,7 @@ francescomoccaldi39@gmail.com
 
 2. If you have a fix, that is most welcome -- please attach or summarize it in your message!
 
-3. I will evaluate the vulnerability in a controlled environement and, if necessary, release a fix or mitigating steps
+3. I will evaluate the vulnerability in a controlled environment and, if necessary, release a fix or mitigating steps
    to address it. I will contact you to let you know the outcome, and will credit you in the report.
 
 4. Please DO NOT disclose the vulnerability publicly until a fix is released!
