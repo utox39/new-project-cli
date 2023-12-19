@@ -11,14 +11,13 @@ from pathlib import Path
 from shutil import which
 from typing import Final
 
+from newproject._version import __version__
+
 import jsonschema
 import typer
 import yaml
 from rich.console import Console
 from typing_extensions import Annotated
-
-# newproject-cli version
-__version__ = "0.5.1"
 
 # rich config
 console = Console()
