@@ -11,9 +11,9 @@ from pathlib import Path
 from shutil import which
 from typing import Final
 
+from newproject.check import config_file_validator, dev_dir_check, projects_path_check, project_name_check
 from newproject._version import __version__
 
-import jsonschema
 import typer
 import yaml
 from rich.console import Console
@@ -32,64 +32,6 @@ PROJECT_STRUCTURE_GEN: Final[str] = "[dodger_blue1]Creating the project structur
 HAPPY_CODING: Final[str] = "[gold1]⫸ Happy Coding![/gold1]"
 COULD_NOT_CREATE_PROJECT: Final[str] = "[red3]𝙓 Could not create the project[/red3]"
 CREATING_NEW_PROJECT: Final[str] = "[dodger_blue1]Creating your new project...[/dodger_blue1]\n"
-
-
-class Check:
-    @staticmethod
-    def config_file_validator(config_file, json_schema) -> bool:
-        try:
-            jsonschema.validate(instance=config_file, schema=json_schema)
-            return True
-        except jsonschema.ValidationError as validation_error:
-            if validation_error.relative_path:
-                print(f"{validation_error.relative_path[0]}:")
-
-                message_len = len(validation_error.relative_path) - 1
-                if validation_error.validator == "required":
-                    print(f"  {validation_error.message[1:-24]} (missing)\n")
-                else:
-                    print(f"  {validation_error.relative_path[message_len]}:(type error)\n")
-
-            print(f"newproject: yaml config file error: {validation_error.message}")
-            if validation_error.context:
-                print(validation_error.context)
-            if validation_error.cause:
-                print(validation_error.cause)
-            return False
-
-    @staticmethod
-    def dev_dir_check(dev_dir) -> bool:
-        """
-        Check if the development folder exists
-        :return bool: True if the development folder exists
-        """
-        if not os.path.isdir(dev_dir):
-            console.print(f"newproject: error: [red3]{dev_dir} does not exist[/red3]")
-            console.print("[dark_orange3]Change it the YAML config file[/dark_orange3]")
-            return False
-        else:
-            return True
-
-    @staticmethod
-    def projects_path_check(projects_dir_to_check: str) -> None:
-        """
-        Check if the specified programming language project folder exists
-        :param projects_dir_to_check: (str) name of the programming language projects folder
-        """
-        if not os.path.isdir(projects_dir_to_check):
-            console.print(f"newproject: error: [red3]{projects_dir_to_check} does not exist[/red3]")
-            console.print("[dark_orange3]Change it the YAML config file[/dark_orange3]")
-            sys.exit(errno.ENOENT)
-
-    @staticmethod
-    def project_name_check(project_name: str):
-        """
-        Checks if the project name contains a space
-        :param project_name: (str) the name of the project
-        """
-        if " " in project_name:
-            print("newproject: error: invalid project name. The project name can't contain spaces'")
-            sys.exit(2)
 
 
 class NewProject:
@@ -120,7 +62,7 @@ class NewProject:
 
         self.check = Check()
 
-        if self.check.config_file_validator(config_file=self.newproject_config, json_schema=self.json_schema):
+        if config_file_validator(config_file=self.newproject_config, json_schema=self.json_schema):
             # Project folder names
             self.PROJECTS_DIR_NAMES: Final[dict] = {
                 "bash": self.newproject_config["bash"]["projects_dir_name"],
@@ -261,11 +203,11 @@ class NewProject:
         :param gitignore_content: (str) the content of the .gitignore file
         :param ide: (str) the name of the IDE where you want to open the new project
         """
-        if self.check.dev_dir_check(dev_dir=self.DEV_DIR):
+        if dev_dir_check(dev_dir=self.DEV_DIR):
             # check if the specified projects folder exists
             projects_path = os.path.join(self.DEV_DIR, projects_dir_name)
 
-            self.check.projects_path_check(projects_dir_to_check=projects_path)
+            projects_path_check(projects_dir_to_check=projects_path)
             # Creating the project folder
             new_project_dir = f"{projects_path}/{project_name}"
 
@@ -313,11 +255,11 @@ class NewProject:
         :param project_name: (str) the name of the new project
         :param ide: (str) the name of the IDE where you want to open the new project
         """
-        if self.check.dev_dir_check(dev_dir=self.DEV_DIR):
+        if dev_dir_check(dev_dir=self.DEV_DIR):
 
             projects_path = os.path.join(self.DEV_DIR, projects_dir_name)
 
-            self.check.projects_path_check(projects_dir_to_check=projects_path)
+            projects_path_check(projects_dir_to_check=projects_path)
             # Creating the project folder
             new_project_dir = f"{projects_path}/{project_name}"
 
@@ -381,11 +323,11 @@ class NewProject:
         :param gitignore_content: (str) the content of the .gitignore file
         :param ide: (str) the name of the IDE where you want to open the new project
         """
-        if self.check.dev_dir_check(dev_dir=self.DEV_DIR):
+        if dev_dir_check(dev_dir=self.DEV_DIR):
             # check if the specified projects folder exists
             projects_path = os.path.join(self.DEV_DIR, projects_dir_name)
 
-            self.check.projects_path_check(projects_dir_to_check=projects_path)
+            projects_path_check(projects_dir_to_check=projects_path)
             # Creating the project folder
             new_project_dir = f"{projects_path}/{project_name}"
 
@@ -565,8 +507,7 @@ class NewProject:
             if flag:
                 create_func, *args = func_and_proj_info
                 # Checks if the project_name contains a space
-                check = Check()
-                check.project_name_check(flag)
+                project_name_check(flag)
 
                 create_func(*args)
                 break
