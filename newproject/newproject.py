@@ -60,8 +60,6 @@ class NewProject:
         # Default Development folder
         self.DEV_DIR: Final[str] = f"{Path.home()}/{self.newproject_config['development_dir_path']}"
 
-        self.check = Check()
-
         if config_file_validator(config_file=self.newproject_config, json_schema=self.json_schema):
             # Project folder names
             self.PROJECTS_DIR_NAMES: Final[dict] = {
