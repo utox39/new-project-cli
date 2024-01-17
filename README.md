@@ -91,7 +91,7 @@ The same is for Ruby, OCaml and Vlang.
 
 ## Requirements
 
-- [Python](https://www.python.org/)
+- [Python >= 3.10](https://www.python.org/)
 - [pip](https://packaging.python.org/en/latest/tutorials/installing-packages/)
 
 #### To create a Rust projects
