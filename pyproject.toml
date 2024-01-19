@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "newproject-cli"
-version = "1.0"
+version = "1.0.1"
 description = "A command-line tool to create new projects"
 authors = ["utox39 <francescomoccaldi39@gmail.com>"]
 license = "MIT"
