@@ -65,7 +65,7 @@ class NewProject:
         ):
             # Project folder names
             self.PROJECTS_DIR_NAMES: Final[dict] = {
-                "b9ash": self.newproject_config["bash"]["projects_dir_name"],
+                "bash": self.newproject_config["bash"]["projects_dir_name"],
                 "c_lang": self.newproject_config["c_lang"]["projects_dir_name"],
                 "cpp": self.newproject_config["cpp"]["projects_dir_name"],
                 "go": self.newproject_config["go"]["projects_dir_name"],
