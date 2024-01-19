@@ -4,12 +4,12 @@ on:
   push:
     branches: [ "main", "dev" ]
     paths:
-      - 'crash_test/**'
+      - 'newproject/**'
       - 'tests/**'
   pull_request:
     branches: [ "main", "dev" ]
     paths:
-      - 'crash_test/**'
+      - 'newproject/**'
       - 'tests/**'
 
 jobs:
