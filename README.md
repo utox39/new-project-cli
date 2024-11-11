@@ -1,3 +1,6 @@
+# THIS PROJECT IS NO LONGER SUPPORTED. A NEW VERSION REWRITTEN IN GO WILL BE RELEASED
+
+
 # new-project-cli
 
 [![codecov](https://codecov.io/gh/utox39/new-project-cli/graph/badge.svg?token=LLIV4AFVY6)](https://codecov.io/gh/utox39/new-project-cli)
